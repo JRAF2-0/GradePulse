@@ -2,7 +2,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { RoleGuard } from '@/components/RoleGuard';
-import { useAuth } from '@/context/AuthContext';
 
 import { Login } from '@/pages/auth/Login';
 import { Signup } from '@/pages/auth/Signup';
@@ -27,20 +26,6 @@ import { AdminUsers } from '@/pages/admin/Users';
 import { AdminSubjects } from '@/pages/admin/Subjects';
 import { AdminClasses } from '@/pages/admin/Classes';
 import { AdminAuditLogs } from '@/pages/admin/AuditLogs';
-
-function RootRedirect() {
-  const { session, role, loading } = useAuth();
-  if (loading || (session && !role)) {
-    return (
-      <div className="flex min-h-screen items-center justify-center text-slate-500">
-        Loading…
-      </div>
-    );
-  }
-  if (!session) return <Navigate to="/login" replace />;
-  if (role === 'pending') return <Navigate to="/pending" replace />;
-  return <Navigate to={`/${role}`} replace />;
-}
 
 export default function App() {
   return (
@@ -120,7 +105,7 @@ export default function App() {
         <Route path="audit" element={<AdminAuditLogs />} />
       </Route>
 
-      <Route path="/" element={<RootRedirect />} />
+      <Route path="/" element={<Login />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

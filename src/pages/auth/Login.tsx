@@ -9,7 +9,11 @@ export function Login() {
 
   useEffect(() => {
     if (session && profile) {
-      navigate('/', { replace: true });
+      if (profile.role === 'pending') {
+        navigate('/pending', { replace: true });
+      } else if (profile.role === 'student' || profile.role === 'teacher' || profile.role === 'admin') {
+        navigate(`/${profile.role}`, { replace: true });
+      }
     }
   }, [session, profile, navigate]);
 
