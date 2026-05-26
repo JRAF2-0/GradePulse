@@ -40,6 +40,13 @@ When you pull new migrations from this repo, run only the new files (the highest
 
 V2 introduces new roles (`department_head`, `parent`), tables (`departments`, `parent_students`, `grade_change_requests`, `score_comments`, `attendance`), and extends the existing RPCs. Each V2 migration starts at `0009_…` and depends on the V1 chain above.
 
+| File | Purpose |
+|---|---|
+| `0009_departments_and_roles.sql` | `departments` table, `department_head` + `parent` role values, dept-scoped RLS, dept_head helpers, expanded `can_see_user()` |
+| `0010_parent_links.sql` | `parent_students` linkage table, parent-scoped RLS on student data, `is_parent_of()` + `parent_can_see_class()` helpers |
+| `0011_grade_change_requests.sql` | `grade_change_requests` table, `request_grade_change()` + `review_grade_change()` RPCs, updates the lock trigger to honor an approval-bypass session flag |
+| `0012_role_helpers_v2.sql` | Updates `set_user_role()` + `get_user_directory()` to support `department_head` and `parent` roles + the `departments.head_id` linkage |
+
 ## Convention
 
 - File names: `NNNN_short_description.sql`

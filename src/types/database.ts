@@ -16,11 +16,18 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-export type UserRole = 'pending' | 'student' | 'teacher' | 'admin';
+export type UserRole =
+  | 'pending'
+  | 'student'
+  | 'teacher'
+  | 'admin'
+  | 'department_head'
+  | 'parent';
 export type Period = 'midterm' | 'finals';
 export type Semester = '1st' | '2nd' | 'summer';
 export type ScoreStatus = 'graded' | 'missing' | 'late' | 'excused';
 export type AppealStatus = 'pending' | 'approved' | 'rejected';
+export type GradeChangeStatus = 'pending' | 'approved' | 'rejected';
 export type NotificationType =
   | 'grade_posted'
   | 'grade_changed'
@@ -28,8 +35,18 @@ export type NotificationType =
   | 'appeal_rejected'
   | 'low_average'
   | 'role_assigned'
-  | 'enrolled';
-export type AuditAction = 'insert' | 'update' | 'delete' | 'publish' | 'lock';
+  | 'enrolled'
+  | 'grade_change_approved'
+  | 'grade_change_rejected'
+  | 'comment_added';
+export type AuditAction =
+  | 'insert'
+  | 'update'
+  | 'delete'
+  | 'publish'
+  | 'lock'
+  | 'grade_change_approved'
+  | 'grade_change_rejected';
 
 export interface DbUser {
   id: string;
@@ -53,6 +70,37 @@ export interface DbTeacher {
   user_id: string;
   employee_no: string | null;
   department: string | null;
+  department_id: string | null;
+}
+
+export interface DbDepartment {
+  id: string;
+  code: string;
+  name: string;
+  head_id: string | null;
+  created_at: string;
+}
+
+export interface DbParentStudent {
+  id: string;
+  parent_id: string;
+  student_id: string;
+  relationship: string | null;
+  created_at: string;
+}
+
+export interface DbGradeChangeRequest {
+  id: string;
+  score_id: string;
+  requested_by: string;
+  old_score: number | null;
+  new_score: number | null;
+  reason: string;
+  status: GradeChangeStatus;
+  reviewed_by: string | null;
+  review_note: string | null;
+  created_at: string;
+  reviewed_at: string | null;
 }
 
 export interface DbSubject {
@@ -60,6 +108,7 @@ export interface DbSubject {
   code: string;
   title: string;
   units: number | null;
+  department_id: string | null;
 }
 
 export interface DbClass {
@@ -263,6 +312,28 @@ export type Database = {
         Update: Partial<DbAuditLog>;
         Relationships: [];
       };
+      departments: {
+        Row: DbDepartment;
+        Insert: Partial<DbDepartment> & { code: string; name: string };
+        Update: Partial<DbDepartment>;
+        Relationships: [];
+      };
+      parent_students: {
+        Row: DbParentStudent;
+        Insert: Partial<DbParentStudent> & { parent_id: string; student_id: string };
+        Update: Partial<DbParentStudent>;
+        Relationships: [];
+      };
+      grade_change_requests: {
+        Row: DbGradeChangeRequest;
+        Insert: Partial<DbGradeChangeRequest> & {
+          score_id: string;
+          requested_by: string;
+          reason: string;
+        };
+        Update: Partial<DbGradeChangeRequest>;
+        Relationships: [];
+      };
     };
     Views: { [_ in never]: never };
     Functions: {
@@ -300,6 +371,7 @@ export type Database = {
           p_section?: string | null;
           p_employee_no?: string | null;
           p_department?: string | null;
+          p_department_id?: string | null;
         };
         Returns: undefined;
       };
@@ -317,7 +389,23 @@ export type Database = {
           section: string | null;
           employee_no: string | null;
           department: string | null;
+          department_id: string | null;
+          department_code: string | null;
+          department_name: string | null;
+          is_department_head: boolean;
         }[];
+      };
+      request_grade_change: {
+        Args: { p_score_id: string; p_new_score: number; p_reason: string };
+        Returns: string;
+      };
+      review_grade_change: {
+        Args: {
+          p_request_id: string;
+          p_decision: 'approve' | 'reject';
+          p_review_note?: string | null;
+        };
+        Returns: undefined;
       };
       get_audit_logs: {
         Args: {

@@ -24,11 +24,22 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   admin: [
     { to: '/admin', label: 'Dashboard' },
     { to: '/admin/users', label: 'Users' },
+    { to: '/admin/departments', label: 'Departments' },
     { to: '/admin/subjects', label: 'Subjects' },
     { to: '/admin/classes', label: 'Classes' },
+    { to: '/admin/parent-links', label: 'Parent Links' },
     { to: '/admin/audit', label: 'Audit Logs' },
   ],
+  department_head: [{ to: '/department-head', label: 'Dashboard' }],
+  parent: [{ to: '/parent', label: 'Dashboard' }],
 };
+
+function homePathForRole(role: UserRole | null): string {
+  if (!role || role === 'pending') return '/';
+  if (role === 'department_head') return '/department-head';
+  if (role === 'parent') return '/parent';
+  return `/${role}`;
+}
 
 export function Layout() {
   const { profile, role, signOut } = useAuth();
@@ -40,7 +51,7 @@ export function Layout() {
   };
 
   const items = role ? NAV_BY_ROLE[role] : [];
-  const homeHref = role && role !== 'pending' ? `/${role}` : '/';
+  const homeHref = homePathForRole(role);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -57,7 +68,7 @@ export function Layout() {
               <NavLink
                 key={item.to}
                 to={item.to}
-                end={item.to === `/${role}`}
+                end={item.to === homeHref}
                 className={({ isActive }) =>
                   `rounded-md px-3 py-1.5 text-sm font-medium transition ${
                     isActive

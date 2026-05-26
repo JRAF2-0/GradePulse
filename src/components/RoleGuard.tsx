@@ -28,6 +28,8 @@ export function RoleGuard({ allow, children }: Props) {
     if (role === 'student') return <Navigate to="/student" replace />;
     if (role === 'teacher') return <Navigate to="/teacher" replace />;
     if (role === 'admin') return <Navigate to="/admin" replace />;
+    if (role === 'department_head') return <Navigate to="/department-head" replace />;
+    if (role === 'parent') return <Navigate to="/parent" replace />;
     return <Navigate to="/login" replace />;
   }
 

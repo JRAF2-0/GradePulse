@@ -1,7 +1,7 @@
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { humanizeError } from '@/utils/errorMessage';
-import type { UserRole } from '@/types/database';
+import type { UserRole, DbDepartment } from '@/types/database';
 
 interface DirectoryRow {
   id: string;
@@ -15,28 +15,37 @@ interface DirectoryRow {
   section: string | null;
   employee_no: string | null;
   department: string | null;
+  department_id: string | null;
+  department_code: string | null;
+  department_name: string | null;
+  is_department_head: boolean;
 }
 
 export function AdminUsers() {
   const [users, setUsers] = useState<DirectoryRow[]>([]);
+  const [departments, setDepartments] = useState<DbDepartment[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<DirectoryRow | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchUsers = useCallback(async () => {
+  const fetchAll = useCallback(async () => {
     setLoading(true);
-    const { data, error: err } = await supabase.rpc('get_user_directory');
+    const [dirRes, deptRes] = await Promise.all([
+      supabase.rpc('get_user_directory'),
+      supabase.from('departments').select('*').order('code'),
+    ]);
     setLoading(false);
-    if (err) {
-      setError(humanizeError(err));
+    if (dirRes.error) {
+      setError(humanizeError(dirRes.error));
       return;
     }
-    setUsers(data ?? []);
+    setUsers((dirRes.data as DirectoryRow[]) ?? []);
+    setDepartments((deptRes.data as DbDepartment[]) ?? []);
   }, []);
 
   useEffect(() => {
-    void fetchUsers();
-  }, [fetchUsers]);
+    void fetchAll();
+  }, [fetchAll]);
 
   const pending = users.filter((u) => u.role === 'pending');
   const active = users.filter((u) => u.role !== 'pending');
@@ -81,10 +90,11 @@ export function AdminUsers() {
       {editing && (
         <AssignRoleModal
           user={editing}
+          departments={departments}
           onClose={() => setEditing(null)}
           onSaved={() => {
             setEditing(null);
-            void fetchUsers();
+            void fetchAll();
           }}
         />
       )}
@@ -139,8 +149,9 @@ function UserTable({
                 </td>
                 <td className="px-4 py-2 text-slate-600">
                   {u.role === 'student' && (u.student_no ?? '—')}
-                  {u.role === 'teacher' && (u.department ?? '—')}
-                  {(u.role === 'admin' || u.role === 'pending') && '—'}
+                  {u.role === 'teacher' && (u.department_name ?? u.department ?? '—')}
+                  {u.role === 'department_head' && (u.department_name ?? '—')}
+                  {(u.role === 'admin' || u.role === 'pending' || u.role === 'parent') && '—'}
                 </td>
                 <td className="px-4 py-2 text-slate-500">
                   {new Date(u.created_at).toLocaleDateString()}
@@ -165,18 +176,25 @@ function RoleBadge({ role }: { role: UserRole }) {
       ? 'badge-danger'
       : role === 'teacher'
         ? 'badge-success'
-        : role === 'student'
-          ? 'badge-neutral'
-          : 'badge-warning';
-  return <span className={cls}>{role}</span>;
+        : role === 'department_head'
+          ? 'badge-success'
+          : role === 'student'
+            ? 'badge-neutral'
+            : role === 'parent'
+              ? 'badge-neutral'
+              : 'badge-warning';
+  const label = role === 'department_head' ? 'dept head' : role;
+  return <span className={cls}>{label}</span>;
 }
 
 function AssignRoleModal({
   user,
+  departments,
   onClose,
   onSaved,
 }: {
   user: DirectoryRow;
+  departments: DbDepartment[];
   onClose: () => void;
   onSaved: () => void;
 }) {
@@ -187,11 +205,19 @@ function AssignRoleModal({
   const [section, setSection] = useState(user.section ?? '');
   const [employeeNo, setEmployeeNo] = useState(user.employee_no ?? '');
   const [department, setDepartment] = useState(user.department ?? '');
+  const [departmentId, setDepartmentId] = useState<string>(user.department_id ?? '');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
+  const needsDept = role === 'teacher' || role === 'department_head';
+  const needsDeptRequired = role === 'department_head';
+
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (needsDeptRequired && !departmentId) {
+      setError('Please choose a department for the Department Head.');
+      return;
+    }
     setBusy(true);
     setError(null);
     const { error: err } = await supabase.rpc('set_user_role', {
@@ -201,8 +227,9 @@ function AssignRoleModal({
       p_course: role === 'student' ? course || null : null,
       p_year_level: role === 'student' && yearLevel ? Number(yearLevel) : null,
       p_section: role === 'student' ? section || null : null,
-      p_employee_no: role === 'teacher' ? employeeNo || null : null,
-      p_department: role === 'teacher' ? department || null : null,
+      p_employee_no: needsDept ? employeeNo || null : null,
+      p_department: needsDept ? department || null : null,
+      p_department_id: needsDept ? departmentId || null : null,
     });
     setBusy(false);
     if (err) {
@@ -228,6 +255,8 @@ function AssignRoleModal({
           >
             <option value="student">Student</option>
             <option value="teacher">Teacher</option>
+            <option value="department_head">Department Head</option>
+            <option value="parent">Parent</option>
             <option value="admin">Admin</option>
             <option value="pending">Pending (revoke access)</option>
           </select>
@@ -263,17 +292,51 @@ function AssignRoleModal({
           </>
         )}
 
-        {role === 'teacher' && (
+        {needsDept && (
           <>
             <div>
               <label className="label">Employee number</label>
               <input className="input" value={employeeNo} onChange={(e) => setEmployeeNo(e.target.value)} />
             </div>
             <div>
-              <label className="label">Department</label>
-              <input className="input" value={department} onChange={(e) => setDepartment(e.target.value)} placeholder="CS Department" />
+              <label className="label">
+                Department {needsDeptRequired && <span className="text-red-600">*</span>}
+              </label>
+              <select
+                className="input"
+                value={departmentId}
+                onChange={(e) => setDepartmentId(e.target.value)}
+              >
+                <option value="">— None —</option>
+                {departments.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.code} — {d.name}
+                  </option>
+                ))}
+              </select>
+              {departments.length === 0 && (
+                <p className="mt-1 text-xs text-amber-700">
+                  No departments yet. Create one under <strong>Departments</strong> first.
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="label">Department label (legacy, optional)</label>
+              <input
+                className="input"
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+                placeholder="Free-text department name"
+              />
             </div>
           </>
+        )}
+
+        {role === 'parent' && (
+          <p className="text-xs text-slate-500">
+            After saving, link this parent to one or more students under{' '}
+            <strong>Parent Links</strong>.
+          </p>
         )}
 
         <div className="flex justify-end gap-2 pt-2">

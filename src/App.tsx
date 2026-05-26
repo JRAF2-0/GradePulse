@@ -26,6 +26,11 @@ import { AdminUsers } from '@/pages/admin/Users';
 import { AdminSubjects } from '@/pages/admin/Subjects';
 import { AdminClasses } from '@/pages/admin/Classes';
 import { AdminAuditLogs } from '@/pages/admin/AuditLogs';
+import { AdminDepartments } from '@/pages/admin/Departments';
+import { AdminParentLinks } from '@/pages/admin/ParentLinks';
+
+import { DepartmentHeadDashboard } from '@/pages/department-head/Dashboard';
+import { ParentDashboard } from '@/pages/parent/Dashboard';
 
 export default function App() {
   return (
@@ -100,9 +105,37 @@ export default function App() {
       >
         <Route index element={<AdminDashboard />} />
         <Route path="users" element={<AdminUsers />} />
+        <Route path="departments" element={<AdminDepartments />} />
         <Route path="subjects" element={<AdminSubjects />} />
         <Route path="classes" element={<AdminClasses />} />
+        <Route path="parent-links" element={<AdminParentLinks />} />
         <Route path="audit" element={<AdminAuditLogs />} />
+      </Route>
+
+      <Route
+        path="/department-head"
+        element={
+          <ProtectedRoute>
+            <RoleGuard allow={['department_head']}>
+              <Layout />
+            </RoleGuard>
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<DepartmentHeadDashboard />} />
+      </Route>
+
+      <Route
+        path="/parent"
+        element={
+          <ProtectedRoute>
+            <RoleGuard allow={['parent']}>
+              <Layout />
+            </RoleGuard>
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<ParentDashboard />} />
       </Route>
 
       <Route path="/" element={<Login />} />

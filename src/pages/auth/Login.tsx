@@ -11,6 +11,10 @@ export function Login() {
     if (session && profile) {
       if (profile.role === 'pending') {
         navigate('/pending', { replace: true });
+      } else if (profile.role === 'department_head') {
+        navigate('/department-head', { replace: true });
+      } else if (profile.role === 'parent') {
+        navigate('/parent', { replace: true });
       } else if (profile.role === 'student' || profile.role === 'teacher' || profile.role === 'admin') {
         navigate(`/${profile.role}`, { replace: true });
       }
