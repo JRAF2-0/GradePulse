@@ -2,6 +2,7 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import type { UserRole } from '@/types/database';
 import { NotificationBell } from './NotificationBell';
+import { Logo } from './Logo';
 
 interface NavItem {
   to: string;
@@ -13,6 +14,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   student: [
     { to: '/student', label: 'Dashboard' },
     { to: '/student/classes', label: 'My Classes' },
+    { to: '/student/analytics', label: 'Analytics' },
     { to: '/student/join', label: 'Join Class' },
     { to: '/student/reports', label: 'Reports' },
   ],
@@ -27,10 +29,14 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { to: '/admin/departments', label: 'Departments' },
     { to: '/admin/subjects', label: 'Subjects' },
     { to: '/admin/classes', label: 'Classes' },
+    { to: '/admin/appeals', label: 'Appeals' },
     { to: '/admin/parent-links', label: 'Parent Links' },
     { to: '/admin/audit', label: 'Audit Logs' },
   ],
-  department_head: [{ to: '/department-head', label: 'Dashboard' }],
+  department_head: [
+    { to: '/department-head', label: 'Dashboard' },
+    { to: '/department-head/approvals', label: 'Approvals' },
+  ],
   parent: [{ to: '/parent', label: 'Dashboard' }],
 };
 
@@ -57,11 +63,8 @@ export function Layout() {
     <div className="min-h-screen bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <Link to={homeHref} className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 font-bold text-white">
-              G
-            </span>
-            <span className="text-lg font-semibold tracking-tight">GradePulse</span>
+          <Link to={homeHref} className="transition hover:opacity-90">
+            <Logo size="sm" withWordmark />
           </Link>
           <nav className="hidden gap-1 md:flex">
             {items.map((item) => (

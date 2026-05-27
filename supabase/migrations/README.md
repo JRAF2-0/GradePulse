@@ -46,6 +46,10 @@ V2 introduces new roles (`department_head`, `parent`), tables (`departments`, `p
 | `0010_parent_links.sql` | `parent_students` linkage table, parent-scoped RLS on student data, `is_parent_of()` + `parent_can_see_class()` helpers |
 | `0011_grade_change_requests.sql` | `grade_change_requests` table, `request_grade_change()` + `review_grade_change()` RPCs, updates the lock trigger to honor an approval-bypass session flag |
 | `0012_role_helpers_v2.sql` | Updates `set_user_role()` + `get_user_directory()` to support `department_head` and `parent` roles + the `departments.head_id` linkage |
+| `0013_score_comments.sql` | `score_comments` table (score-level or item-level), RLS for all roles, notification trigger on insert, realtime |
+| `0014_fix_v2_rls_recursion.sql` | Fixes infinite RLS recursion in `grade_categories` / `grade_items` / `scores` / `score_comments` policies introduced by 0009 + 0010 (was breaking categories add + Appeals tab) |
+| `0015_attendance.sql` | `attendance` table (date + status per student/class), RLS, `get_attendance_summary()` RPC, realtime |
+| `0016_analytics_rpcs.sql` | `compute_cgpa()` + `is_dean_list_eligible()` + `compute_risk_level()` RPCs for V2 analytics surfaces |
 
 ## Convention
 

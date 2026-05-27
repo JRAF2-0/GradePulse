@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 
@@ -55,15 +56,20 @@ export function DepartmentHeadDashboard() {
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-3">
-          <StatCard label="Pending grade change requests" value={pendingApprovals} />
+          <Link to="/department-head/approvals" className="card transition hover:bg-slate-50">
+            <div className="text-xs uppercase tracking-wide text-slate-500">
+              Pending grade change requests
+            </div>
+            <div className="mt-1 text-2xl font-bold">{pendingApprovals}</div>
+            <div className="text-xs text-brand-600">Review →</div>
+          </Link>
           <StatCard label="Department" value={dept.code} />
-          <StatCard label="Coming soon" value="—" hint="Approvals & bias signals" />
+          <StatCard label="Coming soon" value="—" hint="Bias signals & analytics" />
         </div>
       )}
 
       <div className="card text-sm text-slate-600">
-        Approval queue, bias detection signals, and department analytics are
-        coming in the next phase.
+        Bias detection signals and department analytics are coming in the next phase.
       </div>
     </div>
   );

@@ -1,11 +1,20 @@
-import { FormEvent, useMemo, useState } from 'react';
+import { Fragment, FormEvent, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useStudentClassDetail, type PeriodGrade } from '@/hooks/useStudentClassDetail';
 import { useStudentAppeals } from '@/hooks/useAppeals';
 import { supabase } from '@/lib/supabase';
 import { formatNumeric } from '@/utils/conversionTable';
 import { humanizeError } from '@/utils/errorMessage';
-import type { AppealStatus, DbAppeal, DbGradeCategory, DbGradeItem, DbScore, Period } from '@/types/database';
+import type { AttendanceSummary } from '@/types/database';
+import type {
+  AppealStatus,
+  DbAppeal,
+  DbGradeCategory,
+  DbGradeItem,
+  DbScore,
+  DbScoreComment,
+  Period,
+} from '@/types/database';
 
 export function StudentClassDetails() {
   const { classId } = useParams();
@@ -40,6 +49,8 @@ export function StudentClassDetails() {
         <GradeCard label="Final Grade" grade={data.final} primary />
       </section>
 
+      <AttendanceSummaryCard classId={data.class.id} studentId={data.studentId} />
+
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Grade Breakdown</h2>
@@ -62,6 +73,7 @@ export function StudentClassDetails() {
           categories={data.categories}
           items={data.items}
           scores={data.scores}
+          comments={data.comments}
           appeals={appeals}
           onAppealFiled={refreshAppeals}
         />
@@ -104,11 +116,97 @@ function GradeCard({
   );
 }
 
+function AttendanceSummaryCard({
+  classId,
+  studentId,
+}: {
+  classId: string;
+  studentId: string;
+}) {
+  const [summary, setSummary] = useState<AttendanceSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      const { data } = await supabase.rpc('get_attendance_summary', {
+        p_class_id: classId,
+        p_student_id: studentId,
+      });
+      if (cancelled) return;
+      setSummary((data as AttendanceSummary[] | null)?.[0] ?? null);
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [classId, studentId]);
+
+  if (loading) {
+    return (
+      <div className="card text-sm text-slate-500">Loading attendance…</div>
+    );
+  }
+  if (!summary || summary.total === 0) {
+    return (
+      <div className="card text-sm text-slate-500">
+        Your teacher hasn't recorded any attendance yet.
+      </div>
+    );
+  }
+
+  const pct = Number(summary.attendance_pct);
+  const pctColor =
+    pct >= 90
+      ? 'text-emerald-600'
+      : pct >= 75
+        ? 'text-amber-600'
+        : 'text-red-600';
+
+  return (
+    <section className="card">
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Attendance</h2>
+        <div className={`text-2xl font-bold ${pctColor}`}>{pct.toFixed(1)}%</div>
+      </div>
+      <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
+        <AttendanceStat label="Present" value={summary.present} color="text-emerald-700" />
+        <AttendanceStat label="Late" value={summary.late} color="text-amber-700" />
+        <AttendanceStat label="Absent" value={summary.absent} color="text-red-700" />
+        <AttendanceStat label="Excused" value={summary.excused} color="text-slate-700" />
+      </div>
+      <p className="mt-3 text-xs text-slate-500">
+        Total class days recorded: {summary.total}. Attendance % counts late as attended and
+        excludes excused days from the denominator.
+      </p>
+    </section>
+  );
+}
+
+function AttendanceStat({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: number;
+  color: string;
+}) {
+  return (
+    <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-center">
+      <div className="text-[10px] uppercase tracking-wide text-slate-500">{label}</div>
+      <div className={`text-xl font-bold ${color}`}>{value}</div>
+    </div>
+  );
+}
+
 function Breakdown({
   period,
   categories,
   items,
   scores,
+  comments,
   appeals,
   onAppealFiled,
 }: {
@@ -116,6 +214,7 @@ function Breakdown({
   categories: DbGradeCategory[];
   items: DbGradeItem[];
   scores: DbScore[];
+  comments: DbScoreComment[];
   appeals: DbAppeal[];
   onAppealFiled: () => void;
 }) {
@@ -172,42 +271,73 @@ function Breakdown({
                   {catItems.map((i) => {
                     const sc = scores.find((s) => s.grade_item_id === i.id);
                     const appeal = sc ? appeals.find((a) => a.score_id === sc.id) : undefined;
+                    const itemComments = comments.filter(
+                      (c) =>
+                        c.grade_item_id === i.id ||
+                        (sc && c.score_id === sc.id),
+                    );
                     return (
-                      <tr key={i.id}>
-                        <td className="py-2">{i.title}</td>
-                        <td className="py-2 text-right">
-                          {sc?.status === 'graded' && sc.score != null ? (
-                            <span>
-                              <span className="font-mono">
-                                {sc.score} / {i.max_score}
+                      <Fragment key={i.id}>
+                        <tr>
+                          <td className="py-2">{i.title}</td>
+                          <td className="py-2 text-right">
+                            {sc?.status === 'graded' && sc.score != null ? (
+                              <span>
+                                <span className="font-mono">
+                                  {sc.score} / {i.max_score}
+                                </span>
+                                <span className="ml-2 text-xs text-slate-500">
+                                  ({((Number(sc.score) / Number(i.max_score)) * 100).toFixed(0)}%)
+                                </span>
                               </span>
-                              <span className="ml-2 text-xs text-slate-500">
-                                ({((Number(sc.score) / Number(i.max_score)) * 100).toFixed(0)}%)
-                              </span>
-                            </span>
-                          ) : sc?.status === 'missing' ? (
-                            <span className="badge-danger">missing</span>
-                          ) : sc?.status === 'late' ? (
-                            <span className="badge-warning">late</span>
-                          ) : sc?.status === 'excused' ? (
-                            <span className="badge-neutral">excused</span>
-                          ) : (
-                            <span className="text-slate-400">pending</span>
-                          )}
-                        </td>
-                        <td className="py-2 pl-3 text-right">
-                          {appeal ? (
-                            <AppealBadge status={appeal.status} />
-                          ) : sc ? (
-                            <button
-                              onClick={() => setAppealing(sc)}
-                              className="text-xs font-medium text-brand-600 hover:underline"
-                            >
-                              Appeal
-                            </button>
-                          ) : null}
-                        </td>
-                      </tr>
+                            ) : sc?.status === 'missing' ? (
+                              <span className="badge-danger">missing</span>
+                            ) : sc?.status === 'late' ? (
+                              <span className="badge-warning">late</span>
+                            ) : sc?.status === 'excused' ? (
+                              <span className="badge-neutral">excused</span>
+                            ) : (
+                              <span className="text-slate-400">pending</span>
+                            )}
+                          </td>
+                          <td className="py-2 pl-3 text-right">
+                            {appeal ? (
+                              <AppealBadge status={appeal.status} />
+                            ) : sc ? (
+                              <button
+                                onClick={() => setAppealing(sc)}
+                                className="text-xs font-medium text-brand-600 hover:underline"
+                              >
+                                Appeal
+                              </button>
+                            ) : null}
+                          </td>
+                        </tr>
+                        {itemComments.length > 0 && (
+                          <tr>
+                            <td colSpan={3} className="pb-2 pl-4">
+                              <div className="space-y-1">
+                                {itemComments
+                                  .sort((a, b) => a.created_at.localeCompare(b.created_at))
+                                  .map((c) => (
+                                    <div
+                                      key={c.id}
+                                      className="rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs"
+                                    >
+                                      <div className="text-[10px] uppercase tracking-wide text-slate-500">
+                                        💬 {c.grade_item_id ? 'Note to class' : 'From your teacher'} ·{' '}
+                                        {new Date(c.created_at).toLocaleDateString()}
+                                      </div>
+                                      <div className="whitespace-pre-wrap text-slate-700">
+                                        {c.body}
+                                      </div>
+                                    </div>
+                                  ))}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </Fragment>
                     );
                   })}
                 </tbody>

@@ -14,6 +14,7 @@ import { StudentClasses } from '@/pages/student/Classes';
 import { StudentClassDetails } from '@/pages/student/ClassDetails';
 import { JoinClass } from '@/pages/student/JoinClass';
 import { StudentReports } from '@/pages/student/Reports';
+import { StudentAnalytics } from '@/pages/student/Analytics';
 
 import { TeacherDashboard } from '@/pages/teacher/Dashboard';
 import { TeacherClasses } from '@/pages/teacher/Classes';
@@ -28,8 +29,10 @@ import { AdminClasses } from '@/pages/admin/Classes';
 import { AdminAuditLogs } from '@/pages/admin/AuditLogs';
 import { AdminDepartments } from '@/pages/admin/Departments';
 import { AdminParentLinks } from '@/pages/admin/ParentLinks';
+import { AdminAppeals } from '@/pages/admin/Appeals';
 
 import { DepartmentHeadDashboard } from '@/pages/department-head/Dashboard';
+import { DepartmentHeadApprovals } from '@/pages/department-head/Approvals';
 import { ParentDashboard } from '@/pages/parent/Dashboard';
 
 export default function App() {
@@ -73,6 +76,7 @@ export default function App() {
         <Route path="classes" element={<StudentClasses />} />
         <Route path="classes/:classId" element={<StudentClassDetails />} />
         <Route path="join" element={<JoinClass />} />
+        <Route path="analytics" element={<StudentAnalytics />} />
         <Route path="reports" element={<StudentReports />} />
       </Route>
 
@@ -109,6 +113,7 @@ export default function App() {
         <Route path="subjects" element={<AdminSubjects />} />
         <Route path="classes" element={<AdminClasses />} />
         <Route path="parent-links" element={<AdminParentLinks />} />
+        <Route path="appeals" element={<AdminAppeals />} />
         <Route path="audit" element={<AdminAuditLogs />} />
       </Route>
 
@@ -123,6 +128,7 @@ export default function App() {
         }
       >
         <Route index element={<DepartmentHeadDashboard />} />
+        <Route path="approvals" element={<DepartmentHeadApprovals />} />
       </Route>
 
       <Route

@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { humanizeError } from '@/utils/errorMessage';
+import { Logo } from '@/components/Logo';
 
 export function Signup() {
   const { signUp, session, profile } = useAuth();
@@ -44,11 +45,9 @@ export function Signup() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-50 to-slate-100 px-4">
       <div className="w-full max-w-md">
-        <div className="mb-6 text-center">
-          <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-600 text-2xl font-bold text-white">
-            G
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight">Create account</h1>
+        <div className="mb-6 flex flex-col items-center text-center">
+          <Logo size="lg" />
+          <h1 className="mt-3 text-2xl font-bold tracking-tight">Create account</h1>
           <p className="text-sm text-slate-600">
             After sign-up, an admin will assign your role (student/teacher).
           </p>

@@ -3,9 +3,12 @@ import { supabase } from '@/lib/supabase';
 import { humanizeError } from '@/utils/errorMessage';
 import type {
   DbClass,
+  DbFinalizedGrade,
   DbGradeCategory,
+  DbGradeChangeRequest,
   DbGradeItem,
   DbScore,
+  DbScoreComment,
   DbSubject,
   Period,
 } from '@/types/database';
@@ -16,6 +19,9 @@ export interface ClassDetail {
   categories: DbGradeCategory[];
   items: DbGradeItem[];
   scores: DbScore[];
+  finalized: DbFinalizedGrade[];
+  pendingChangeRequests: DbGradeChangeRequest[];
+  comments: DbScoreComment[];
 }
 
 export function useClassDetail(classId: string | undefined) {
@@ -49,6 +55,8 @@ export function useClassDetail(classId: string | undefined) {
     const categoryIds = (categoriesRes.data ?? []).map((c) => c.id);
     let items: DbGradeItem[] = [];
     let scores: DbScore[] = [];
+    let pendingChangeRequests: DbGradeChangeRequest[] = [];
+    let comments: DbScoreComment[] = [];
     if (categoryIds.length > 0) {
       const itemsRes = await supabase
         .from('grade_items')
@@ -69,8 +77,48 @@ export function useClassDetail(classId: string | undefined) {
           return;
         }
         scores = scoresRes.data ?? [];
+        const scoreIds = scores.map((s) => s.id);
+        if (scoreIds.length > 0) {
+          const reqRes = await supabase
+            .from('grade_change_requests')
+            .select('*')
+            .in('score_id', scoreIds)
+            .eq('status', 'pending');
+          if (!reqRes.error) {
+            pendingChangeRequests = (reqRes.data as DbGradeChangeRequest[]) ?? [];
+          }
+        }
+        // Comments: any targeting either our scores or our items
+        const scoreCommentsP =
+          scoreIds.length > 0
+            ? supabase.from('score_comments').select('*').in('score_id', scoreIds)
+            : Promise.resolve({ data: [] as DbScoreComment[], error: null });
+        const itemCommentsP = supabase
+          .from('score_comments')
+          .select('*')
+          .in('grade_item_id', itemIds);
+        const [scoreCommentsRes, itemCommentsRes] = await Promise.all([
+          scoreCommentsP,
+          itemCommentsP,
+        ]);
+        if (!scoreCommentsRes.error) {
+          comments = comments.concat(
+            (scoreCommentsRes.data as DbScoreComment[]) ?? [],
+          );
+        }
+        if (!itemCommentsRes.error) {
+          comments = comments.concat(
+            (itemCommentsRes.data as DbScoreComment[]) ?? [],
+          );
+        }
       }
     }
+
+    const finalizedRes = await supabase
+      .from('finalized_grades')
+      .select('*')
+      .eq('class_id', classId);
+    const finalized = (finalizedRes.data as DbFinalizedGrade[] | null) ?? [];
 
     type RosterRow = {
       student_id: string;
@@ -94,6 +142,9 @@ export function useClassDetail(classId: string | undefined) {
       categories: categoriesRes.data ?? [],
       items,
       scores,
+      finalized,
+      pendingChangeRequests,
+      comments,
     });
     setLoading(false);
   }, [classId]);

@@ -28,6 +28,8 @@ export type Semester = '1st' | '2nd' | 'summer';
 export type ScoreStatus = 'graded' | 'missing' | 'late' | 'excused';
 export type AppealStatus = 'pending' | 'approved' | 'rejected';
 export type GradeChangeStatus = 'pending' | 'approved' | 'rejected';
+export type AttendanceStatus = 'present' | 'absent' | 'late' | 'excused';
+export type RiskLevel = 'low' | 'medium' | 'high';
 export type NotificationType =
   | 'grade_posted'
   | 'grade_changed'
@@ -87,6 +89,37 @@ export interface DbParentStudent {
   student_id: string;
   relationship: string | null;
   created_at: string;
+}
+
+export interface DbAttendance {
+  id: string;
+  class_id: string;
+  student_id: string;
+  attended_at: string;
+  status: AttendanceStatus;
+  remarks: string | null;
+  recorded_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AttendanceSummary {
+  total: number;
+  present: number;
+  absent: number;
+  late: number;
+  excused: number;
+  attendance_pct: number;
+}
+
+export interface DbScoreComment {
+  id: string;
+  score_id: string | null;
+  grade_item_id: string | null;
+  author_id: string;
+  body: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface DbGradeChangeRequest {
@@ -334,6 +367,23 @@ export type Database = {
         Update: Partial<DbGradeChangeRequest>;
         Relationships: [];
       };
+      score_comments: {
+        Row: DbScoreComment;
+        Insert: Partial<DbScoreComment> & { author_id: string; body: string };
+        Update: Partial<DbScoreComment>;
+        Relationships: [];
+      };
+      attendance: {
+        Row: DbAttendance;
+        Insert: Partial<DbAttendance> & {
+          class_id: string;
+          student_id: string;
+          attended_at: string;
+          status: AttendanceStatus;
+        };
+        Update: Partial<DbAttendance>;
+        Relationships: [];
+      };
     };
     Views: { [_ in never]: never };
     Functions: {
@@ -406,6 +456,34 @@ export type Database = {
           p_review_note?: string | null;
         };
         Returns: undefined;
+      };
+      get_attendance_summary: {
+        Args: { p_class_id: string; p_student_id: string };
+        Returns: AttendanceSummary[];
+      };
+      compute_cgpa: {
+        Args: { p_student_id: string };
+        Returns: number;
+      };
+      is_dean_list_eligible: {
+        Args: {
+          p_student_id: string;
+          p_school_year: string;
+          p_semester: Semester;
+        };
+        Returns: boolean;
+      };
+      compute_risk_level: {
+        Args: { p_student_id: string; p_class_id?: string | null };
+        Returns: RiskLevel;
+      };
+      count_high_risk_students: {
+        Args: Record<string, never>;
+        Returns: number;
+      };
+      count_deans_list_current_term: {
+        Args: Record<string, never>;
+        Returns: number;
       };
       get_audit_logs: {
         Args: {

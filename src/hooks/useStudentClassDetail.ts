@@ -7,6 +7,7 @@ import type {
   DbGradeCategory,
   DbGradeItem,
   DbScore,
+  DbScoreComment,
   DbSubject,
   Period,
 } from '@/types/database';
@@ -22,6 +23,7 @@ export interface StudentClassDetail {
   categories: DbGradeCategory[];
   items: DbGradeItem[];
   scores: DbScore[];
+  comments: DbScoreComment[];
   midterm: PeriodGrade;
   finals: PeriodGrade;
   final: PeriodGrade;
@@ -73,6 +75,7 @@ export function useStudentClassDetail(classId: string | undefined) {
     const categoryIds = (categoriesRes.data ?? []).map((c) => c.id);
     let items: DbGradeItem[] = [];
     let scores: DbScore[] = [];
+    let comments: DbScoreComment[] = [];
     if (categoryIds.length > 0) {
       const itemsRes = await supabase
         .from('grade_items')
@@ -98,6 +101,24 @@ export function useStudentClassDetail(classId: string | undefined) {
           return;
         }
         scores = scoresRes.data ?? [];
+        const scoreIds = scores.map((s) => s.id);
+        const itemIds = items.map((i) => i.id);
+        const [scoreCommentsRes, itemCommentsRes] = await Promise.all([
+          scoreIds.length > 0
+            ? supabase.from('score_comments').select('*').in('score_id', scoreIds)
+            : Promise.resolve({ data: [] as DbScoreComment[], error: null }),
+          supabase.from('score_comments').select('*').in('grade_item_id', itemIds),
+        ]);
+        if (!scoreCommentsRes.error) {
+          comments = comments.concat(
+            (scoreCommentsRes.data as DbScoreComment[]) ?? [],
+          );
+        }
+        if (!itemCommentsRes.error) {
+          comments = comments.concat(
+            (itemCommentsRes.data as DbScoreComment[]) ?? [],
+          );
+        }
       }
     }
 
@@ -112,6 +133,7 @@ export function useStudentClassDetail(classId: string | undefined) {
       categories: categoriesRes.data ?? [],
       items,
       scores,
+      comments,
       midterm: mid,
       finals: fin,
       final,
@@ -133,6 +155,9 @@ export function useStudentClassDetail(classId: string | undefined) {
         void fetchAll();
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'grade_items' }, () => {
+        void fetchAll();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'score_comments' }, () => {
         void fetchAll();
       })
       .subscribe();

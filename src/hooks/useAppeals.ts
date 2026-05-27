@@ -88,6 +88,98 @@ export function useClassAppeals(classId: string | undefined) {
 }
 
 /**
+ * Fetch ALL appeals system-wide for the admin view.
+ */
+export interface AdminAppealRow extends AppealRow {
+  subject_code: string;
+  subject_title: string;
+  teacher_name: string;
+}
+
+export function useAllAppeals() {
+  const [appeals, setAppeals] = useState<AdminAppealRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchAll = useCallback(async () => {
+    setLoading(true);
+    const { data, error: err } = await supabase
+      .from('appeals')
+      .select(
+        `*,
+        student:students(student_no, user:users(full_name)),
+        score:scores(
+          score,
+          item:grade_items(
+            title, max_score,
+            category:grade_categories(
+              class_id,
+              class:classes(
+                subject:subjects(code, title),
+                teacher:teachers(user:users(full_name))
+              )
+            )
+          )
+        )`,
+      )
+      .order('created_at', { ascending: false });
+    setLoading(false);
+    if (err) {
+      setError(humanizeError(err));
+      return;
+    }
+    type Row = DbAppeal & {
+      student: { student_no: string | null; user: { full_name: string } };
+      score: {
+        score: number | null;
+        item: {
+          title: string;
+          max_score: number;
+          category: {
+            class_id: string;
+            class: {
+              subject: { code: string; title: string } | null;
+              teacher: { user: { full_name: string } | null } | null;
+            } | null;
+          };
+        };
+      };
+    };
+    const rows = ((data as Row[] | null) ?? []).map<AdminAppealRow>((r) => ({
+      ...r,
+      student_name: r.student.user.full_name,
+      student_no: r.student.student_no,
+      item_title: r.score.item.title,
+      score_value: r.score.score,
+      max_score: r.score.item.max_score,
+      class_id: r.score.item.category.class_id,
+      subject_code: r.score.item.category.class?.subject?.code ?? '—',
+      subject_title: r.score.item.category.class?.subject?.title ?? '—',
+      teacher_name: r.score.item.category.class?.teacher?.user?.full_name ?? '—',
+    }));
+    setAppeals(rows);
+  }, []);
+
+  useEffect(() => {
+    void fetchAll();
+  }, [fetchAll]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('appeals-admin')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'appeals' }, () => {
+        void fetchAll();
+      })
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [fetchAll]);
+
+  return { appeals, loading, error, refresh: fetchAll };
+}
+
+/**
  * Fetch the student's own appeals (used to show status next to each score).
  */
 export function useStudentAppeals(classId: string | undefined) {

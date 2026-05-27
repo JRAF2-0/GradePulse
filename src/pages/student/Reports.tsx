@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 import { useStudentClasses } from '@/hooks/useStudentClasses';
@@ -7,10 +7,12 @@ import { downloadPdf } from '@/utils/pdfExport';
 import { formatNumeric } from '@/utils/conversionTable';
 import { humanizeError } from '@/utils/errorMessage';
 import type {
+  DbFinalizedGrade,
   DbGradeCategory,
   DbGradeItem,
   DbScore,
   Period,
+  Semester,
 } from '@/types/database';
 
 interface PeriodGradeRow {
@@ -257,13 +259,15 @@ export function StudentReports() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-bold">Reports</h1>
         <p className="text-sm text-slate-600">
-          Download your grade summary as CSV or PDF.
+          Download a grade summary for one class, or a full semester transcript.
         </p>
       </header>
+
+      <TranscriptSection />
 
       <div className="card space-y-3">
         <div>
@@ -332,6 +336,301 @@ function SummaryStat({
       <div className="text-xs uppercase tracking-wide text-slate-500">{label}</div>
       <div className="mt-1 text-xl font-bold">{pct.toFixed(2)}%</div>
       <div className="text-xs text-slate-600">{remarks}</div>
+    </div>
+  );
+}
+
+interface TranscriptClass {
+  classId: string;
+  subjectCode: string;
+  subjectTitle: string;
+  units: number;
+  finalPercentage: number;
+  finalNumeric: number;
+  remarks: string;
+  finalized: boolean;
+}
+
+function TranscriptSection() {
+  const { profile, user } = useAuth();
+  const { classes, loading: classesLoading } = useStudentClasses();
+  const [studentId, setStudentId] = useState<string | null>(null);
+  const [studentNo, setStudentNo] = useState<string | null>(null);
+  const [studentCourse, setStudentCourse] = useState<string | null>(null);
+  const [termKey, setTermKey] = useState<string>('');
+  const [rows, setRows] = useState<TranscriptClass[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [deansList, setDeansList] = useState(false);
+
+  // Build unique term options from the student's classes
+  const termOptions = useMemo(() => {
+    const seen = new Map<string, { year: string; sem: Semester }>();
+    for (const c of classes) {
+      const key = `${c.school_year}__${c.semester}`;
+      if (!seen.has(key)) {
+        seen.set(key, { year: c.school_year, sem: c.semester as Semester });
+      }
+    }
+    return Array.from(seen.entries()).map(([key, v]) => ({
+      key,
+      ...v,
+      label: `${v.sem} · ${v.year}`,
+    }));
+  }, [classes]);
+
+  useEffect(() => {
+    if (!user) return;
+    void (async () => {
+      const { data } = await supabase
+        .from('students')
+        .select('id, student_no, course')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      const row = data as
+        | { id: string; student_no: string | null; course: string | null }
+        | null;
+      setStudentId(row?.id ?? null);
+      setStudentNo(row?.student_no ?? null);
+      setStudentCourse(row?.course ?? null);
+    })();
+  }, [user]);
+
+  useEffect(() => {
+    if (!termKey || !studentId) {
+      setRows([]);
+      setDeansList(false);
+      return;
+    }
+    const term = termOptions.find((t) => t.key === termKey);
+    if (!term) return;
+
+    void (async () => {
+      setLoading(true);
+      setError(null);
+      // Pull all of the student's classes for this term
+      const termClasses = classes.filter(
+        (c) => c.school_year === term.year && c.semester === term.sem,
+      );
+      // For each class, get final percentage + numeric grade + units. Prefer
+      // finalized_grades when available; otherwise fall back to live
+      // compute_final_grade so the transcript is at least informative.
+      const classIds = termClasses.map((c) => c.id);
+      const { data: finalsRows } = await supabase
+        .from('finalized_grades')
+        .select('class_id, period, percentage, numeric_grade, remarks')
+        .in('class_id', classIds.length ? classIds : ['00000000-0000-0000-0000-000000000000'])
+        .eq('student_id', studentId)
+        .eq('period', 'finals');
+      const finalsByClass = new Map<string, DbFinalizedGrade>();
+      for (const r of (finalsRows as DbFinalizedGrade[]) ?? []) {
+        finalsByClass.set(r.class_id, r);
+      }
+
+      const out: TranscriptClass[] = [];
+      for (const c of termClasses) {
+        const fin = finalsByClass.get(c.id);
+        if (fin) {
+          out.push({
+            classId: c.id,
+            subjectCode: c.subject.code,
+            subjectTitle: c.subject.title,
+            units: Number(c.subject.units ?? 3),
+            finalPercentage: Number(fin.percentage),
+            finalNumeric: Number(fin.numeric_grade),
+            remarks: fin.remarks,
+            finalized: true,
+          });
+        } else {
+          // fall back to live computation
+          const { data } = await supabase.rpc('compute_final_grade', {
+            p_class_id: c.id,
+            p_student_id: studentId,
+          });
+          const row = Array.isArray(data) && data.length > 0 ? (data[0] as PeriodGradeRow) : null;
+          out.push({
+            classId: c.id,
+            subjectCode: c.subject.code,
+            subjectTitle: c.subject.title,
+            units: Number(c.subject.units ?? 3),
+            finalPercentage: row ? Number(row.percentage) : 0,
+            finalNumeric: row ? Number(row.numeric_grade) : 5.0,
+            remarks: row?.remarks ?? 'No grades yet',
+            finalized: false,
+          });
+        }
+      }
+      setRows(out);
+
+      const { data: ok } = await supabase.rpc('is_dean_list_eligible', {
+        p_student_id: studentId,
+        p_school_year: term.year,
+        p_semester: term.sem,
+      });
+      setDeansList(Boolean(ok));
+      setLoading(false);
+    })();
+  }, [termKey, studentId, termOptions, classes]);
+
+  const totalUnits = rows.reduce((s, r) => s + r.units, 0);
+  const weightedGpa =
+    totalUnits > 0
+      ? rows.reduce((s, r) => s + r.finalNumeric * r.units, 0) / totalUnits
+      : 0;
+
+  const downloadTranscript = () => {
+    if (!profile) return;
+    const term = termOptions.find((t) => t.key === termKey);
+    if (!term) return;
+
+    const allFinalized = rows.every((r) => r.finalized);
+
+    downloadPdf({
+      title: 'Semester Transcript',
+      subtitle: `${term.sem} · ${term.year}`,
+      meta: [
+        { label: 'Student', value: profile.full_name },
+        { label: 'Student #', value: studentNo ?? '—' },
+        { label: 'Course', value: studentCourse ?? '—' },
+        {
+          label: 'Status',
+          value: deansList
+            ? "🏅 Dean's List"
+            : allFinalized
+              ? 'Finalized'
+              : 'In-progress (some classes not yet finalized)',
+        },
+      ],
+      sections: [
+        {
+          title: 'Subjects',
+          head: [['Code', 'Title', 'Units', 'Final %', 'Equiv.', 'Remarks']],
+          body: rows.map((r) => [
+            r.subjectCode,
+            r.subjectTitle,
+            r.units.toFixed(1),
+            `${r.finalPercentage.toFixed(2)}%`,
+            formatNumeric(r.finalNumeric),
+            r.finalized ? r.remarks : `${r.remarks} (provisional)`,
+          ]),
+        },
+        {
+          title: 'Summary',
+          head: [['Total Units', 'Weighted GPA', "Dean's List"]],
+          body: [
+            [
+              totalUnits.toFixed(1),
+              formatNumeric(weightedGpa),
+              deansList ? 'Yes' : 'No',
+            ],
+          ],
+        },
+      ],
+      filename: `gradepulse_transcript_${term.year}_${term.sem}_${profile.full_name.replace(/\s+/g, '_')}`,
+    });
+  };
+
+  return (
+    <div className="card space-y-3">
+      <div>
+        <h2 className="text-lg font-semibold">Semester Transcript</h2>
+        <p className="text-xs text-slate-500">
+          A full grade summary for one term — every class, final grade, units, weighted GPA,
+          and Dean's List eligibility.
+        </p>
+      </div>
+
+      <div>
+        <label className="label">Term</label>
+        {classesLoading ? (
+          <p className="text-sm text-slate-500">Loading…</p>
+        ) : termOptions.length === 0 ? (
+          <p className="text-sm text-slate-500">No classes joined yet.</p>
+        ) : (
+          <select
+            className="input"
+            value={termKey}
+            onChange={(e) => setTermKey(e.target.value)}
+          >
+            <option value="">— select —</option>
+            {termOptions.map((t) => (
+              <option key={t.key} value={t.key}>
+                {t.label}
+              </option>
+            ))}
+          </select>
+        )}
+      </div>
+
+      {error && (
+        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+      )}
+
+      {loading && <p className="text-sm text-slate-500">Building transcript…</p>}
+
+      {!loading && termKey && rows.length > 0 && (
+        <>
+          <div className="overflow-x-auto rounded-md border border-slate-200">
+            <table className="min-w-full divide-y divide-slate-200 text-sm">
+              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                <tr>
+                  <th className="px-3 py-2">Code</th>
+                  <th className="px-3 py-2">Title</th>
+                  <th className="px-3 py-2 text-right">Units</th>
+                  <th className="px-3 py-2 text-right">Final %</th>
+                  <th className="px-3 py-2 text-right">Equiv.</th>
+                  <th className="px-3 py-2">Remarks</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {rows.map((r) => (
+                  <tr key={r.classId}>
+                    <td className="px-3 py-2 font-mono text-xs uppercase text-slate-500">
+                      {r.subjectCode}
+                    </td>
+                    <td className="px-3 py-2">{r.subjectTitle}</td>
+                    <td className="px-3 py-2 text-right">{r.units.toFixed(1)}</td>
+                    <td className="px-3 py-2 text-right">{r.finalPercentage.toFixed(2)}%</td>
+                    <td className="px-3 py-2 text-right font-mono">
+                      {formatNumeric(r.finalNumeric)}
+                    </td>
+                    <td className="px-3 py-2 text-xs">
+                      {r.remarks}
+                      {!r.finalized && (
+                        <span className="ml-1 text-amber-700">(provisional)</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+                <tr className="bg-slate-50 font-semibold">
+                  <td colSpan={2} className="px-3 py-2">
+                    Total / Weighted GPA
+                  </td>
+                  <td className="px-3 py-2 text-right">{totalUnits.toFixed(1)}</td>
+                  <td></td>
+                  <td className="px-3 py-2 text-right font-mono">
+                    {formatNumeric(weightedGpa)}
+                  </td>
+                  <td className="px-3 py-2 text-xs">
+                    {deansList && (
+                      <span className="badge-success">🏅 Dean's List</span>
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-end">
+            <button onClick={downloadTranscript} className="btn-primary">
+              Download Transcript PDF
+            </button>
+          </div>
+        </>
+      )}
+
+      {!loading && termKey && rows.length === 0 && (
+        <p className="text-sm text-slate-500">No classes found for this term.</p>
+      )}
     </div>
   );
 }
