@@ -88,8 +88,8 @@ export function AdminParentLinks() {
     <div className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Parent ↔ Student Links</h1>
-          <p className="text-sm text-slate-600">
+          <h1 className="text-3xl font-bold tracking-tight">Parent ↔ Student Links</h1>
+          <p className="text-sm text-content-muted">
             Link a parent account to one or more students so they can view their
             children's grades.
           </p>
@@ -111,12 +111,12 @@ export function AdminParentLinks() {
       </header>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
       <div className="card overflow-x-auto p-0">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <table className="min-w-full divide-y divide-line text-sm">
+          <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
             <tr>
               <th className="px-4 py-2">Parent</th>
               <th className="px-4 py-2">Student</th>
@@ -125,16 +125,16 @@ export function AdminParentLinks() {
               <th className="px-4 py-2"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-line">
             {loading ? (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={5} className="px-4 py-6 text-center text-content-subtle">
                   Loading…
                 </td>
               </tr>
             ) : links.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={5} className="px-4 py-6 text-center text-content-subtle">
                   No parent links yet.
                 </td>
               </tr>
@@ -143,13 +143,13 @@ export function AdminParentLinks() {
                 <tr key={l.id}>
                   <td className="px-4 py-2">
                     <div className="font-medium">{l.parent?.full_name}</div>
-                    <div className="text-xs text-slate-500">{l.parent?.email}</div>
+                    <div className="text-xs text-content-subtle">{l.parent?.email}</div>
                   </td>
                   <td className="px-4 py-2 font-medium">
                     {l.student?.user?.full_name ?? '—'}
                   </td>
-                  <td className="px-4 py-2 text-slate-600">{l.relationship ?? '—'}</td>
-                  <td className="px-4 py-2 text-slate-500">
+                  <td className="px-4 py-2 text-content-muted">{l.relationship ?? '—'}</td>
+                  <td className="px-4 py-2 text-content-subtle">
                     {new Date(l.created_at).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-2 text-right">
@@ -225,11 +225,11 @@ function NewLinkModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">Link parent to student</h3>
         {error && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
         )}
         <div>
           <label className="label">Parent</label>

@@ -51,17 +51,16 @@ export function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-50 to-slate-100 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-app bg-gradient-to-br from-brand-500/10 via-app to-app px-4">
       <div className="w-full max-w-md">
         <div className="mb-6 flex flex-col items-center text-center">
-          <Logo size="lg" />
-          <h1 className="mt-3 text-2xl font-bold tracking-tight">GradePulse</h1>
-          <p className="text-sm text-slate-600">Real-time academic transparency</p>
+          <Logo full size="lg" />
+          <p className="mt-3 text-base text-content-muted">Real-time academic transparency</p>
         </div>
         <form onSubmit={onSubmit} className="card space-y-4">
           <h2 className="text-lg font-semibold">Sign in</h2>
           {error && (
-            <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+            <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
           )}
           <div>
             <label className="label">Email</label>
@@ -89,7 +88,7 @@ export function Login() {
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
-                className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 hover:text-slate-700"
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-content-subtle hover:text-content-muted"
               >
                 {showPassword ? (
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" className="h-5 w-5">

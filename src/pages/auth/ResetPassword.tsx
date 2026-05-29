@@ -22,18 +22,18 @@ export function ResetPassword() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-50 to-slate-100 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-app bg-gradient-to-br from-brand-500/10 via-app to-app px-4">
       <div className="w-full max-w-md">
         <form onSubmit={onSubmit} className="card space-y-4">
           <h2 className="text-lg font-semibold">Reset password</h2>
           {done ? (
-            <p className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+            <p className="rounded-md bg-emerald-500/10 px-3 py-2 text-sm text-emerald-600 dark:text-emerald-300">
               Check your email for a reset link.
             </p>
           ) : (
             <>
               {error && (
-                <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+                <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">
                   {error}
                 </div>
               )}

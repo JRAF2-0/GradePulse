@@ -31,14 +31,14 @@ export function JoinClass() {
   return (
     <div className="mx-auto max-w-md space-y-4">
       <header>
-        <h1 className="text-2xl font-bold">Join a Class</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-bold tracking-tight">Join a Class</h1>
+        <p className="text-sm text-content-muted">
           Enter the 6-character class code your teacher gave you.
         </p>
       </header>
       <form onSubmit={onSubmit} className="card space-y-4">
         {error && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
         )}
         <div>
           <label className="label">Class code</label>

@@ -165,17 +165,17 @@ export function TeacherReports() {
   return (
     <div className="space-y-4">
       <header>
-        <h1 className="text-2xl font-bold">Reports</h1>
-        <p className="text-sm text-slate-600">Export class grades as CSV or PDF.</p>
+        <h1 className="text-3xl font-bold tracking-tight">Reports</h1>
+        <p className="text-sm text-content-muted">Export class grades as CSV or PDF.</p>
       </header>
 
       <div className="card space-y-3">
         <div>
           <label className="label">Pick a class</label>
           {classesLoading ? (
-            <p className="text-sm text-slate-500">Loading…</p>
+            <p className="text-sm text-content-subtle">Loading…</p>
           ) : classes.length === 0 ? (
-            <p className="text-sm text-slate-500">No classes yet.</p>
+            <p className="text-sm text-content-subtle">No classes yet.</p>
           ) : (
             <select
               className="input"
@@ -193,7 +193,7 @@ export function TeacherReports() {
         </div>
 
         {(loading || computing) && classId && (
-          <p className="text-sm text-slate-500">Computing grades…</p>
+          <p className="text-sm text-content-subtle">Computing grades…</p>
         )}
 
         {data && !computing && klass && (
@@ -219,9 +219,9 @@ export function TeacherReports() {
 
 function Preview({ data, computed }: { data: ClassDetail; computed: ComputedRow[] }) {
   return (
-    <div className="overflow-x-auto rounded-md ring-1 ring-slate-200">
-      <table className="min-w-full divide-y divide-slate-200 text-xs">
-        <thead className="bg-slate-50 text-left uppercase tracking-wide text-slate-500">
+    <div className="overflow-x-auto rounded-md ring-1 ring-line">
+      <table className="min-w-full divide-y divide-line text-xs">
+        <thead className="bg-surface-2 text-left uppercase tracking-wide text-content-subtle">
           <tr>
             <th className="px-3 py-2">Student</th>
             <th className="px-3 py-2 text-right">Midterm</th>
@@ -231,10 +231,10 @@ function Preview({ data, computed }: { data: ClassDetail; computed: ComputedRow[
             <th className="px-3 py-2">Remarks</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-line">
           {computed.length === 0 ? (
             <tr>
-              <td colSpan={6} className="px-3 py-4 text-center text-slate-500">
+              <td colSpan={6} className="px-3 py-4 text-center text-content-subtle">
                 {data.roster.length === 0 ? 'No students enrolled.' : 'No grades yet.'}
               </td>
             </tr>

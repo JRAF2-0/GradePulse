@@ -115,48 +115,48 @@ export function StudentDashboard() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-sm text-slate-600">Your grade overview across all classes.</p>
+        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-sm text-content-muted">Your grade overview across all classes.</p>
       </header>
 
       <section className="grid gap-4 md:grid-cols-4">
         <div className="card">
-          <div className="text-xs uppercase tracking-wide text-slate-500">Classes</div>
+          <div className="text-xs uppercase tracking-wide text-content-subtle">Classes</div>
           <div className="mt-1 text-3xl font-bold">{classes.length}</div>
         </div>
         <div className="card">
-          <div className="text-xs uppercase tracking-wide text-slate-500">Overall Average</div>
+          <div className="text-xs uppercase tracking-wide text-content-subtle">Overall Average</div>
           <div className="mt-1 text-3xl font-bold">{overallAverage.toFixed(2)}%</div>
         </div>
         <div className="card">
-          <div className="text-xs uppercase tracking-wide text-slate-500">CGPA</div>
+          <div className="text-xs uppercase tracking-wide text-content-subtle">CGPA</div>
           <div className="mt-1 flex items-baseline gap-2">
             <span className="text-3xl font-bold">
               {cgpa != null && cgpa > 0 ? cgpa.toFixed(2) : '—'}
             </span>
             {cgpa != null && cgpa > 0 && (
-              <span className="text-xs text-slate-500">PH scale</span>
+              <span className="text-xs text-content-subtle">PH scale</span>
             )}
           </div>
           {deansList && (
             <div className="mt-1">
               <span className="badge-success">🏅 Dean's List</span>
-              <span className="ml-1 text-[10px] text-slate-500">
+              <span className="ml-1 text-xs text-content-subtle">
                 ({deansList.sem} · {deansList.year})
               </span>
             </div>
           )}
         </div>
         <div className="card">
-          <div className="text-xs uppercase tracking-wide text-slate-500">Risk Level</div>
+          <div className="text-xs uppercase tracking-wide text-content-subtle">Risk Level</div>
           <div className="mt-2">
             {risk ? (
               <RiskBadge level={risk} />
             ) : (
-              <span className="text-sm text-slate-400">Calculating…</span>
+              <span className="text-sm text-content-subtle">Calculating…</span>
             )}
           </div>
-          <div className="mt-1 text-[10px] text-slate-500">
+          <div className="mt-1 text-xs text-content-subtle">
             Based on grades + attendance
           </div>
         </div>
@@ -164,7 +164,7 @@ export function StudentDashboard() {
 
       <section className="card">
         <div className="flex items-center justify-between">
-          <div className="text-xs uppercase tracking-wide text-slate-500">Status</div>
+          <div className="text-xs uppercase tracking-wide text-content-subtle">Status</div>
           <Link
             to="/student/analytics"
             className="text-xs font-medium text-brand-600 hover:underline"
@@ -196,15 +196,15 @@ export function StudentDashboard() {
       <section>
         <h2 className="mb-3 text-lg font-semibold">My Classes</h2>
         {loading || computing ? (
-          <div className="card text-sm text-slate-500">Loading…</div>
+          <div className="card text-sm text-content-subtle">Loading…</div>
         ) : classes.length === 0 ? (
-          <div className="card text-sm text-slate-500">
+          <div className="card text-sm text-content-subtle">
             You haven't joined any class. Go to <Link className="text-brand-600 underline" to="/student/join">Join Class</Link>.
           </div>
         ) : (
           <div className="card overflow-x-auto p-0">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+            <table className="min-w-full divide-y divide-line text-sm">
+              <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
                 <tr>
                   <th className="px-4 py-2">Subject</th>
                   <th className="px-4 py-2 text-right">Midterm</th>
@@ -214,15 +214,15 @@ export function StudentDashboard() {
                   <th className="px-4 py-2 text-right">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-line">
                 {rows.map((r) => (
-                  <tr key={r.classId} className="hover:bg-slate-50">
+                  <tr key={r.classId} className="hover:bg-surface-3">
                     <td className="px-4 py-3">
                       <Link
                         to={`/student/classes/${r.classId}`}
                         className="block font-medium hover:text-brand-700"
                       >
-                        <div className="font-mono text-xs uppercase text-slate-500">
+                        <div className="font-mono text-xs uppercase text-content-subtle">
                           {r.code}
                         </div>
                         {r.title}

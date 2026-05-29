@@ -45,8 +45,8 @@ export function StudentClasses() {
     <div className="space-y-4">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">My Classes</h1>
-          <p className="text-sm text-slate-600">Classes you're enrolled in.</p>
+          <h1 className="text-3xl font-bold tracking-tight">My Classes</h1>
+          <p className="text-sm text-content-muted">Classes you're enrolled in.</p>
         </div>
         <Link to="/student/join" className="btn-primary">
           + Join Class
@@ -54,13 +54,13 @@ export function StudentClasses() {
       </header>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
       {loading ? (
-        <div className="card text-center text-sm text-slate-500">Loading…</div>
+        <div className="card text-center text-sm text-content-subtle">Loading…</div>
       ) : classes.length === 0 ? (
-        <div className="card text-center text-sm text-slate-500">
+        <div className="card text-center text-sm text-content-subtle">
           You haven't joined any class yet.
         </div>
       ) : (
@@ -68,11 +68,11 @@ export function StudentClasses() {
           {classes.map((c) => (
             <div key={c.id} className="card relative transition hover:shadow-md">
               <Link to={`/student/classes/${c.id}`} className="block">
-                <div className="font-mono text-xs uppercase text-slate-500">
+                <div className="font-mono text-xs uppercase text-content-subtle">
                   {c.subject.code}
                 </div>
                 <h3 className="text-lg font-semibold">{c.subject.title}</h3>
-                <div className="mt-2 space-y-1 text-sm text-slate-600">
+                <div className="mt-2 space-y-1 text-sm text-content-muted">
                   <div>Teacher: {c.teacher_name}</div>
                   <div>Section: {c.section ?? '—'}</div>
                   <div>
@@ -80,7 +80,7 @@ export function StudentClasses() {
                   </div>
                 </div>
               </Link>
-              <div className="mt-3 border-t border-slate-100 pt-3 text-right">
+              <div className="mt-3 border-t border-line pt-3 text-right">
                 <button
                   onClick={(e: MouseEvent) => {
                     e.preventDefault();
@@ -98,16 +98,16 @@ export function StudentClasses() {
       )}
 
       {leaving && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
           <div className="card w-full max-w-md space-y-4">
             <h3 className="text-lg font-semibold">Leave class?</h3>
-            <p className="text-sm text-slate-700">
+            <p className="text-sm text-content-muted">
               You'll be removed from <strong>{leaving.subject.code} — {leaving.subject.title}</strong>.
               Your existing grade records stay in the audit log, but you'll lose access to
               this class's grades. You can rejoin if you still have the class code.
             </p>
             {actionError && (
-              <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+              <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">
                 {actionError}
               </div>
             )}

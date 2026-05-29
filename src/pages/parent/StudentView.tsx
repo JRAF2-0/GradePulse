@@ -157,14 +157,14 @@ export function ParentStudentView() {
     };
   }, [studentId]);
 
-  if (loading) return <div className="card text-sm text-slate-500">Loading…</div>;
+  if (loading) return <div className="card text-sm text-content-subtle">Loading…</div>;
   if (error)
     return (
       <div className="space-y-3">
         <Link to="/parent" className="text-sm text-brand-600 hover:underline">
           ← Back to children
         </Link>
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       </div>
     );
   if (!child) return null;
@@ -179,8 +179,8 @@ export function ParentStudentView() {
 
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{child.full_name}</h1>
-          <div className="mt-1 text-sm text-slate-600">
+          <h1 className="text-3xl font-bold tracking-tight">{child.full_name}</h1>
+          <div className="mt-1 text-sm text-content-muted">
             {child.student_no && <span>{child.student_no} · </span>}
             {child.course ?? '—'}
             {child.year_level ? ` · Year ${child.year_level}` : ''}
@@ -189,8 +189,8 @@ export function ParentStudentView() {
         </div>
         <div className="flex items-center gap-4">
           <div className="text-right">
-            <div className="text-xs uppercase tracking-wide text-slate-500">CGPA</div>
-            <div className="text-2xl font-bold">
+            <div className="text-xs uppercase tracking-wide text-content-subtle">CGPA</div>
+            <div className="text-3xl font-bold tracking-tight">
               {cgpa != null && cgpa > 0 ? cgpa.toFixed(2) : '—'}
             </div>
           </div>
@@ -201,13 +201,13 @@ export function ParentStudentView() {
       <section>
         <h2 className="mb-3 text-lg font-semibold">Classes</h2>
         {classes.length === 0 ? (
-          <div className="card text-sm text-slate-500">
+          <div className="card text-sm text-content-subtle">
             This student isn't enrolled in any classes yet.
           </div>
         ) : (
           <div className="card overflow-x-auto p-0">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+            <table className="min-w-full divide-y divide-line text-sm">
+              <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
                 <tr>
                   <th className="px-4 py-2">Subject</th>
                   <th className="px-4 py-2">Term</th>
@@ -217,16 +217,16 @@ export function ParentStudentView() {
                   <th className="px-4 py-2 text-right">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-line">
                 {classes.map((c) => (
                   <tr key={c.classId}>
                     <td className="px-4 py-3">
-                      <div className="font-mono text-xs uppercase text-slate-500">
+                      <div className="font-mono text-xs uppercase text-content-subtle">
                         {c.code}
                       </div>
                       <div className="font-medium">{c.title}</div>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">
+                    <td className="px-4 py-3 text-content-muted">
                       {c.semester} · {c.schoolYear}
                       {c.section ? ` · ${c.section}` : ''}
                     </td>
@@ -250,7 +250,7 @@ export function ParentStudentView() {
                           {c.attendancePct.toFixed(0)}%
                         </span>
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-content-subtle">—</span>
                       )}
                     </td>
                     <td className="px-4 py-3 text-right">
@@ -276,7 +276,7 @@ export function ParentStudentView() {
         )}
       </section>
 
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-content-subtle">
         You're viewing read-only data for your linked student. Final grades reflect published
         scores; attendance % counts late as attended and excludes excused days.
       </p>

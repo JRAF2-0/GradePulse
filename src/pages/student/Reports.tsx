@@ -261,8 +261,8 @@ export function StudentReports() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold">Reports</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-bold tracking-tight">Reports</h1>
+        <p className="text-sm text-content-muted">
           Download a grade summary for one class, or a full semester transcript.
         </p>
       </header>
@@ -273,9 +273,9 @@ export function StudentReports() {
         <div>
           <label className="label">Pick a class</label>
           {loading ? (
-            <p className="text-sm text-slate-500">Loading…</p>
+            <p className="text-sm text-content-subtle">Loading…</p>
           ) : classes.length === 0 ? (
-            <p className="text-sm text-slate-500">You're not enrolled in any class yet.</p>
+            <p className="text-sm text-content-subtle">You're not enrolled in any class yet.</p>
           ) : (
             <select
               className="input"
@@ -293,10 +293,10 @@ export function StudentReports() {
         </div>
 
         {error && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
         )}
 
-        {busy && <p className="text-sm text-slate-500">Loading report data…</p>}
+        {busy && <p className="text-sm text-content-subtle">Loading report data…</p>}
 
         {data && !busy && (
           <>
@@ -332,10 +332,10 @@ function SummaryStat({
   primary?: boolean;
 }) {
   return (
-    <div className={`rounded-md p-3 ring-1 ${primary ? 'bg-brand-50 ring-brand-200' : 'bg-slate-50 ring-slate-200'}`}>
-      <div className="text-xs uppercase tracking-wide text-slate-500">{label}</div>
+    <div className={`rounded-md p-3 ring-1 ${primary ? 'bg-brand-500/10 ring-brand-500/30' : 'bg-surface-2 ring-line'}`}>
+      <div className="text-xs uppercase tracking-wide text-content-subtle">{label}</div>
       <div className="mt-1 text-xl font-bold">{pct.toFixed(2)}%</div>
-      <div className="text-xs text-slate-600">{remarks}</div>
+      <div className="text-xs text-content-muted">{remarks}</div>
     </div>
   );
 }
@@ -534,7 +534,7 @@ function TranscriptSection() {
     <div className="card space-y-3">
       <div>
         <h2 className="text-lg font-semibold">Semester Transcript</h2>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-content-subtle">
           A full grade summary for one term — every class, final grade, units, weighted GPA,
           and Dean's List eligibility.
         </p>
@@ -543,9 +543,9 @@ function TranscriptSection() {
       <div>
         <label className="label">Term</label>
         {classesLoading ? (
-          <p className="text-sm text-slate-500">Loading…</p>
+          <p className="text-sm text-content-subtle">Loading…</p>
         ) : termOptions.length === 0 ? (
-          <p className="text-sm text-slate-500">No classes joined yet.</p>
+          <p className="text-sm text-content-subtle">No classes joined yet.</p>
         ) : (
           <select
             className="input"
@@ -563,16 +563,16 @@ function TranscriptSection() {
       </div>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
-      {loading && <p className="text-sm text-slate-500">Building transcript…</p>}
+      {loading && <p className="text-sm text-content-subtle">Building transcript…</p>}
 
       {!loading && termKey && rows.length > 0 && (
         <>
-          <div className="overflow-x-auto rounded-md border border-slate-200">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+          <div className="overflow-x-auto rounded-md border border-line">
+            <table className="min-w-full divide-y divide-line text-sm">
+              <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
                 <tr>
                   <th className="px-3 py-2">Code</th>
                   <th className="px-3 py-2">Title</th>
@@ -582,10 +582,10 @@ function TranscriptSection() {
                   <th className="px-3 py-2">Remarks</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-line">
                 {rows.map((r) => (
                   <tr key={r.classId}>
-                    <td className="px-3 py-2 font-mono text-xs uppercase text-slate-500">
+                    <td className="px-3 py-2 font-mono text-xs uppercase text-content-subtle">
                       {r.subjectCode}
                     </td>
                     <td className="px-3 py-2">{r.subjectTitle}</td>
@@ -602,7 +602,7 @@ function TranscriptSection() {
                     </td>
                   </tr>
                 ))}
-                <tr className="bg-slate-50 font-semibold">
+                <tr className="bg-surface-2 font-semibold">
                   <td colSpan={2} className="px-3 py-2">
                     Total / Weighted GPA
                   </td>
@@ -629,7 +629,7 @@ function TranscriptSection() {
       )}
 
       {!loading && termKey && rows.length === 0 && (
-        <p className="text-sm text-slate-500">No classes found for this term.</p>
+        <p className="text-sm text-content-subtle">No classes found for this term.</p>
       )}
     </div>
   );

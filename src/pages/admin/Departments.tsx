@@ -46,8 +46,8 @@ export function AdminDepartments() {
     <div className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Departments</h1>
-          <p className="text-sm text-slate-600">
+          <h1 className="text-3xl font-bold tracking-tight">Departments</h1>
+          <p className="text-sm text-content-muted">
             Departments group subjects and teachers. A Department Head leads one department.
           </p>
         </div>
@@ -57,12 +57,12 @@ export function AdminDepartments() {
       </header>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
       <div className="card overflow-x-auto p-0">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <table className="min-w-full divide-y divide-line text-sm">
+          <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
             <tr>
               <th className="px-4 py-2">Code</th>
               <th className="px-4 py-2">Name</th>
@@ -70,16 +70,16 @@ export function AdminDepartments() {
               <th className="px-4 py-2"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-line">
             {loading ? (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={4} className="px-4 py-6 text-center text-content-subtle">
                   Loading…
                 </td>
               </tr>
             ) : rows.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={4} className="px-4 py-6 text-center text-content-subtle">
                   No departments yet. Click "New department" to create one.
                 </td>
               </tr>
@@ -88,7 +88,7 @@ export function AdminDepartments() {
                 <tr key={d.id}>
                   <td className="px-4 py-2 font-mono text-xs">{d.code}</td>
                   <td className="px-4 py-2 font-medium">{d.name}</td>
-                  <td className="px-4 py-2 text-slate-600">{d.head?.full_name ?? '—'}</td>
+                  <td className="px-4 py-2 text-content-muted">{d.head?.full_name ?? '—'}</td>
                   <td className="px-4 py-2 text-right">
                     <button
                       onClick={() => setEditing(d)}
@@ -167,13 +167,13 @@ function DepartmentForm({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">
           {initial ? 'Edit department' : 'New department'}
         </h3>
         {error && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
         )}
         <div>
           <label className="label">Code</label>

@@ -53,18 +53,18 @@ export function AdminUsers() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold">Users</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-bold tracking-tight">Users</h1>
+        <p className="text-sm text-content-muted">
           Approve pending users by assigning them a role.
         </p>
       </header>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-content-subtle">
           Pending ({pending.length})
         </h2>
         <UserTable
@@ -76,7 +76,7 @@ export function AdminUsers() {
       </section>
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-content-subtle">
           Active ({active.length})
         </h2>
         <UserTable
@@ -115,8 +115,8 @@ function UserTable({
 }) {
   return (
     <div className="card overflow-x-auto p-0">
-      <table className="min-w-full divide-y divide-slate-200 text-sm">
-        <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+      <table className="min-w-full divide-y divide-line text-sm">
+        <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
           <tr>
             <th className="px-4 py-2">Name</th>
             <th className="px-4 py-2">Email</th>
@@ -126,16 +126,16 @@ function UserTable({
             <th className="px-4 py-2"></th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-line">
           {loading ? (
             <tr>
-              <td colSpan={6} className="px-4 py-6 text-center text-slate-500">
+              <td colSpan={6} className="px-4 py-6 text-center text-content-subtle">
                 Loading…
               </td>
             </tr>
           ) : rows.length === 0 ? (
             <tr>
-              <td colSpan={6} className="px-4 py-6 text-center text-slate-500">
+              <td colSpan={6} className="px-4 py-6 text-center text-content-subtle">
                 {emptyText}
               </td>
             </tr>
@@ -143,17 +143,17 @@ function UserTable({
             rows.map((u) => (
               <tr key={u.id}>
                 <td className="px-4 py-2 font-medium">{u.full_name}</td>
-                <td className="px-4 py-2 text-slate-600">{u.email}</td>
+                <td className="px-4 py-2 text-content-muted">{u.email}</td>
                 <td className="px-4 py-2">
                   <RoleBadge role={u.role} />
                 </td>
-                <td className="px-4 py-2 text-slate-600">
+                <td className="px-4 py-2 text-content-muted">
                   {u.role === 'student' && (u.student_no ?? '—')}
                   {u.role === 'teacher' && (u.department_name ?? u.department ?? '—')}
                   {u.role === 'department_head' && (u.department_name ?? '—')}
                   {(u.role === 'admin' || u.role === 'pending' || u.role === 'parent') && '—'}
                 </td>
-                <td className="px-4 py-2 text-slate-500">
+                <td className="px-4 py-2 text-content-subtle">
                   {new Date(u.created_at).toLocaleDateString()}
                 </td>
                 <td className="px-4 py-2 text-right">
@@ -240,11 +240,11 @@ function AssignRoleModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">Assign role — {user.full_name}</h3>
         {error && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
         )}
         <div>
           <label className="label">Role</label>
@@ -333,7 +333,7 @@ function AssignRoleModal({
         )}
 
         {role === 'parent' && (
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-content-subtle">
             After saving, link this parent to one or more students under{' '}
             <strong>Parent Links</strong>.
           </p>

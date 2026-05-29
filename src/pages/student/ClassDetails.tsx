@@ -22,10 +22,10 @@ export function StudentClassDetails() {
   const { appeals, refresh: refreshAppeals } = useStudentAppeals(classId);
   const [period, setPeriod] = useState<Period>('midterm');
 
-  if (loading) return <div className="card text-sm text-slate-500">Loading…</div>;
+  if (loading) return <div className="card text-sm text-content-subtle">Loading…</div>;
   if (error || !data)
     return (
-      <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+      <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">
         {error ?? 'Class not found'}
       </div>
     );
@@ -33,11 +33,11 @@ export function StudentClassDetails() {
   return (
     <div className="space-y-6">
       <header>
-        <div className="font-mono text-xs uppercase text-slate-500">
+        <div className="font-mono text-xs uppercase text-content-subtle">
           {data.class.subject.code}
         </div>
-        <h1 className="text-2xl font-bold">{data.class.subject.title}</h1>
-        <div className="mt-1 text-sm text-slate-600">
+        <h1 className="text-3xl font-bold tracking-tight">{data.class.subject.title}</h1>
+        <div className="mt-1 text-sm text-content-muted">
           {data.class.semester} · {data.class.school_year}
           {data.class.section && <> · Section {data.class.section}</>}
         </div>
@@ -54,13 +54,13 @@ export function StudentClassDetails() {
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Grade Breakdown</h2>
-          <div className="flex gap-1 rounded-md bg-slate-100 p-1 text-sm">
+          <div className="flex gap-1 rounded-md bg-surface-3 p-1 text-sm">
             {(['midterm', 'finals'] as Period[]).map((p) => (
               <button
                 key={p}
                 onClick={() => setPeriod(p)}
                 className={`rounded px-3 py-1 capitalize ${
-                  period === p ? 'bg-white shadow-sm font-medium' : 'text-slate-600'
+                  period === p ? 'bg-surface shadow-sm font-medium' : 'text-content-muted'
                 }`}
               >
                 {p}
@@ -101,11 +101,11 @@ function GradeCard({
           : 'badge-neutral';
 
   return (
-    <div className={`card ${primary ? 'bg-brand-50 ring-brand-200' : ''}`}>
-      <div className="text-xs uppercase tracking-wide text-slate-500">{label}</div>
+    <div className={`card ${primary ? 'bg-brand-500/10 ring-brand-500/30' : ''}`}>
+      <div className="text-xs uppercase tracking-wide text-content-subtle">{label}</div>
       <div className="mt-1 flex items-baseline gap-2">
         <span className="text-3xl font-bold">{grade.percentage.toFixed(2)}%</span>
-        <span className="text-sm text-slate-500">
+        <span className="text-sm text-content-subtle">
           ≈ {formatNumeric(grade.numeric_grade)}
         </span>
       </div>
@@ -145,12 +145,12 @@ function AttendanceSummaryCard({
 
   if (loading) {
     return (
-      <div className="card text-sm text-slate-500">Loading attendance…</div>
+      <div className="card text-sm text-content-subtle">Loading attendance…</div>
     );
   }
   if (!summary || summary.total === 0) {
     return (
-      <div className="card text-sm text-slate-500">
+      <div className="card text-sm text-content-subtle">
         Your teacher hasn't recorded any attendance yet.
       </div>
     );
@@ -168,15 +168,15 @@ function AttendanceSummaryCard({
     <section className="card">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Attendance</h2>
-        <div className={`text-2xl font-bold ${pctColor}`}>{pct.toFixed(1)}%</div>
+        <div className={`text-3xl font-bold tracking-tight ${pctColor}`}>{pct.toFixed(1)}%</div>
       </div>
       <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
-        <AttendanceStat label="Present" value={summary.present} color="text-emerald-700" />
+        <AttendanceStat label="Present" value={summary.present} color="text-emerald-600 dark:text-emerald-300" />
         <AttendanceStat label="Late" value={summary.late} color="text-amber-700" />
-        <AttendanceStat label="Absent" value={summary.absent} color="text-red-700" />
-        <AttendanceStat label="Excused" value={summary.excused} color="text-slate-700" />
+        <AttendanceStat label="Absent" value={summary.absent} color="text-red-600 dark:text-red-300" />
+        <AttendanceStat label="Excused" value={summary.excused} color="text-content-muted" />
       </div>
-      <p className="mt-3 text-xs text-slate-500">
+      <p className="mt-3 text-xs text-content-subtle">
         Total class days recorded: {summary.total}. Attendance % counts late as attended and
         excludes excused days from the denominator.
       </p>
@@ -194,8 +194,8 @@ function AttendanceStat({
   color: string;
 }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-center">
-      <div className="text-[10px] uppercase tracking-wide text-slate-500">{label}</div>
+    <div className="rounded-md border border-line bg-surface-2 px-3 py-2 text-center">
+      <div className="text-xs uppercase tracking-wide text-content-subtle">{label}</div>
       <div className={`text-xl font-bold ${color}`}>{value}</div>
     </div>
   );
@@ -226,7 +226,7 @@ function Breakdown({
 
   if (periodCats.length === 0) {
     return (
-      <div className="card text-sm text-slate-500">
+      <div className="card text-sm text-content-subtle">
         Your teacher hasn't set up {period} categories yet.
       </div>
     );
@@ -252,22 +252,22 @@ function Breakdown({
             <div className="mb-3 flex items-center justify-between">
               <div>
                 <h3 className="font-semibold">{cat.name}</h3>
-                <div className="text-xs text-slate-500">Weight: {cat.weight}%</div>
+                <div className="text-xs text-content-subtle">Weight: {cat.weight}%</div>
               </div>
               <div className="text-right">
                 <div className="font-mono text-sm">
                   {earned} / {totalMax}
                 </div>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-content-subtle">
                   {catPct.toFixed(1)}% · contributes {contribution.toFixed(2)} pts
                 </div>
               </div>
             </div>
             {catItems.length === 0 ? (
-              <p className="text-xs text-slate-500">No items yet.</p>
+              <p className="text-xs text-content-subtle">No items yet.</p>
             ) : (
               <table className="min-w-full text-sm">
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-line">
                   {catItems.map((i) => {
                     const sc = scores.find((s) => s.grade_item_id === i.id);
                     const appeal = sc ? appeals.find((a) => a.score_id === sc.id) : undefined;
@@ -286,7 +286,7 @@ function Breakdown({
                                 <span className="font-mono">
                                   {sc.score} / {i.max_score}
                                 </span>
-                                <span className="ml-2 text-xs text-slate-500">
+                                <span className="ml-2 text-xs text-content-subtle">
                                   ({((Number(sc.score) / Number(i.max_score)) * 100).toFixed(0)}%)
                                 </span>
                               </span>
@@ -297,7 +297,7 @@ function Breakdown({
                             ) : sc?.status === 'excused' ? (
                               <span className="badge-neutral">excused</span>
                             ) : (
-                              <span className="text-slate-400">pending</span>
+                              <span className="text-content-subtle">pending</span>
                             )}
                           </td>
                           <td className="py-2 pl-3 text-right">
@@ -322,13 +322,13 @@ function Breakdown({
                                   .map((c) => (
                                     <div
                                       key={c.id}
-                                      className="rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs"
+                                      className="rounded-md border border-line bg-surface-2 px-3 py-1.5 text-xs"
                                     >
-                                      <div className="text-[10px] uppercase tracking-wide text-slate-500">
+                                      <div className="text-xs uppercase tracking-wide text-content-subtle">
                                         💬 {c.grade_item_id ? 'Note to class' : 'From your teacher'} ·{' '}
                                         {new Date(c.created_at).toLocaleDateString()}
                                       </div>
-                                      <div className="whitespace-pre-wrap text-slate-700">
+                                      <div className="whitespace-pre-wrap text-content-muted">
                                         {c.body}
                                       </div>
                                     </div>
@@ -412,10 +412,10 @@ function AppealModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">File an Appeal</h3>
-        <div className="rounded-md bg-slate-50 px-3 py-2 text-sm">
+        <div className="rounded-md bg-surface-2 px-3 py-2 text-sm">
           <div>
             Item: <strong>{itemTitle}</strong>
           </div>
@@ -427,7 +427,7 @@ function AppealModal({
           </div>
         </div>
         {error && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
         )}
         <div>
           <label className="label">Reason</label>

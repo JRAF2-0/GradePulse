@@ -10,22 +10,22 @@ const SIGNAL_META: Record<
   below_dept_avg: {
     label: 'Below department average',
     blurb: 'Class mean is more than 1 SD under the department mean',
-    tone: 'bg-amber-100 text-amber-800 ring-amber-300',
+    tone: 'bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-amber-500/30',
   },
   section_divergence: {
     label: 'Section divergence',
     blurb: 'One section trails sibling sections of the same subject + teacher',
-    tone: 'bg-purple-100 text-purple-800 ring-purple-300',
+    tone: 'bg-purple-500/15 text-purple-700 dark:text-purple-300 ring-purple-500/30',
   },
   high_fail_rate: {
     label: 'High failing rate',
     blurb: '≥30% of the class has a failing final grade',
-    tone: 'bg-red-100 text-red-800 ring-red-300',
+    tone: 'bg-red-500/15 text-red-700 dark:text-red-300 ring-red-500/30',
   },
   entry_burst: {
     label: 'Grade entry burst',
     blurb: '>50 score changes recorded in a single day',
-    tone: 'bg-sky-100 text-sky-800 ring-sky-300',
+    tone: 'bg-sky-500/15 text-sky-700 dark:text-sky-300 ring-sky-500/30',
   },
 };
 
@@ -68,13 +68,13 @@ export function BiasSignals() {
   return (
     <div className="space-y-5">
       <header>
-        <h1 className="text-2xl font-bold">Bias &amp; anomaly signals</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-bold tracking-tight">Bias &amp; anomaly signals</h1>
+        <p className="text-sm text-content-muted">
           Statistical flags worth a closer look across finalized classes.
         </p>
       </header>
 
-      <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+      <div className="rounded-md border border-amber-200 bg-amber-500/10 px-4 py-3 text-sm text-amber-700 dark:text-amber-300 dark:text-amber-200">
         <strong>These are signals, not accusations.</strong> Each flag is a statistical
         pattern that may have a perfectly valid explanation (a genuinely hard section, a small
         class, a legitimate bulk correction). Use them as a starting point for a conversation,
@@ -82,7 +82,7 @@ export function BiasSignals() {
       </div>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
       <div className="card flex flex-wrap items-center gap-2">
@@ -90,7 +90,7 @@ export function BiasSignals() {
         <button
           onClick={() => setTypeFilter('all')}
           className={`rounded-md px-3 py-1 text-xs ${
-            typeFilter === 'all' ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-700'
+            typeFilter === 'all' ? 'bg-brand-600 text-white' : 'bg-surface-3 text-content-muted'
           }`}
         >
           All ({signals.length})
@@ -100,7 +100,7 @@ export function BiasSignals() {
             key={t}
             onClick={() => setTypeFilter(t)}
             className={`rounded-md px-3 py-1 text-xs ${
-              typeFilter === t ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-700'
+              typeFilter === t ? 'bg-brand-600 text-white' : 'bg-surface-3 text-content-muted'
             }`}
           >
             {SIGNAL_META[t].label} ({counts[t] ?? 0})
@@ -109,9 +109,9 @@ export function BiasSignals() {
       </div>
 
       {loading ? (
-        <div className="card text-sm text-slate-500">Analyzing…</div>
+        <div className="card text-sm text-content-subtle">Analyzing…</div>
       ) : filtered.length === 0 ? (
-        <div className="card text-sm text-slate-500">
+        <div className="card text-sm text-content-subtle">
           {signals.length === 0
             ? 'No anomalies detected in finalized classes. 🎉'
             : 'No signals of this type.'}
@@ -125,34 +125,34 @@ export function BiasSignals() {
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="flex-1">
                     <span
-                      className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ring-1 ${meta.tone}`}
+                      className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium uppercase tracking-wide ring-1 ${meta.tone}`}
                     >
                       {meta.label}
                     </span>
                     <div className="mt-1 font-semibold">
-                      <span className="font-mono text-xs uppercase text-slate-500">
+                      <span className="font-mono text-xs uppercase text-content-subtle">
                         {s.subject_code}
                       </span>{' '}
                       {s.subject_title}
                       {s.section ? (
-                        <span className="text-sm font-normal text-slate-500">
+                        <span className="text-sm font-normal text-content-subtle">
                           {' '}
                           · Section {s.section}
                         </span>
                       ) : null}
                     </div>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-content-subtle">
                       Teacher: {s.teacher_name ?? '—'}
                       {s.department_name ? ` · ${s.department_name}` : ''}
                     </div>
-                    <p className="mt-2 text-sm text-slate-700">{s.detail}</p>
+                    <p className="mt-2 text-sm text-content-muted">{s.detail}</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs uppercase tracking-wide text-slate-500">
+                    <div className="text-xs uppercase tracking-wide text-content-subtle">
                       Metric
                     </div>
-                    <div className="text-2xl font-bold">{Number(s.metric)}</div>
-                    <div className="text-[10px] text-slate-500">
+                    <div className="text-3xl font-bold tracking-tight">{Number(s.metric)}</div>
+                    <div className="text-xs text-content-subtle">
                       benchmark: {Number(s.benchmark)}
                     </div>
                   </div>

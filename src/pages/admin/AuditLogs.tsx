@@ -63,8 +63,8 @@ export function AdminAuditLogs() {
   return (
     <div className="space-y-4">
       <header>
-        <h1 className="text-2xl font-bold">Audit Logs</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-bold tracking-tight">Audit Logs</h1>
+        <p className="text-sm text-content-muted">
           Every grade change is recorded with actor, old value, and new value.
         </p>
       </header>
@@ -113,18 +113,18 @@ export function AdminAuditLogs() {
         >
           Reset
         </button>
-        <div className="ml-auto text-sm text-slate-500">
+        <div className="ml-auto text-sm text-content-subtle">
           {loading ? 'Loading…' : `${total.toLocaleString()} total log${total === 1 ? '' : 's'}`}
         </div>
       </div>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
       <div className="card overflow-x-auto p-0">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <table className="min-w-full divide-y divide-line text-sm">
+          <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
             <tr>
               <th className="px-4 py-2">When</th>
               <th className="px-4 py-2">Actor</th>
@@ -135,34 +135,34 @@ export function AdminAuditLogs() {
               <th className="px-4 py-2"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-line">
             {loading ? (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={7} className="px-4 py-6 text-center text-content-subtle">
                   Loading…
                 </td>
               </tr>
             ) : logs.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={7} className="px-4 py-6 text-center text-content-subtle">
                   No logs yet.
                 </td>
               </tr>
             ) : (
               logs.map((log) => (
-                <tr key={log.id} className="hover:bg-slate-50">
-                  <td className="whitespace-nowrap px-4 py-2 text-slate-500">
+                <tr key={log.id} className="hover:bg-surface-3">
+                  <td className="whitespace-nowrap px-4 py-2 text-content-subtle">
                     {new Date(log.created_at).toLocaleString()}
                   </td>
                   <td className="px-4 py-2">
                     <div className="font-medium">{log.actor_name ?? '—'}</div>
-                    <div className="text-xs text-slate-500">{log.actor_email ?? ''}</div>
+                    <div className="text-xs text-content-subtle">{log.actor_email ?? ''}</div>
                   </td>
                   <td className="px-4 py-2">
                     <ActionBadge action={log.action} />
                   </td>
                   <td className="px-4 py-2 font-mono text-xs">{log.target_type}</td>
-                  <td className="px-4 py-2 text-xs text-slate-600">
+                  <td className="px-4 py-2 text-xs text-content-muted">
                     {log.student_name && (
                       <div>
                         Student: <strong>{log.student_name}</strong>
@@ -191,7 +191,7 @@ export function AdminAuditLogs() {
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-content-subtle">
             Page {page + 1} of {totalPages}
           </div>
           <div className="flex gap-2">
@@ -257,24 +257,24 @@ function ChangeSummary({ log }: { log: AuditLogRow }) {
       <span>
         {oldScore ?? '—'} → {newScore ?? '—'}
         {oldStatus !== newStatus && (
-          <span className="ml-1 text-slate-500">
+          <span className="ml-1 text-content-subtle">
             ({oldStatus} → {newStatus})
           </span>
         )}
       </span>
     );
   }
-  return <span className="text-slate-400">—</span>;
+  return <span className="text-content-subtle">—</span>;
 }
 
 function DiffModal({ log, onClose }: { log: AuditLogRow; onClose: () => void }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <div className="card w-full max-w-3xl space-y-4">
         <div className="flex items-start justify-between">
           <div>
             <h3 className="text-lg font-semibold">Audit Log Detail</h3>
-            <div className="mt-1 text-xs text-slate-500">
+            <div className="mt-1 text-xs text-content-subtle">
               {new Date(log.created_at).toLocaleString()} · {log.actor_name ?? '—'} ·{' '}
               <ActionBadge action={log.action} /> on <code>{log.target_type}</code>
             </div>
@@ -285,7 +285,7 @@ function DiffModal({ log, onClose }: { log: AuditLogRow; onClose: () => void }) 
         </div>
 
         {(log.student_name || log.item_title) && (
-          <div className="rounded-md bg-slate-50 px-3 py-2 text-sm">
+          <div className="rounded-md bg-surface-2 px-3 py-2 text-sm">
             {log.student_name && (
               <div>
                 Student: <strong>{log.student_name}</strong>
@@ -301,14 +301,14 @@ function DiffModal({ log, onClose }: { log: AuditLogRow; onClose: () => void }) 
 
         <div className="grid gap-3 md:grid-cols-2">
           <div>
-            <div className="mb-1 text-xs font-semibold uppercase text-slate-500">Old value</div>
-            <pre className="max-h-96 overflow-auto rounded-md bg-red-50 p-3 text-xs text-red-900 ring-1 ring-red-200">
+            <div className="mb-1 text-xs font-semibold uppercase text-content-subtle">Old value</div>
+            <pre className="max-h-96 overflow-auto rounded-md bg-red-500/10 p-3 text-xs text-red-900 ring-1 ring-red-200">
               {log.old_value ? JSON.stringify(log.old_value, null, 2) : '—'}
             </pre>
           </div>
           <div>
-            <div className="mb-1 text-xs font-semibold uppercase text-slate-500">New value</div>
-            <pre className="max-h-96 overflow-auto rounded-md bg-emerald-50 p-3 text-xs text-emerald-900 ring-1 ring-emerald-200">
+            <div className="mb-1 text-xs font-semibold uppercase text-content-subtle">New value</div>
+            <pre className="max-h-96 overflow-auto rounded-md bg-emerald-500/10 p-3 text-xs text-emerald-900 ring-1 ring-emerald-200">
               {log.new_value ? JSON.stringify(log.new_value, null, 2) : '—'}
             </pre>
           </div>

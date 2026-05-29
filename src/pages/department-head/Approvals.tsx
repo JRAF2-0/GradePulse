@@ -87,18 +87,18 @@ export function DepartmentHeadApprovals() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold">Grade change approvals</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-bold tracking-tight">Grade change approvals</h1>
+        <p className="text-sm text-content-muted">
           Teachers submit a request to change a score after a period has been finalized.
           Approving applies the new score immediately; rejecting keeps the original score.
         </p>
       </header>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
-      <nav className="flex gap-1 border-b border-slate-200">
+      <nav className="flex gap-1 border-b border-line">
         <TabButton active={tab === 'pending'} onClick={() => setTab('pending')}>
           Pending ({pending.length})
         </TabButton>
@@ -108,8 +108,8 @@ export function DepartmentHeadApprovals() {
       </nav>
 
       <div className="card overflow-x-auto p-0">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <table className="min-w-full divide-y divide-line text-sm">
+          <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
             <tr>
               <th className="px-4 py-2">Filed</th>
               <th className="px-4 py-2">Class / Item</th>
@@ -121,16 +121,16 @@ export function DepartmentHeadApprovals() {
               <th className="px-4 py-2"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-line">
             {loading ? (
               <tr>
-                <td colSpan={8} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={8} className="px-4 py-6 text-center text-content-subtle">
                   Loading…
                 </td>
               </tr>
             ) : visible.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={8} className="px-4 py-6 text-center text-content-subtle">
                   {tab === 'pending'
                     ? 'No pending requests.'
                     : 'No reviewed requests yet.'}
@@ -142,14 +142,14 @@ export function DepartmentHeadApprovals() {
                 const subj = cls?.subject;
                 return (
                   <tr key={r.id}>
-                    <td className="px-4 py-2 text-xs text-slate-500">
+                    <td className="px-4 py-2 text-xs text-content-subtle">
                       {new Date(r.created_at).toLocaleString()}
                     </td>
                     <td className="px-4 py-2">
                       <div className="font-medium">
                         {subj ? `${subj.code} — ${subj.title}` : '—'}
                       </div>
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-content-subtle">
                         {r.score?.grade_item?.title}
                         {r.score?.grade_item?.category &&
                           ` · ${r.score.grade_item.category.name} · ${r.score.grade_item.category.period}`}
@@ -159,16 +159,16 @@ export function DepartmentHeadApprovals() {
                       {r.score?.student?.user?.full_name ?? '—'}
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
-                      <span className="text-slate-500">{r.old_score ?? '—'}</span>{' '}
+                      <span className="text-content-subtle">{r.old_score ?? '—'}</span>{' '}
                       → <strong>{r.new_score ?? '—'}</strong>
                       {r.score?.grade_item?.max_score && (
-                        <span className="text-xs text-slate-400"> / {r.score.grade_item.max_score}</span>
+                        <span className="text-xs text-content-subtle"> / {r.score.grade_item.max_score}</span>
                       )}
                     </td>
-                    <td className="max-w-xs px-4 py-2 text-slate-600">
+                    <td className="max-w-xs px-4 py-2 text-content-muted">
                       <div className="line-clamp-2">{r.reason}</div>
                     </td>
-                    <td className="px-4 py-2 text-slate-600">
+                    <td className="px-4 py-2 text-content-muted">
                       {r.requester?.full_name ?? '—'}
                     </td>
                     {tab === 'history' && (
@@ -230,7 +230,7 @@ function TabButton({
       className={`whitespace-nowrap px-4 py-2 text-sm font-medium transition ${
         active
           ? 'border-b-2 border-brand-600 text-brand-700'
-          : 'text-slate-500 hover:text-slate-800'
+          : 'text-content-subtle hover:text-content'
       }`}
     >
       {children}
@@ -283,24 +283,24 @@ function ReviewModal({
   const subj = request.score?.grade_item?.category?.class?.subject;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <div className="card w-full max-w-lg space-y-4">
         <div>
           <h3 className="text-lg font-semibold">
             {readOnly ? 'Request details' : 'Review grade change'}
           </h3>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-content-subtle">
             Filed {new Date(request.created_at).toLocaleString()}
             {request.reviewed_at &&
               ` · Reviewed ${new Date(request.reviewed_at).toLocaleString()}`}
           </p>
         </div>
 
-        <div className="rounded-md border border-slate-200 p-3 text-sm">
+        <div className="rounded-md border border-line p-3 text-sm">
           <div className="font-medium">
             {subj ? `${subj.code} — ${subj.title}` : 'Class'}
           </div>
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-content-subtle">
             {request.score?.grade_item?.title}
             {request.score?.grade_item?.category &&
               ` · ${request.score.grade_item.category.name} · ${request.score.grade_item.category.period}`}
@@ -309,23 +309,23 @@ function ReviewModal({
             Student: <strong>{request.score?.student?.user?.full_name ?? '—'}</strong>
           </div>
           <div className="mt-1">
-            Score: <span className="text-slate-500">{request.old_score ?? '—'}</span> →{' '}
+            Score: <span className="text-content-subtle">{request.old_score ?? '—'}</span> →{' '}
             <strong>{request.new_score ?? '—'}</strong>
             {request.score?.grade_item?.max_score && (
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-content-subtle">
                 {' '}
                 / {request.score.grade_item.max_score}
               </span>
             )}
           </div>
-          <div className="mt-1 text-xs text-slate-500">
+          <div className="mt-1 text-xs text-content-subtle">
             Requested by {request.requester?.full_name ?? '—'} ({request.requester?.email})
           </div>
         </div>
 
         <div>
           <div className="label">Teacher's reason</div>
-          <div className="rounded-md bg-slate-50 px-3 py-2 text-sm text-slate-700">
+          <div className="rounded-md bg-surface-2 px-3 py-2 text-sm text-content-muted">
             {request.reason}
           </div>
         </div>
@@ -343,14 +343,14 @@ function ReviewModal({
         </div>
 
         {readOnly && (
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-content-subtle">
             Status: <StatusBadge status={request.status} /> by{' '}
             {request.reviewer?.full_name ?? '—'}
           </div>
         )}
 
         {error && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
         )}
 
         <div className="flex justify-end gap-2 pt-2">

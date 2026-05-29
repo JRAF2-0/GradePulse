@@ -29,7 +29,7 @@ export function NotificationBell() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100"
+        className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl text-content-muted transition hover:bg-surface-3 hover:text-content"
         aria-label="Notifications"
       >
         <svg
@@ -47,19 +47,19 @@ export function NotificationBell() {
           />
         </svg>
         {unreadCount > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+          <span className="absolute -right-0.5 -top-0.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
       </button>
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-80 origin-top-right overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-slate-200">
-          <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2">
-            <h3 className="text-sm font-semibold">Notifications</h3>
+        <div className="absolute right-0 z-50 mt-2 w-80 origin-top-right animate-fade-in overflow-hidden rounded-xl border border-line bg-surface shadow-lg">
+          <div className="flex items-center justify-between border-b border-line px-4 py-2.5">
+            <h3 className="text-sm font-semibold text-content">Notifications</h3>
             {unreadCount > 0 && (
               <button
                 onClick={markAllRead}
-                className="text-xs font-medium text-brand-600 hover:text-brand-700"
+                className="text-xs font-medium text-brand-500 hover:text-brand-400"
               >
                 Mark all read
               </button>
@@ -67,7 +67,7 @@ export function NotificationBell() {
           </div>
           <div className="max-h-96 overflow-y-auto">
             {notifications.length === 0 ? (
-              <div className="px-4 py-6 text-center text-sm text-slate-500">
+              <div className="px-4 py-6 text-center text-sm text-content-subtle">
                 No notifications yet.
               </div>
             ) : (
@@ -75,12 +75,12 @@ export function NotificationBell() {
                 <button
                   key={n.id}
                   onClick={() => markRead(n.id)}
-                  className={`flex w-full flex-col items-start gap-1 border-b border-slate-100 px-4 py-3 text-left text-sm hover:bg-slate-50 ${
+                  className={`flex w-full flex-col items-start gap-1 border-b border-line px-4 py-3 text-left text-sm transition hover:bg-surface-3 ${
                     n.is_read ? 'opacity-60' : ''
                   }`}
                 >
-                  <span className="text-slate-800">{n.message}</span>
-                  <span className="text-xs text-slate-400">{formatRelative(n.created_at)}</span>
+                  <span className="text-content">{n.message}</span>
+                  <span className="text-xs text-content-subtle">{formatRelative(n.created_at)}</span>
                 </button>
               ))
             )}

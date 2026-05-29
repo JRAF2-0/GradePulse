@@ -50,20 +50,20 @@ export function ParentDashboard() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold">Parent Portal</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-bold tracking-tight">Parent Portal</h1>
+        <p className="text-sm text-content-muted">
           Welcome, {profile?.full_name}. Below are the students linked to your account.
         </p>
       </header>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
       {loading ? (
-        <p className="text-sm text-slate-500">Loading…</p>
+        <p className="text-sm text-content-subtle">Loading…</p>
       ) : children.length === 0 ? (
-        <div className="card text-sm text-slate-600">
+        <div className="card text-sm text-content-muted">
           No students are linked to your account yet. Please contact an admin.
         </div>
       ) : (
@@ -75,13 +75,13 @@ export function ParentDashboard() {
                 to={`/parent/student/${c.student.id}`}
                 className="card transition hover:shadow-md"
               >
-                <div className="text-xs uppercase tracking-wide text-slate-500">
+                <div className="text-xs uppercase tracking-wide text-content-subtle">
                   {c.relationship ?? 'Linked student'}
                 </div>
                 <div className="mt-1 text-lg font-semibold">
                   {c.student.user?.full_name ?? 'Student'}
                 </div>
-                <div className="mt-1 text-sm text-slate-600">
+                <div className="mt-1 text-sm text-content-muted">
                   {c.student.student_no && <span>{c.student.student_no} · </span>}
                   {c.student.course ?? '—'}
                   {c.student.year_level ? ` · Year ${c.student.year_level}` : ''}

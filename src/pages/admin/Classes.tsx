@@ -77,13 +77,13 @@ export function AdminClasses() {
     <div className="space-y-4">
       <header className="flex items-end justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Classes</h1>
-          <p className="text-sm text-slate-600">
+          <h1 className="text-3xl font-bold tracking-tight">Classes</h1>
+          <p className="text-sm text-content-muted">
             All classes across the system. {activeCount} active
             {archivedCount > 0 && ` · ${archivedCount} archived`}.
           </p>
         </div>
-        <label className="flex items-center gap-2 text-sm text-slate-700">
+        <label className="flex items-center gap-2 text-sm text-content-muted">
           <input
             type="checkbox"
             checked={showArchived}
@@ -94,12 +94,12 @@ export function AdminClasses() {
       </header>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
       <div className="card overflow-x-auto p-0">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <table className="min-w-full divide-y divide-line text-sm">
+          <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
             <tr>
               <th className="px-4 py-2">Code / Subject</th>
               <th className="px-4 py-2">Teacher</th>
@@ -111,16 +111,16 @@ export function AdminClasses() {
               <th className="px-4 py-2"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-line">
             {loading ? (
               <tr>
-                <td colSpan={8} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={8} className="px-4 py-6 text-center text-content-subtle">
                   Loading…
                 </td>
               </tr>
             ) : filtered.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={8} className="px-4 py-6 text-center text-content-subtle">
                   No classes {showArchived ? '' : '(toggle "Show archived" to see archived ones)'}.
                 </td>
               </tr>
@@ -128,17 +128,17 @@ export function AdminClasses() {
               filtered.map((c) => (
                 <tr key={c.id} className={c.is_archived ? 'opacity-60' : ''}>
                   <td className="px-4 py-2">
-                    <div className="font-mono text-xs uppercase text-slate-500">
+                    <div className="font-mono text-xs uppercase text-content-subtle">
                       {c.subject_code}
                     </div>
                     <div className="font-medium">{c.subject_title}</div>
                   </td>
-                  <td className="px-4 py-2 text-slate-700">{c.teacher_name}</td>
-                  <td className="px-4 py-2 text-slate-600">{c.section ?? '—'}</td>
-                  <td className="px-4 py-2 text-slate-600">
+                  <td className="px-4 py-2 text-content-muted">{c.teacher_name}</td>
+                  <td className="px-4 py-2 text-content-muted">{c.section ?? '—'}</td>
+                  <td className="px-4 py-2 text-content-muted">
                     {c.semester} · {c.school_year}
                   </td>
-                  <td className="px-4 py-2 text-slate-700">{c.enrollment_count}</td>
+                  <td className="px-4 py-2 text-content-muted">{c.enrollment_count}</td>
                   <td className="px-4 py-2 font-mono text-xs tracking-widest text-brand-700">
                     {c.class_code}
                   </td>

@@ -3,49 +3,118 @@
 @tailwind utilities;
 
 @layer base {
+  /* ---- Theme tokens (RGB triplets so Tailwind /alpha works) ---- */
+  :root {
+    --app-bg: 248 250 252;        /* slate-50  */
+    --surface: 255 255 255;       /* white     */
+    --surface-2: 248 250 252;     /* slate-50  */
+    --surface-3: 241 245 249;     /* slate-100 */
+    --content: 10 12 18;          /* near-black — high contrast */
+    --content-muted: 30 41 59;    /* slate-800 — dark, very readable */
+    --content-subtle: 71 85 105;  /* slate-600 */
+    --line: 214 221 232;          /* visible separator */
+    --accent: 26 104 245;         /* brand-600 */
+    --accent-soft: 217 236 255;   /* brand-100 */
+  }
+
+  .dark {
+    --app-bg: 10 11 20;           /* near-black indigo */
+    --surface: 23 24 38;          /* elevated panel   */
+    --surface-2: 30 32 48;        /* secondary panel  */
+    --surface-3: 41 43 64;        /* hover / inputs   */
+    --content: 255 255 255;       /* pure white */
+    --content-muted: 245 247 250; /* essentially white */
+    --content-subtle: 226 232 240;/* light slate — still clearly white-ish */
+    --line: 62 66 92;             /* visible separator on dark */
+    --accent: 96 165 250;         /* lighter blue for dark */
+    --accent-soft: 30 41 78;      /* deep blue tint   */
+  }
+
   html {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-text-size-adjust: 100%;
   }
   body {
+    background-color: rgb(var(--app-bg));
+    color: rgb(var(--content));
+    line-height: 1.6;
     @apply antialiased;
+  }
+
+  /* Headings stay tight + bold for clear hierarchy */
+  h1, h2, h3 {
+    line-height: 1.25;
+  }
+
+  /* Visible keyboard focus for accessibility */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 2px;
+    border-radius: 0.375rem;
+  }
+
+  /* Smooth theme transition on color-bearing properties */
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 150ms;
+    transition-timing-function: ease;
   }
 }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
   }
   .btn-primary {
-    @apply btn bg-brand-600 text-white hover:bg-brand-700 disabled:bg-brand-300;
+    @apply btn bg-brand-600 text-white shadow-sm hover:bg-brand-500 hover:shadow-md disabled:hover:bg-brand-600;
   }
   .btn-secondary {
-    @apply btn bg-white text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50;
+    @apply btn bg-surface text-content ring-1 ring-line hover:bg-surface-3;
   }
   .btn-danger {
-    @apply btn bg-red-600 text-white hover:bg-red-700;
+    @apply btn bg-red-600 text-white hover:bg-red-500;
+  }
+  .btn-ghost {
+    @apply btn text-content-muted hover:bg-surface-3 hover:text-content;
   }
   .input {
-    @apply block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500;
+    @apply block w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-content shadow-sm placeholder:text-content-subtle focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/40;
   }
   .label {
-    @apply mb-1 block text-sm font-medium text-slate-700;
+    @apply mb-1.5 block text-sm font-semibold text-content-muted;
   }
   .card {
-    @apply rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200;
+    @apply rounded-2xl bg-surface p-6 shadow-sm ring-1 ring-line;
+  }
+  .card-glass {
+    @apply rounded-2xl border border-white/10 bg-surface/70 p-6 shadow-sm backdrop-blur-xl;
+  }
+  .card-hover {
+    @apply transition duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:ring-brand-500/40;
   }
   .badge {
-    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold;
   }
   .badge-success {
-    @apply badge bg-emerald-100 text-emerald-700;
+    @apply badge bg-emerald-500/15 text-emerald-700 ring-1 ring-emerald-500/30 dark:text-emerald-300;
   }
   .badge-warning {
-    @apply badge bg-amber-100 text-amber-700;
+    @apply badge bg-amber-500/15 text-amber-700 ring-1 ring-amber-500/30 dark:text-amber-300;
   }
   .badge-danger {
-    @apply badge bg-red-100 text-red-700;
+    @apply badge bg-red-500/15 text-red-700 ring-1 ring-red-500/30 dark:text-red-300;
   }
   .badge-neutral {
-    @apply badge bg-slate-100 text-slate-700;
+    @apply badge bg-surface-3 text-content-muted ring-1 ring-line;
+  }
+  /* Skeleton shimmer for loading states */
+  .skeleton {
+    @apply relative overflow-hidden rounded-md bg-surface-3;
+  }
+  .skeleton::after {
+    @apply absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent;
+    content: '';
   }
 }

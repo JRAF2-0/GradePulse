@@ -192,8 +192,8 @@ export function StudentAnalytics() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold">Analytics</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
+        <p className="text-sm text-content-muted">
           Track your grade trend over time and see where your points are coming from.
         </p>
       </header>
@@ -217,13 +217,13 @@ export function StudentAnalytics() {
         </div>
         <div>
           <label className="label">Period</label>
-          <div className="flex gap-1 rounded-md bg-slate-100 p-1 text-sm">
+          <div className="flex gap-1 rounded-md bg-surface-3 p-1 text-sm">
             {(['midterm', 'finals'] as Period[]).map((p) => (
               <button
                 key={p}
                 onClick={() => setPeriod(p)}
                 className={`rounded px-3 py-1 capitalize ${
-                  period === p ? 'bg-white shadow-sm font-medium' : 'text-slate-600'
+                  period === p ? 'bg-surface shadow-sm font-medium' : 'text-content-muted'
                 }`}
               >
                 {p}
@@ -234,9 +234,9 @@ export function StudentAnalytics() {
       </section>
 
       {loading ? (
-        <div className="card text-sm text-slate-500">Loading…</div>
+        <div className="card text-sm text-content-subtle">Loading…</div>
       ) : !selectedClassId || items.length === 0 ? (
-        <div className="card text-sm text-slate-500">
+        <div className="card text-sm text-content-subtle">
           No published grades to chart yet for this {period}.
         </div>
       ) : (
@@ -329,7 +329,7 @@ export function StudentAnalytics() {
             subtitle={`Period: ${period[0].toUpperCase() + period.slice(1)}`}
           >
             <table className="min-w-full text-sm">
-              <thead className="text-left text-xs uppercase tracking-wide text-slate-500">
+              <thead className="text-left text-xs uppercase tracking-wide text-content-subtle">
                 <tr>
                   <th className="py-1">Category</th>
                   <th className="py-1 text-right">Weight</th>
@@ -337,7 +337,7 @@ export function StudentAnalytics() {
                   <th className="py-1 text-right">Contribution</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-line">
                 {categoryRows.map((r) => (
                   <tr key={r.name}>
                     <td className="py-1">{r.name}</td>
@@ -383,7 +383,7 @@ function ChartCard({
     <div className="card">
       <div className="mb-2">
         <h3 className="font-semibold">{title}</h3>
-        {subtitle && <p className="text-xs text-slate-500">{subtitle}</p>}
+        {subtitle && <p className="text-xs text-content-subtle">{subtitle}</p>}
       </div>
       {children}
     </div>
@@ -392,7 +392,7 @@ function ChartCard({
 
 function EmptyState({ text }: { text: string }) {
   return (
-    <div className="flex h-[260px] items-center justify-center text-sm text-slate-400">
+    <div className="flex h-[260px] items-center justify-center text-sm text-content-subtle">
       {text}
     </div>
   );

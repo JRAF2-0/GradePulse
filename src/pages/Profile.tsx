@@ -9,12 +9,12 @@ export function Profile() {
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       <header>
-        <h1 className="text-2xl font-bold">Profile</h1>
-        <p className="text-sm text-slate-600">Update your name or change your password.</p>
+        <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
+        <p className="text-sm text-content-muted">Update your name or change your password.</p>
       </header>
 
       {!profile ? (
-        <div className="card text-sm text-slate-500">Loading…</div>
+        <div className="card text-sm text-content-subtle">Loading…</div>
       ) : (
         <>
           <NameForm
@@ -68,17 +68,17 @@ function NameForm({
     <form onSubmit={onSubmit} className="card space-y-4">
       <h2 className="text-lg font-semibold">Account info</h2>
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
       {success && (
-        <div className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+        <div className="rounded-md bg-emerald-500/10 px-3 py-2 text-sm text-emerald-600 dark:text-emerald-300">
           Name updated.
         </div>
       )}
       <div>
         <label className="label">Email</label>
-        <input className="input bg-slate-50" value={email} disabled />
-        <p className="mt-1 text-xs text-slate-500">
+        <input className="input bg-surface-2" value={email} disabled />
+        <p className="mt-1 text-xs text-content-subtle">
           Contact your admin to change your email.
         </p>
       </div>
@@ -142,10 +142,10 @@ function PasswordForm() {
     <form onSubmit={onSubmit} className="card space-y-4">
       <h2 className="text-lg font-semibold">Change password</h2>
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
       {success && (
-        <div className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+        <div className="rounded-md bg-emerald-500/10 px-3 py-2 text-sm text-emerald-600 dark:text-emerald-300">
           Password updated. Use the new password next time you sign in.
         </div>
       )}
@@ -173,7 +173,7 @@ function PasswordForm() {
           autoComplete="new-password"
         />
       </div>
-      <label className="flex items-center gap-2 text-sm text-slate-600">
+      <label className="flex items-center gap-2 text-sm text-content-muted">
         <input
           type="checkbox"
           checked={showPassword}

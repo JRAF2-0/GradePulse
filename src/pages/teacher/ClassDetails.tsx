@@ -36,10 +36,10 @@ export function TeacherClassDetails() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  if (loading) return <div className="card text-sm text-slate-500">Loading…</div>;
+  if (loading) return <div className="card text-sm text-content-subtle">Loading…</div>;
   if (error || !data)
     return (
-      <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+      <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">
         {error ?? 'Class not found'}
       </div>
     );
@@ -71,11 +71,11 @@ export function TeacherClassDetails() {
     <div className="space-y-4">
       <header className="flex items-start justify-between gap-4">
         <div>
-          <div className="font-mono text-xs uppercase text-slate-500">
+          <div className="font-mono text-xs uppercase text-content-subtle">
             {data.class.subject.code}
           </div>
-          <h1 className="text-2xl font-bold">{data.class.subject.title}</h1>
-          <div className="mt-1 flex flex-wrap gap-3 text-sm text-slate-600">
+          <h1 className="text-3xl font-bold tracking-tight">{data.class.subject.title}</h1>
+          <div className="mt-1 flex flex-wrap gap-3 text-sm text-content-muted">
             <span>Section: {data.class.section ?? '—'}</span>
             <span>Semester: {data.class.semester}</span>
             <span>SY: {data.class.school_year}</span>
@@ -89,13 +89,13 @@ export function TeacherClassDetails() {
         </div>
         <button
           onClick={() => setShowDeleteModal(true)}
-          className="btn-secondary text-xs text-red-600 hover:bg-red-50"
+          className="btn-secondary text-xs text-red-600 hover:bg-red-500/10"
         >
           Delete class
         </button>
       </header>
 
-      <nav className="flex gap-1 overflow-x-auto border-b border-slate-200">
+      <nav className="flex gap-1 overflow-x-auto border-b border-line">
         {tabs.map((t) => (
           <button
             key={t.key}
@@ -103,7 +103,7 @@ export function TeacherClassDetails() {
             className={`whitespace-nowrap px-4 py-2 text-sm font-medium transition ${
               tab === t.key
                 ? 'border-b-2 border-brand-600 text-brand-700'
-                : 'text-slate-500 hover:text-slate-800'
+                : 'text-content-subtle hover:text-content'
             }`}
           >
             {t.label}
@@ -143,10 +143,10 @@ export function TeacherClassDetails() {
       )}
 
       {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
           <div className="card w-full max-w-md space-y-4">
-            <h3 className="text-lg font-semibold text-red-700">Delete this class?</h3>
-            <div className="space-y-2 text-sm text-slate-700">
+            <h3 className="text-lg font-semibold text-red-600 dark:text-red-300">Delete this class?</h3>
+            <div className="space-y-2 text-sm text-content-muted">
               <p>
                 You're about to permanently delete{' '}
                 <strong>
@@ -155,19 +155,19 @@ export function TeacherClassDetails() {
                 {data.class.section && <> (Section {data.class.section})</>}.
               </p>
               <p>This will also delete:</p>
-              <ul className="list-inside list-disc text-slate-600">
+              <ul className="list-inside list-disc text-content-muted">
                 <li>{data.roster.length} student enrollment(s)</li>
                 <li>{data.categories.length} grade categor(y/ies)</li>
                 <li>{data.items.length} grade item(s)</li>
                 <li>{data.scores.length} score record(s)</li>
                 <li>Any finalized grades and appeals for this class</li>
               </ul>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-content-subtle">
                 Audit log entries are preserved. This cannot be undone.
               </p>
             </div>
             {deleteError && (
-              <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+              <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">
                 {deleteError}
               </div>
             )}
@@ -229,25 +229,25 @@ function RosterTab({
 
   return (
     <div className="card overflow-x-auto p-0">
-      <table className="min-w-full divide-y divide-slate-200 text-sm">
-        <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+      <table className="min-w-full divide-y divide-line text-sm">
+        <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
           <tr>
             <th className="px-4 py-2">Student #</th>
             <th className="px-4 py-2">Name</th>
             <th className="px-4 py-2">Risk</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-line">
           {roster.length === 0 ? (
             <tr>
-              <td colSpan={3} className="px-4 py-6 text-center text-slate-500">
+              <td colSpan={3} className="px-4 py-6 text-center text-content-subtle">
                 No students enrolled yet. Share the class code so students can join.
               </td>
             </tr>
           ) : (
             roster.map((r) => (
               <tr key={r.student_id}>
-                <td className="px-4 py-2 font-mono text-slate-600">{r.student_no ?? '—'}</td>
+                <td className="px-4 py-2 font-mono text-content-muted">{r.student_no ?? '—'}</td>
                 <td className="px-4 py-2 font-medium">{r.full_name}</td>
                 <td className="px-4 py-2">
                   <RiskBadge level={risk[r.student_id]} size="sm" />
@@ -313,13 +313,13 @@ function CategoriesTab({
       <div className="card">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Categories</h2>
-          <div className="flex gap-1 rounded-md bg-slate-100 p-1 text-sm">
+          <div className="flex gap-1 rounded-md bg-surface-3 p-1 text-sm">
             {(['midterm', 'finals'] as Period[]).map((p) => (
               <button
                 key={p}
                 onClick={() => setPeriod(p)}
                 className={`rounded px-3 py-1 capitalize ${
-                  period === p ? 'bg-white shadow-sm font-medium' : 'text-slate-600'
+                  period === p ? 'bg-surface shadow-sm font-medium' : 'text-content-muted'
                 }`}
               >
                 {p}
@@ -327,7 +327,7 @@ function CategoriesTab({
             ))}
           </div>
         </div>
-        <p className="mb-2 text-sm text-slate-600">
+        <p className="mb-2 text-sm text-content-muted">
           Total weight for <span className="capitalize">{period}</span>:{' '}
           <strong
             className={
@@ -343,7 +343,7 @@ function CategoriesTab({
           (must equal 100% before entering scores)
         </p>
         {error && (
-          <div className="mb-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+          <div className="mb-3 rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">
             {error}
           </div>
         )}
@@ -370,18 +370,18 @@ function CategoriesTab({
       </div>
 
       <div className="card overflow-x-auto p-0">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <table className="min-w-full divide-y divide-line text-sm">
+          <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
             <tr>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Weight</th>
               <th className="px-4 py-2"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-line">
             {list.length === 0 ? (
               <tr>
-                <td colSpan={3} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={3} className="px-4 py-6 text-center text-content-subtle">
                   No categories for {period} yet.
                 </td>
               </tr>
@@ -455,7 +455,7 @@ function ItemsTab({
 
   if (categories.length === 0) {
     return (
-      <div className="card text-sm text-slate-500">
+      <div className="card text-sm text-content-subtle">
         Define at least one category first in the <strong>Categories</strong> tab.
       </div>
     );
@@ -466,7 +466,7 @@ function ItemsTab({
       <div className="card">
         <h2 className="mb-3 text-lg font-semibold">Add Grade Item</h2>
         {error && (
-          <div className="mb-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+          <div className="mb-3 rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">
             {error}
           </div>
         )}
@@ -504,8 +504,8 @@ function ItemsTab({
       </div>
 
       <div className="card overflow-x-auto p-0">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <table className="min-w-full divide-y divide-line text-sm">
+          <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
             <tr>
               <th className="px-4 py-2">Category</th>
               <th className="px-4 py-2">Title</th>
@@ -514,10 +514,10 @@ function ItemsTab({
               <th className="px-4 py-2"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-line">
             {items.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={5} className="px-4 py-6 text-center text-content-subtle">
                   No grade items yet.
                 </td>
               </tr>
@@ -526,7 +526,7 @@ function ItemsTab({
                 const cat = categories.find((c) => c.id === i.category_id);
                 return (
                   <tr key={i.id}>
-                    <td className="px-4 py-2 text-slate-600">
+                    <td className="px-4 py-2 text-content-muted">
                       {cat ? `[${cat.period}] ${cat.name}` : '—'}
                     </td>
                     <td className="px-4 py-2 font-medium">{i.title}</td>
@@ -659,14 +659,14 @@ function GradesTab({
 
   if (categories.length === 0 || items.length === 0) {
     return (
-      <div className="card text-sm text-slate-500">
+      <div className="card text-sm text-content-subtle">
         Create categories and grade items first.
       </div>
     );
   }
   if (roster.length === 0) {
     return (
-      <div className="card text-sm text-slate-500">
+      <div className="card text-sm text-content-subtle">
         No students enrolled yet. Share the class code.
       </div>
     );
@@ -770,7 +770,7 @@ function GradesTab({
   return (
     <div className="space-y-3">
       {unpublishedItems.length > 0 && (
-        <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-3 text-sm text-amber-900">
+        <div className="rounded-md border border-amber-200 bg-amber-500/10 px-3 py-3 text-sm text-amber-700 dark:text-amber-300 dark:text-amber-200">
           <strong>{unpublishedItems.length}</strong> grade item
           {unpublishedItems.length === 1 ? ' is' : 's are'} still hidden from students (
           {unpublishedItems.map((i) => i.title).join(', ')}). Scores you save here are stored,
@@ -787,16 +787,16 @@ function GradesTab({
         </button>
       </div>
       <div className="card overflow-x-auto p-0">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <table className="min-w-full divide-y divide-line text-sm">
+          <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
             <tr>
-              <th className="sticky left-0 bg-slate-50 px-4 py-2">Student</th>
+              <th className="sticky left-0 bg-surface-2 px-4 py-2">Student</th>
               {items.map((i) => {
                 const cat = categories.find((c) => c.id === i.category_id);
                 return (
                   <th key={i.id} className="px-3 py-2 text-center">
                     <div className="font-semibold normal-case">{i.title}</div>
-                    <div className="text-[10px] text-slate-400">
+                    <div className="text-xs text-content-subtle">
                       {cat?.name} · /{i.max_score} · {i.is_published ? 'pub' : 'draft'}
                     </div>
                   </th>
@@ -804,10 +804,10 @@ function GradesTab({
               })}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-line">
             {roster.map((r) => (
               <tr key={r.student_id}>
-                <td className="sticky left-0 bg-white px-4 py-2 font-medium">
+                <td className="sticky left-0 bg-surface px-4 py-2 font-medium">
                   {r.full_name}
                 </td>
                 {items.map((i) => {
@@ -825,7 +825,7 @@ function GradesTab({
                           max={i.max_score}
                           step="0.5"
                           disabled={cell?.status !== 'graded'}
-                          className={`input h-8 text-center ${cell?.dirty ? 'ring-2 ring-amber-300' : ''} ${locked ? 'border-amber-300 bg-amber-50' : ''}`}
+                          className={`input h-8 text-center ${cell?.dirty ? 'ring-2 ring-amber-500/30' : ''} ${locked ? 'border-amber-300 bg-amber-500/10' : ''}`}
                           value={cell?.score ?? ''}
                           onChange={(e) => update(key, { score: e.target.value })}
                           onBlur={() => cell?.dirty && void saveCell(r.student_id, i.id, cell, false)}
@@ -855,10 +855,10 @@ function GradesTab({
                               scoreId: findScoreId(r.student_id, i.id) ?? null,
                             })
                           }
-                          className={`flex items-center justify-center gap-1 rounded px-1 text-[10px] transition ${
+                          className={`flex items-center justify-center gap-1 rounded px-1 text-xs transition ${
                             commentCount > 0
-                              ? 'text-brand-700 hover:bg-brand-50'
-                              : 'text-slate-400 hover:bg-slate-100'
+                              ? 'text-brand-700 hover:bg-brand-500/10'
+                              : 'text-content-subtle hover:bg-surface-3'
                           }`}
                           title={
                             commentCount > 0
@@ -870,21 +870,21 @@ function GradesTab({
                         </button>
                         {pending ? (
                           <div
-                            className="text-[10px] font-medium text-amber-700"
+                            className="text-xs font-medium text-amber-700"
                             title={`Pending change to ${pending.new_score} — ${pending.reason}`}
                           >
                             ⏳ Pending review
                           </div>
                         ) : cell?.error ? (
-                          <div className="text-[10px] text-red-600">{cell.error}</div>
+                          <div className="text-xs text-red-600">{cell.error}</div>
                         ) : cell?.saving ? (
-                          <div className="text-[10px] text-slate-400">Saving…</div>
+                          <div className="text-xs text-content-subtle">Saving…</div>
                         ) : cell?.saved ? (
-                          <div className="text-[10px] font-medium text-emerald-600">
+                          <div className="text-xs font-medium text-emerald-600">
                             ✓ Saved
                           </div>
                         ) : locked ? (
-                          <div className="text-[10px] font-medium text-amber-700">
+                          <div className="text-xs font-medium text-amber-700">
                             🔒 Locked
                           </div>
                         ) : null}
@@ -897,7 +897,7 @@ function GradesTab({
           </tbody>
         </table>
       </div>
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-content-subtle">
         Tip: cells with amber border are unsaved. Score saves on blur. Use the buttons at the
         top to bulk save as draft or publish. Cells in a finalized period are locked — editing
         them opens a request-change dialog that goes to the Department Head for approval.
@@ -1011,22 +1011,22 @@ function CommentsModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <div className="card w-full max-w-md space-y-4">
         <div>
           <h3 className="text-lg font-semibold">Comments</h3>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-content-subtle">
             {studentName} — {itemTitle}
           </p>
         </div>
 
         {error && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
         )}
 
         <div className="max-h-64 space-y-2 overflow-y-auto">
           {sorted.length === 0 ? (
-            <p className="text-sm text-slate-500">No comments yet.</p>
+            <p className="text-sm text-content-subtle">No comments yet.</p>
           ) : (
             sorted.map((c) => {
               const mine = c.author_id === user?.id;
@@ -1034,9 +1034,9 @@ function CommentsModal({
               return (
                 <div
                   key={c.id}
-                  className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm"
+                  className="rounded-md border border-line bg-surface-2 px-3 py-2 text-sm"
                 >
-                  <div className="mb-1 flex items-center justify-between text-[10px] text-slate-500">
+                  <div className="mb-1 flex items-center justify-between text-xs text-content-subtle">
                     <span>
                       {c.grade_item_id ? 'Class-wide' : 'For this student'} ·{' '}
                       {new Date(c.created_at).toLocaleString()}
@@ -1086,7 +1086,7 @@ function CommentsModal({
                       </div>
                     </div>
                   ) : (
-                    <div className="whitespace-pre-wrap text-slate-700">{c.body}</div>
+                    <div className="whitespace-pre-wrap text-content-muted">{c.body}</div>
                   )}
                 </div>
               );
@@ -1198,23 +1198,23 @@ function RequestChangeModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">Request grade change</h3>
-        <div className="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-900">
+        <div className="rounded-md bg-amber-500/10 px-3 py-2 text-xs text-amber-700 dark:text-amber-300 dark:text-amber-200">
           This period is finalized. Your change will be sent to the Department Head for
           approval. The student's grade won't update until the request is approved.
         </div>
-        <div className="text-sm text-slate-700">
+        <div className="text-sm text-content-muted">
           <div>
             <strong>{studentName}</strong> — {itemTitle}
           </div>
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-content-subtle">
             Current score: {oldScore ?? '—'} / {maxScore}
           </div>
         </div>
         {error && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
         )}
         <div>
           <label className="label">New score</label>
@@ -1337,7 +1337,7 @@ function AttendanceTab({
 
   if (roster.length === 0) {
     return (
-      <div className="card text-sm text-slate-500">
+      <div className="card text-sm text-content-subtle">
         No students enrolled yet. Share the class code.
       </div>
     );
@@ -1367,22 +1367,22 @@ function AttendanceTab({
       </div>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
       <div className="card overflow-x-auto p-0">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <table className="min-w-full divide-y divide-line text-sm">
+          <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
             <tr>
               <th className="px-4 py-2">Student #</th>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2 text-center">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-line">
             {loading ? (
               <tr>
-                <td colSpan={3} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={3} className="px-4 py-6 text-center text-content-subtle">
                   Loading…
                 </td>
               </tr>
@@ -1392,7 +1392,7 @@ function AttendanceTab({
                 const saving = savingId === r.student_id;
                 return (
                   <tr key={r.student_id}>
-                    <td className="px-4 py-2 font-mono text-slate-600">
+                    <td className="px-4 py-2 font-mono text-content-muted">
                       {r.student_no ?? '—'}
                     </td>
                     <td className="px-4 py-2 font-medium">{r.full_name}</td>
@@ -1423,7 +1423,7 @@ function AttendanceTab({
           </tbody>
         </table>
       </div>
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-content-subtle">
         Tip: pick a date, then click a status per student. Use the bulk buttons to mark the
         whole class quickly.
       </p>
@@ -1432,11 +1432,11 @@ function AttendanceTab({
 }
 
 function statusButtonClass(status: AttendanceStatus, active: boolean): string {
-  if (!active) return 'bg-slate-100 text-slate-600 hover:bg-slate-200';
-  if (status === 'present') return 'bg-emerald-100 text-emerald-800 ring-1 ring-emerald-300';
-  if (status === 'late') return 'bg-amber-100 text-amber-800 ring-1 ring-amber-300';
-  if (status === 'absent') return 'bg-red-100 text-red-800 ring-1 ring-red-300';
-  return 'bg-slate-200 text-slate-800 ring-1 ring-slate-300';
+  if (!active) return 'bg-surface-3 text-content-muted hover:bg-surface-3';
+  if (status === 'present') return 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/30';
+  if (status === 'late') return 'bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-1 ring-amber-500/30';
+  if (status === 'absent') return 'bg-red-500/15 text-red-700 dark:text-red-300 ring-1 ring-red-500/30';
+  return 'bg-surface-3 text-content ring-1 ring-line';
 }
 
 function FinalizeTab({ classId, onChange }: { classId: string; onChange: () => void }) {
@@ -1470,15 +1470,15 @@ function FinalizeTab({ classId, onChange }: { classId: string; onChange: () => v
   return (
     <div className="card space-y-3">
       <h2 className="text-lg font-semibold">Finalize Grades</h2>
-      <p className="text-sm text-slate-600">
+      <p className="text-sm text-content-muted">
         Locking a period takes a snapshot of every enrolled student's computed grade and
         prevents further edits to scores in that period.
       </p>
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
       {result && (
-        <div className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+        <div className="rounded-md bg-emerald-500/10 px-3 py-2 text-sm text-emerald-600 dark:text-emerald-300">
           {result}
         </div>
       )}
@@ -1523,7 +1523,7 @@ function AppealsTab({ classId }: { classId: string }) {
             key={s}
             onClick={() => setFilter(s)}
             className={`rounded-md px-3 py-1 text-xs capitalize ${
-              filter === s ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-700'
+              filter === s ? 'bg-brand-600 text-white' : 'bg-surface-3 text-content-muted'
             }`}
           >
             {s} {s !== 'all' && `(${counts[s as keyof typeof counts]})`}
@@ -1532,13 +1532,13 @@ function AppealsTab({ classId }: { classId: string }) {
       </div>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
       {loading ? (
-        <div className="card text-sm text-slate-500">Loading…</div>
+        <div className="card text-sm text-content-subtle">Loading…</div>
       ) : filtered.length === 0 ? (
-        <div className="card text-sm text-slate-500">
+        <div className="card text-sm text-content-subtle">
           No {filter === 'all' ? '' : filter} appeals.
         </div>
       ) : (
@@ -1547,12 +1547,12 @@ function AppealsTab({ classId }: { classId: string }) {
             <div key={a.id} className="card">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
-                  <div className="text-sm text-slate-500">
+                  <div className="text-sm text-content-subtle">
                     {new Date(a.created_at).toLocaleString()}
                   </div>
                   <div className="mt-1 font-semibold">
                     {a.student_name}{' '}
-                    <span className="text-xs font-normal text-slate-500">
+                    <span className="text-xs font-normal text-content-subtle">
                       ({a.student_no ?? '—'})
                     </span>
                   </div>
@@ -1562,11 +1562,11 @@ function AppealsTab({ classId }: { classId: string }) {
                       {a.score_value ?? '—'} / {a.max_score}
                     </span>
                   </div>
-                  <p className="mt-2 whitespace-pre-wrap rounded-md bg-slate-50 px-3 py-2 text-sm text-slate-700">
+                  <p className="mt-2 whitespace-pre-wrap rounded-md bg-surface-2 px-3 py-2 text-sm text-content-muted">
                     {a.reason}
                   </p>
                   {a.teacher_response && (
-                    <p className="mt-2 rounded-md bg-brand-50 px-3 py-2 text-sm text-brand-900">
+                    <p className="mt-2 rounded-md bg-brand-500/10 px-3 py-2 text-sm text-brand-700 dark:text-brand-300">
                       <strong>Your response:</strong> {a.teacher_response}
                     </p>
                   )}
@@ -1665,10 +1665,10 @@ function ResolveAppealModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <form className="card w-full max-w-md space-y-4" onSubmit={(e) => e.preventDefault()}>
         <h3 className="text-lg font-semibold">Review Appeal</h3>
-        <div className="rounded-md bg-slate-50 px-3 py-2 text-sm">
+        <div className="rounded-md bg-surface-2 px-3 py-2 text-sm">
           <div>
             Student: <strong>{appeal.student_name}</strong>
           </div>
@@ -1678,15 +1678,15 @@ function ResolveAppealModal({
               {appeal.score_value ?? '—'} / {appeal.max_score}
             </strong>
           </div>
-          <p className="mt-2 whitespace-pre-wrap text-slate-700">{appeal.reason}</p>
+          <p className="mt-2 whitespace-pre-wrap text-content-muted">{appeal.reason}</p>
         </div>
 
         {error && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
         )}
 
-        <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-3">
-          <label className="flex items-center gap-2 text-sm font-medium text-amber-900">
+        <div className="rounded-md border border-amber-200 bg-amber-500/10 px-3 py-3">
+          <label className="flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-300 dark:text-amber-200">
             <input
               type="checkbox"
               checked={updateScore}
@@ -1706,10 +1706,10 @@ function ResolveAppealModal({
                 onChange={(e) => setNewScore(e.target.value)}
                 placeholder="0"
               />
-              <span className="text-sm text-slate-700">/ {appeal.max_score}</span>
+              <span className="text-sm text-content-muted">/ {appeal.max_score}</span>
             </div>
           )}
-          <p className="mt-2 text-xs text-amber-800">
+          <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">
             The audit log will record both the score change and the appeal resolution.
           </p>
         </div>

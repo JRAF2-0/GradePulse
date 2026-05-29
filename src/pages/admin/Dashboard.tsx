@@ -89,8 +89,8 @@ export function AdminDashboard() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-        <p className="text-sm text-slate-600">System overview and quick actions.</p>
+        <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
+        <p className="text-sm text-content-muted">System overview and quick actions.</p>
       </header>
 
       <section className="grid gap-4 md:grid-cols-4">
@@ -99,10 +99,10 @@ export function AdminDashboard() {
             key={c.label}
             to={c.to}
             className={`card transition hover:shadow-md ${
-              c.highlight && c.value > 0 ? 'ring-amber-300 bg-amber-50' : ''
+              c.highlight && c.value > 0 ? 'ring-amber-500/30 bg-amber-500/10' : ''
             }`}
           >
-            <div className="text-xs uppercase tracking-wide text-slate-500">{c.label}</div>
+            <div className="text-xs uppercase tracking-wide text-content-subtle">{c.label}</div>
             <div className="mt-1 text-3xl font-bold">{loading ? '…' : c.value}</div>
           </Link>
         ))}
@@ -112,18 +112,18 @@ export function AdminDashboard() {
         {insightCards.map((c) => {
           const cls = `card ${
             c.tone === 'danger' && c.value > 0
-              ? 'ring-red-300 bg-red-50'
+              ? 'ring-red-500/30 bg-red-500/10'
               : c.tone === 'warning' && c.value > 0
-                ? 'ring-amber-300 bg-amber-50'
+                ? 'ring-amber-500/30 bg-amber-500/10'
                 : c.tone === 'success' && c.value > 0
-                  ? 'ring-emerald-300 bg-emerald-50'
+                  ? 'ring-emerald-500/30 bg-emerald-500/10'
                   : ''
           }`;
           const inner = (
             <>
-              <div className="text-xs uppercase tracking-wide text-slate-500">{c.label}</div>
+              <div className="text-xs uppercase tracking-wide text-content-subtle">{c.label}</div>
               <div className="mt-1 text-3xl font-bold">{loading ? '…' : c.value}</div>
-              <div className="mt-1 text-[10px] text-slate-500">{c.hint}</div>
+              <div className="mt-1 text-xs text-content-subtle">{c.hint}</div>
             </>
           );
           if ('to' in c && c.to) {
@@ -144,15 +144,15 @@ export function AdminDashboard() {
       <section className="grid gap-3 md:grid-cols-3">
         <Link to="/admin/users" className="card transition hover:shadow-md">
           <h3 className="font-semibold">Manage Users</h3>
-          <p className="mt-1 text-sm text-slate-600">Approve signups, assign roles.</p>
+          <p className="mt-1 text-sm text-content-muted">Approve signups, assign roles.</p>
         </Link>
         <Link to="/admin/subjects" className="card transition hover:shadow-md">
           <h3 className="font-semibold">Manage Subjects</h3>
-          <p className="mt-1 text-sm text-slate-600">Maintain the subject catalog.</p>
+          <p className="mt-1 text-sm text-content-muted">Maintain the subject catalog.</p>
         </Link>
         <Link to="/admin/audit" className="card transition hover:shadow-md">
           <h3 className="font-semibold">Audit Logs</h3>
-          <p className="mt-1 text-sm text-slate-600">Inspect every grade change.</p>
+          <p className="mt-1 text-sm text-content-muted">Inspect every grade change.</p>
         </Link>
       </section>
     </div>

@@ -56,8 +56,8 @@ export function AdminSubjects() {
     <div className="space-y-4">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Subjects</h1>
-          <p className="text-sm text-slate-600">
+          <h1 className="text-3xl font-bold tracking-tight">Subjects</h1>
+          <p className="text-sm text-content-muted">
             Subject catalog. Teachers create classes off this list.
           </p>
         </div>
@@ -67,12 +67,12 @@ export function AdminSubjects() {
       </header>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
       <div className="card overflow-x-auto p-0">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <table className="min-w-full divide-y divide-line text-sm">
+          <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-content-subtle">
             <tr>
               <th className="px-4 py-2">Code</th>
               <th className="px-4 py-2">Title</th>
@@ -81,16 +81,16 @@ export function AdminSubjects() {
               <th className="px-4 py-2"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-line">
             {loading ? (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={5} className="px-4 py-6 text-center text-content-subtle">
                   Loading…
                 </td>
               </tr>
             ) : subjects.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={5} className="px-4 py-6 text-center text-content-subtle">
                   No subjects yet. Add one to get started.
                 </td>
               </tr>
@@ -101,8 +101,8 @@ export function AdminSubjects() {
                   <tr key={s.id}>
                     <td className="px-4 py-2 font-mono">{s.code}</td>
                     <td className="px-4 py-2 font-medium">{s.title}</td>
-                    <td className="px-4 py-2 text-slate-600">{s.units ?? '—'}</td>
-                    <td className="px-4 py-2 text-slate-600">{inUse}</td>
+                    <td className="px-4 py-2 text-content-muted">{s.units ?? '—'}</td>
+                    <td className="px-4 py-2 text-content-muted">{inUse}</td>
                     <td className="px-4 py-2 text-right">
                       <button onClick={() => setEditing(s)} className="btn-secondary mr-2 text-xs">
                         Edit
@@ -178,11 +178,11 @@ function SubjectForm({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">{subject ? 'Edit Subject' : 'New Subject'}</h3>
         {error && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
         )}
         <div>
           <label className="label">Code</label>

@@ -8,8 +8,8 @@ export function TeacherClasses() {
     <div className="space-y-4">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">My Classes</h1>
-          <p className="text-sm text-slate-600">Classes you teach.</p>
+          <h1 className="text-3xl font-bold tracking-tight">My Classes</h1>
+          <p className="text-sm text-content-muted">Classes you teach.</p>
         </div>
         <Link to="/teacher/classes/new" className="btn-primary">
           + Create Class
@@ -17,13 +17,13 @@ export function TeacherClasses() {
       </header>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
       {loading ? (
-        <div className="card text-center text-sm text-slate-500">Loading…</div>
+        <div className="card text-center text-sm text-content-subtle">Loading…</div>
       ) : classes.length === 0 ? (
-        <div className="card text-center text-sm text-slate-500">
+        <div className="card text-center text-sm text-content-subtle">
           No classes yet. Click <strong>Create Class</strong> to get started.
         </div>
       ) : (
@@ -36,20 +36,20 @@ export function TeacherClasses() {
             >
               <div className="mb-2 flex items-start justify-between">
                 <div>
-                  <div className="font-mono text-xs uppercase text-slate-500">
+                  <div className="font-mono text-xs uppercase text-content-subtle">
                     {c.subject.code}
                   </div>
                   <h3 className="text-lg font-semibold">{c.subject.title}</h3>
                 </div>
                 <span className="badge-neutral">{c.semester}</span>
               </div>
-              <div className="mt-2 space-y-1 text-sm text-slate-600">
+              <div className="mt-2 space-y-1 text-sm text-content-muted">
                 <div>Section: {c.section ?? '—'}</div>
                 <div>School year: {c.school_year}</div>
                 <div>Students: {c.enrollment_count}</div>
               </div>
-              <div className="mt-3 border-t border-slate-100 pt-2">
-                <div className="text-xs text-slate-500">Class code</div>
+              <div className="mt-3 border-t border-line pt-2">
+                <div className="text-xs text-content-subtle">Class code</div>
                 <div className="font-mono text-lg font-bold tracking-widest text-brand-700">
                   {c.class_code}
                 </div>

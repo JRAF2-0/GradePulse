@@ -42,31 +42,31 @@ export function DepartmentHeadDashboard() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold">Department Head</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-bold tracking-tight">Department Head</h1>
+        <p className="text-sm text-content-muted">
           Welcome, {profile?.full_name}. {dept ? `You lead ${dept.name} (${dept.code}).` : ''}
         </p>
       </header>
 
       {loading ? (
-        <p className="text-sm text-slate-500">Loading…</p>
+        <p className="text-sm text-content-subtle">Loading…</p>
       ) : !dept ? (
-        <div className="card text-sm text-slate-600">
+        <div className="card text-sm text-content-muted">
           You are not currently assigned to a department. Please contact an admin.
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-3">
-          <Link to="/department-head/approvals" className="card transition hover:bg-slate-50">
-            <div className="text-xs uppercase tracking-wide text-slate-500">
+          <Link to="/department-head/approvals" className="card transition hover:bg-surface-3">
+            <div className="text-xs uppercase tracking-wide text-content-subtle">
               Pending grade change requests
             </div>
-            <div className="mt-1 text-2xl font-bold">{pendingApprovals}</div>
+            <div className="mt-1 text-3xl font-bold tracking-tight">{pendingApprovals}</div>
             <div className="text-xs text-brand-600">Review →</div>
           </Link>
           <StatCard label="Department" value={dept.code} />
-          <Link to="/department-head/bias-signals" className="card transition hover:bg-slate-50">
-            <div className="text-xs uppercase tracking-wide text-slate-500">Bias signals</div>
-            <div className="mt-1 text-2xl font-bold">View</div>
+          <Link to="/department-head/bias-signals" className="card transition hover:bg-surface-3">
+            <div className="text-xs uppercase tracking-wide text-content-subtle">Bias signals</div>
+            <div className="mt-1 text-3xl font-bold tracking-tight">View</div>
             <div className="text-xs text-brand-600">Department anomalies →</div>
           </Link>
         </div>
@@ -86,9 +86,9 @@ function StatCard({
 }) {
   return (
     <div className="card">
-      <div className="text-xs uppercase tracking-wide text-slate-500">{label}</div>
-      <div className="mt-1 text-2xl font-bold">{value}</div>
-      {hint && <div className="text-xs text-slate-500">{hint}</div>}
+      <div className="text-xs uppercase tracking-wide text-content-subtle">{label}</div>
+      <div className="mt-1 text-3xl font-bold tracking-tight">{value}</div>
+      {hint && <div className="text-xs text-content-subtle">{hint}</div>}
     </div>
   );
 }

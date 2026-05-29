@@ -72,19 +72,19 @@ export function CreateClass() {
   return (
     <div className="mx-auto max-w-xl space-y-4">
       <header>
-        <h1 className="text-2xl font-bold">Create Class</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-bold tracking-tight">Create Class</h1>
+        <p className="text-sm text-content-muted">
           A unique 6-character code will be generated for students to join.
         </p>
       </header>
       <form onSubmit={onSubmit} className="card space-y-4">
         {error && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
         )}
         <div>
           <label className="label">Subject</label>
           {subjects.length === 0 ? (
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-content-subtle">
               No subjects exist yet — ask an admin to create one first.
             </p>
           ) : (

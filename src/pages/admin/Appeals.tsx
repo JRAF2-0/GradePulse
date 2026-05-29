@@ -39,8 +39,8 @@ export function AdminAppeals() {
   return (
     <div className="space-y-4">
       <header>
-        <h1 className="text-2xl font-bold">Appeals (system-wide)</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-bold tracking-tight">Appeals (system-wide)</h1>
+        <p className="text-sm text-content-muted">
           Review and resolve grade appeals filed by students. Teachers handle appeals within
           their own classes; admins have escalation authority across all classes.
         </p>
@@ -49,13 +49,13 @@ export function AdminAppeals() {
       <div className="card flex flex-wrap items-end gap-3">
         <div>
           <label className="label">Status</label>
-          <div className="flex gap-1 rounded-md bg-slate-100 p-1 text-sm">
+          <div className="flex gap-1 rounded-md bg-surface-3 p-1 text-sm">
             {(['pending', 'approved', 'rejected', 'all'] as const).map((s) => (
               <button
                 key={s}
                 onClick={() => setStatusFilter(s)}
                 className={`rounded px-3 py-1 capitalize ${
-                  statusFilter === s ? 'bg-white shadow-sm font-medium' : 'text-slate-600'
+                  statusFilter === s ? 'bg-surface shadow-sm font-medium' : 'text-content-muted'
                 }`}
               >
                 {s} {s !== 'all' && `(${counts[s as keyof typeof counts]})`}
@@ -81,13 +81,13 @@ export function AdminAppeals() {
       </div>
 
       {error && (
-        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
       )}
 
       {loading ? (
-        <div className="card text-sm text-slate-500">Loading…</div>
+        <div className="card text-sm text-content-subtle">Loading…</div>
       ) : filtered.length === 0 ? (
-        <div className="card text-sm text-slate-500">
+        <div className="card text-sm text-content-subtle">
           No {statusFilter === 'all' ? '' : statusFilter} appeals
           {classFilter ? ' for that class' : ''}.
         </div>
@@ -97,21 +97,21 @@ export function AdminAppeals() {
             <div key={a.id} className="card">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-content-subtle">
                     {new Date(a.created_at).toLocaleString()}
                   </div>
                   <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
                     <span className="font-semibold">{a.student_name}</span>
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs text-content-subtle">
                       ({a.student_no ?? '—'})
                     </span>
-                    <span className="text-xs text-slate-400">·</span>
-                    <span className="font-mono text-xs uppercase text-slate-500">
+                    <span className="text-xs text-content-subtle">·</span>
+                    <span className="font-mono text-xs uppercase text-content-subtle">
                       {a.subject_code}
                     </span>
-                    <span className="text-xs text-slate-500">{a.subject_title}</span>
-                    <span className="text-xs text-slate-400">·</span>
-                    <span className="text-xs text-slate-500">teacher: {a.teacher_name}</span>
+                    <span className="text-xs text-content-subtle">{a.subject_title}</span>
+                    <span className="text-xs text-content-subtle">·</span>
+                    <span className="text-xs text-content-subtle">teacher: {a.teacher_name}</span>
                   </div>
                   <div className="mt-1 text-sm">
                     Disputing <strong>{a.item_title}</strong> — score:{' '}
@@ -119,11 +119,11 @@ export function AdminAppeals() {
                       {a.score_value ?? '—'} / {a.max_score}
                     </span>
                   </div>
-                  <p className="mt-2 whitespace-pre-wrap rounded-md bg-slate-50 px-3 py-2 text-sm text-slate-700">
+                  <p className="mt-2 whitespace-pre-wrap rounded-md bg-surface-2 px-3 py-2 text-sm text-content-muted">
                     {a.reason}
                   </p>
                   {a.teacher_response && (
-                    <p className="mt-2 rounded-md bg-brand-50 px-3 py-2 text-sm text-brand-900">
+                    <p className="mt-2 rounded-md bg-brand-500/10 px-3 py-2 text-sm text-brand-700 dark:text-brand-300">
                       <strong>Resolver response:</strong> {a.teacher_response}
                     </p>
                   )}
@@ -223,28 +223,28 @@ function AdminResolveAppealModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <div>
           <h3 className="text-lg font-semibold">Resolve appeal (admin)</h3>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-content-subtle">
             {appeal.subject_code} — {appeal.subject_title} · teacher: {appeal.teacher_name}
           </p>
         </div>
 
-        <div className="rounded-md border border-slate-200 p-3 text-sm">
+        <div className="rounded-md border border-line p-3 text-sm">
           <div>
             <strong>{appeal.student_name}</strong> on{' '}
             <strong>{appeal.item_title}</strong>
           </div>
-          <div className="mt-1 text-xs text-slate-500">
+          <div className="mt-1 text-xs text-content-subtle">
             Current score: {appeal.score_value ?? '—'} / {appeal.max_score}
           </div>
         </div>
 
         <div>
           <div className="label">Student's reason</div>
-          <div className="rounded-md bg-slate-50 px-3 py-2 text-sm text-slate-700">
+          <div className="rounded-md bg-surface-2 px-3 py-2 text-sm text-content-muted">
             {appeal.reason}
           </div>
         </div>
@@ -272,7 +272,7 @@ function AdminResolveAppealModal({
         </div>
 
         {decision === 'approved' && (
-          <div className="rounded-md border border-emerald-200 bg-emerald-50 p-3">
+          <div className="rounded-md border border-emerald-200 bg-emerald-500/10 p-3">
             <label className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
@@ -294,7 +294,7 @@ function AdminResolveAppealModal({
                   value={newScore}
                   onChange={(e) => setNewScore(e.target.value)}
                 />
-                <p className="mt-1 text-[10px] text-emerald-800">
+                <p className="mt-1 text-xs text-emerald-700 dark:text-emerald-300">
                   Will update <strong>{appeal.student_name}</strong>'s score on{' '}
                   <strong>{appeal.item_title}</strong> in the same transaction.
                 </p>
@@ -315,7 +315,7 @@ function AdminResolveAppealModal({
         </div>
 
         {error && (
-          <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
         )}
 
         <div className="flex justify-end gap-2 pt-2">

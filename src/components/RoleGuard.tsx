@@ -13,7 +13,7 @@ export function RoleGuard({ allow, children }: Props) {
 
   if (loading || (session && !profile)) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-slate-500">
+      <div className="flex min-h-screen items-center justify-center text-content-subtle">
         Loading…
       </div>
     );
