@@ -64,13 +64,13 @@ export function DepartmentHeadDashboard() {
             <div className="text-xs text-brand-600">Review →</div>
           </Link>
           <StatCard label="Department" value={dept.code} />
-          <StatCard label="Coming soon" value="—" hint="Bias signals & analytics" />
+          <Link to="/department-head/bias-signals" className="card transition hover:bg-slate-50">
+            <div className="text-xs uppercase tracking-wide text-slate-500">Bias signals</div>
+            <div className="mt-1 text-2xl font-bold">View</div>
+            <div className="text-xs text-brand-600">Department anomalies →</div>
+          </Link>
         </div>
       )}
-
-      <div className="card text-sm text-slate-600">
-        Bias detection signals and department analytics are coming in the next phase.
-      </div>
     </div>
   );
 }

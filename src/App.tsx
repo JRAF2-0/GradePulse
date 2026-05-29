@@ -34,6 +34,8 @@ import { AdminAppeals } from '@/pages/admin/Appeals';
 import { DepartmentHeadDashboard } from '@/pages/department-head/Dashboard';
 import { DepartmentHeadApprovals } from '@/pages/department-head/Approvals';
 import { ParentDashboard } from '@/pages/parent/Dashboard';
+import { ParentStudentView } from '@/pages/parent/StudentView';
+import { BiasSignals } from '@/pages/BiasSignals';
 
 export default function App() {
   return (
@@ -114,6 +116,7 @@ export default function App() {
         <Route path="classes" element={<AdminClasses />} />
         <Route path="parent-links" element={<AdminParentLinks />} />
         <Route path="appeals" element={<AdminAppeals />} />
+        <Route path="bias-signals" element={<BiasSignals />} />
         <Route path="audit" element={<AdminAuditLogs />} />
       </Route>
 
@@ -129,6 +132,7 @@ export default function App() {
       >
         <Route index element={<DepartmentHeadDashboard />} />
         <Route path="approvals" element={<DepartmentHeadApprovals />} />
+        <Route path="bias-signals" element={<BiasSignals />} />
       </Route>
 
       <Route
@@ -142,6 +146,7 @@ export default function App() {
         }
       >
         <Route index element={<ParentDashboard />} />
+        <Route path="student/:studentId" element={<ParentStudentView />} />
       </Route>
 
       <Route path="/" element={<Login />} />

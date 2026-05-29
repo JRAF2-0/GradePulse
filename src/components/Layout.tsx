@@ -30,12 +30,14 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { to: '/admin/subjects', label: 'Subjects' },
     { to: '/admin/classes', label: 'Classes' },
     { to: '/admin/appeals', label: 'Appeals' },
+    { to: '/admin/bias-signals', label: 'Bias Signals' },
     { to: '/admin/parent-links', label: 'Parent Links' },
     { to: '/admin/audit', label: 'Audit Logs' },
   ],
   department_head: [
     { to: '/department-head', label: 'Dashboard' },
     { to: '/department-head/approvals', label: 'Approvals' },
+    { to: '/department-head/bias-signals', label: 'Bias Signals' },
   ],
   parent: [{ to: '/parent', label: 'Dashboard' }],
 };

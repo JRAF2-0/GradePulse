@@ -30,6 +30,24 @@ export type AppealStatus = 'pending' | 'approved' | 'rejected';
 export type GradeChangeStatus = 'pending' | 'approved' | 'rejected';
 export type AttendanceStatus = 'present' | 'absent' | 'late' | 'excused';
 export type RiskLevel = 'low' | 'medium' | 'high';
+export type BiasSignalType =
+  | 'below_dept_avg'
+  | 'section_divergence'
+  | 'high_fail_rate'
+  | 'entry_burst';
+
+export interface BiasSignal {
+  signal_type: BiasSignalType;
+  class_id: string;
+  subject_code: string;
+  subject_title: string;
+  section: string | null;
+  teacher_name: string | null;
+  department_name: string | null;
+  metric: number;
+  benchmark: number;
+  detail: string;
+}
 export type NotificationType =
   | 'grade_posted'
   | 'grade_changed'
@@ -476,6 +494,10 @@ export type Database = {
       compute_risk_level: {
         Args: { p_student_id: string; p_class_id?: string | null };
         Returns: RiskLevel;
+      };
+      compute_bias_signals: {
+        Args: Record<string, never>;
+        Returns: BiasSignal[];
       };
       count_high_risk_students: {
         Args: Record<string, never>;

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 
@@ -67,28 +68,33 @@ export function ParentDashboard() {
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
-          {children.map((c) => (
-            <div key={c.id} className="card">
-              <div className="text-xs uppercase tracking-wide text-slate-500">
-                {c.relationship ?? 'Linked student'}
-              </div>
-              <div className="mt-1 text-lg font-semibold">
-                {c.student?.user?.full_name ?? 'Student'}
-              </div>
-              <div className="mt-1 text-sm text-slate-600">
-                {c.student?.student_no && <span>{c.student.student_no} · </span>}
-                {c.student?.course ?? '—'}
-                {c.student?.year_level ? ` · Year ${c.student.year_level}` : ''}
-                {c.student?.section ? ` · ${c.student.section}` : ''}
-              </div>
-            </div>
-          ))}
+          {children.map((c) =>
+            c.student ? (
+              <Link
+                key={c.id}
+                to={`/parent/student/${c.student.id}`}
+                className="card transition hover:shadow-md"
+              >
+                <div className="text-xs uppercase tracking-wide text-slate-500">
+                  {c.relationship ?? 'Linked student'}
+                </div>
+                <div className="mt-1 text-lg font-semibold">
+                  {c.student.user?.full_name ?? 'Student'}
+                </div>
+                <div className="mt-1 text-sm text-slate-600">
+                  {c.student.student_no && <span>{c.student.student_no} · </span>}
+                  {c.student.course ?? '—'}
+                  {c.student.year_level ? ` · Year ${c.student.year_level}` : ''}
+                  {c.student.section ? ` · ${c.student.section}` : ''}
+                </div>
+                <div className="mt-2 text-xs font-medium text-brand-600">
+                  View grades & attendance →
+                </div>
+              </Link>
+            ) : null,
+          )}
         </div>
       )}
-
-      <div className="card text-sm text-slate-600">
-        Per-student grade, attendance, and transcript views are coming in the next phase.
-      </div>
     </div>
   );
 }

@@ -49,7 +49,10 @@ V2 introduces new roles (`department_head`, `parent`), tables (`departments`, `p
 | `0013_score_comments.sql` | `score_comments` table (score-level or item-level), RLS for all roles, notification trigger on insert, realtime |
 | `0014_fix_v2_rls_recursion.sql` | Fixes infinite RLS recursion in `grade_categories` / `grade_items` / `scores` / `score_comments` policies introduced by 0009 + 0010 (was breaking categories add + Appeals tab) |
 | `0015_attendance.sql` | `attendance` table (date + status per student/class), RLS, `get_attendance_summary()` RPC, realtime |
-| `0016_analytics_rpcs.sql` | `compute_cgpa()` + `is_dean_list_eligible()` + `compute_risk_level()` RPCs for V2 analytics surfaces |
+| `0016_analytics_rpcs.sql` | `compute_cgpa()` + `is_dean_list_eligible()` + `compute_risk_level()` + admin count RPCs for V2 analytics surfaces |
+| `0017_view_student_authz.sql` | `can_view_student()` guard baked into the 4 student-scoped analytics RPCs so they can't be called for unauthorized students |
+| `0018_bias_signals.sql` | `compute_bias_signals()` RPC — read-only statistical anomaly flags for admins (system-wide) + department heads (dept-scoped) |
+| `0019_security_hardening.sql` | Lock-bypass now requires admin/dept_head actor; pins `search_path` on every SECURITY DEFINER function (anti search-path hijack) |
 
 ## Convention
 
