@@ -1,6 +1,21 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import {
+  GraduationCap,
+  Users,
+  BookOpen,
+  UserPlus,
+  AlertTriangle,
+  Award,
+  ClipboardCheck,
+  Gavel,
+  Settings,
+  Library,
+  ScrollText,
+  ArrowRight,
+} from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { StatTile } from '@/components/StatTile';
 
 export function AdminDashboard() {
   const [counts, setCounts] = useState({
@@ -51,109 +66,112 @@ export function AdminDashboard() {
     })();
   }, []);
 
-  const cards = [
-    { label: 'Students', value: counts.students, to: '/admin/users' },
-    { label: 'Teachers', value: counts.teachers, to: '/admin/users' },
-    { label: 'Active Classes', value: counts.classes, to: '/admin/classes' },
-    { label: 'Pending Approvals', value: counts.pending, to: '/admin/users', highlight: true },
-  ];
+  const v = (n: number) => (loading ? '…' : n);
 
-  const insightCards = [
+  const quickActions = [
     {
-      label: 'High-risk students',
-      value: counts.highRisk,
-      tone: counts.highRisk > 0 ? 'danger' : 'neutral',
-      hint: 'Grades < 70% or attendance < 60%',
+      to: '/admin/users',
+      icon: Settings,
+      title: 'Manage Users',
+      desc: 'Approve signups, assign roles.',
     },
     {
-      label: "Dean's List (current term)",
-      value: counts.deansList,
-      tone: 'success',
-      hint: 'GPA ≤ 1.50 · No grade > 2.50',
+      to: '/admin/subjects',
+      icon: Library,
+      title: 'Manage Subjects',
+      desc: 'Maintain the subject catalog.',
     },
     {
-      label: 'Pending grade changes',
-      value: counts.pendingApprovals,
-      tone: counts.pendingApprovals > 0 ? 'warning' : 'neutral',
-      hint: 'Filed by teachers after finalize',
-    },
-    {
-      label: 'Open appeals',
-      value: counts.pendingAppeals,
-      tone: counts.pendingAppeals > 0 ? 'warning' : 'neutral',
-      hint: 'Filed by students',
-      to: '/admin/appeals',
+      to: '/admin/audit',
+      icon: ScrollText,
+      title: 'Audit Logs',
+      desc: 'Inspect every grade change.',
     },
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <header>
         <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-        <p className="text-sm text-content-muted">System overview and quick actions.</p>
+        <p className="mt-1 text-content-muted">System overview and quick actions.</p>
       </header>
 
-      <section className="grid gap-4 md:grid-cols-4">
-        {cards.map((c) => (
-          <Link
-            key={c.label}
-            to={c.to}
-            className={`card transition hover:shadow-md ${
-              c.highlight && c.value > 0 ? 'ring-amber-500/30 bg-amber-500/10' : ''
-            }`}
-          >
-            <div className="text-xs uppercase tracking-wide text-content-subtle">{c.label}</div>
-            <div className="mt-1 text-3xl font-bold">{loading ? '…' : c.value}</div>
-          </Link>
-        ))}
+      {/* Primary counts */}
+      <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <StatTile icon={GraduationCap} label="Students" value={v(counts.students)} to="/admin/users" tone="brand" />
+        <StatTile icon={Users} label="Teachers" value={v(counts.teachers)} to="/admin/users" tone="brand" />
+        <StatTile icon={BookOpen} label="Active Classes" value={v(counts.classes)} to="/admin/classes" tone="brand" />
+        <StatTile
+          icon={UserPlus}
+          label="Pending Approvals"
+          value={v(counts.pending)}
+          to="/admin/users"
+          tone="warning"
+          active={counts.pending > 0}
+          hint="Awaiting role assignment"
+        />
       </section>
 
-      <section className="grid gap-4 md:grid-cols-4">
-        {insightCards.map((c) => {
-          const cls = `card ${
-            c.tone === 'danger' && c.value > 0
-              ? 'ring-red-500/30 bg-red-500/10'
-              : c.tone === 'warning' && c.value > 0
-                ? 'ring-amber-500/30 bg-amber-500/10'
-                : c.tone === 'success' && c.value > 0
-                  ? 'ring-emerald-500/30 bg-emerald-500/10'
-                  : ''
-          }`;
-          const inner = (
-            <>
-              <div className="text-xs uppercase tracking-wide text-content-subtle">{c.label}</div>
-              <div className="mt-1 text-3xl font-bold">{loading ? '…' : c.value}</div>
-              <div className="mt-1 text-xs text-content-subtle">{c.hint}</div>
-            </>
-          );
-          if ('to' in c && c.to) {
+      {/* Insights */}
+      <section>
+        <h2 className="mb-3 text-lg font-semibold text-content">Insights</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatTile
+            icon={AlertTriangle}
+            label="High-risk students"
+            value={v(counts.highRisk)}
+            tone="danger"
+            active={counts.highRisk > 0}
+            hint="Grades < 70% or attendance < 60%"
+          />
+          <StatTile
+            icon={Award}
+            label="Dean's List"
+            value={v(counts.deansList)}
+            tone="success"
+            active={counts.deansList > 0}
+            hint="GPA ≤ 1.50 · No grade > 2.50"
+          />
+          <StatTile
+            icon={ClipboardCheck}
+            label="Pending grade changes"
+            value={v(counts.pendingApprovals)}
+            tone="warning"
+            active={counts.pendingApprovals > 0}
+            hint="Filed by teachers after finalize"
+          />
+          <StatTile
+            icon={Gavel}
+            label="Open appeals"
+            value={v(counts.pendingAppeals)}
+            to="/admin/appeals"
+            tone="warning"
+            active={counts.pendingAppeals > 0}
+            hint="Filed by students"
+          />
+        </div>
+      </section>
+
+      {/* Quick actions */}
+      <section>
+        <h2 className="mb-3 text-lg font-semibold text-content">Quick actions</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {quickActions.map((a) => {
+            const Icon = a.icon;
             return (
-              <Link key={c.label} to={c.to} className={`${cls} transition hover:shadow-md`}>
-                {inner}
+              <Link key={a.to} to={a.to} className="card card-hover group flex items-center gap-4">
+                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-500/15 text-brand-500">
+                  <Icon className="h-5 w-5" strokeWidth={1.9} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-content">{a.title}</h3>
+                  <p className="text-sm text-content-muted">{a.desc}</p>
+                </div>
+                <ArrowRight className="h-4 w-4 shrink-0 text-content-subtle transition group-hover:translate-x-0.5 group-hover:text-brand-500" />
               </Link>
             );
-          }
-          return (
-            <div key={c.label} className={cls}>
-              {inner}
-            </div>
-          );
-        })}
-      </section>
-
-      <section className="grid gap-3 md:grid-cols-3">
-        <Link to="/admin/users" className="card transition hover:shadow-md">
-          <h3 className="font-semibold">Manage Users</h3>
-          <p className="mt-1 text-sm text-content-muted">Approve signups, assign roles.</p>
-        </Link>
-        <Link to="/admin/subjects" className="card transition hover:shadow-md">
-          <h3 className="font-semibold">Manage Subjects</h3>
-          <p className="mt-1 text-sm text-content-muted">Maintain the subject catalog.</p>
-        </Link>
-        <Link to="/admin/audit" className="card transition hover:shadow-md">
-          <h3 className="font-semibold">Audit Logs</h3>
-          <p className="mt-1 text-sm text-content-muted">Inspect every grade change.</p>
-        </Link>
+          })}
+        </div>
       </section>
     </div>
   );
