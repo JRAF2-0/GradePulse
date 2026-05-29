@@ -22,7 +22,18 @@ export function StudentClassDetails() {
   const { appeals, refresh: refreshAppeals } = useStudentAppeals(classId);
   const [period, setPeriod] = useState<Period>('midterm');
 
-  if (loading) return <div className="card text-sm text-content-subtle">Loading…</div>;
+  if (loading)
+    return (
+      <div className="space-y-4">
+        <div className="skeleton h-10 w-64" />
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="skeleton h-28" />
+          <div className="skeleton h-28" />
+          <div className="skeleton h-28" />
+        </div>
+        <div className="skeleton h-40" />
+      </div>
+    );
   if (error || !data)
     return (
       <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
@@ -159,10 +170,10 @@ function AttendanceSummaryCard({
   const pct = Number(summary.attendance_pct);
   const pctColor =
     pct >= 90
-      ? 'text-emerald-600'
+      ? 'text-emerald-600 dark:text-emerald-400'
       : pct >= 75
-        ? 'text-amber-600'
-        : 'text-red-600';
+        ? 'text-amber-600 dark:text-amber-400'
+        : 'text-red-600 dark:text-red-400';
 
   return (
     <section className="card">
@@ -172,7 +183,7 @@ function AttendanceSummaryCard({
       </div>
       <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
         <AttendanceStat label="Present" value={summary.present} color="text-emerald-600 dark:text-emerald-300" />
-        <AttendanceStat label="Late" value={summary.late} color="text-amber-700" />
+        <AttendanceStat label="Late" value={summary.late} color="text-amber-600 dark:text-amber-300" />
         <AttendanceStat label="Absent" value={summary.absent} color="text-red-600 dark:text-red-300" />
         <AttendanceStat label="Excused" value={summary.excused} color="text-content-muted" />
       </div>

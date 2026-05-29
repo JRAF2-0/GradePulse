@@ -16,6 +16,7 @@ import {
 } from 'recharts';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 import { useStudentClasses } from '@/hooks/useStudentClasses';
 import type {
   DbGradeCategory,
@@ -58,6 +59,17 @@ const PIE_COLORS = [
 
 export function StudentAnalytics() {
   const { user } = useAuth();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  const axisColor = isDark ? '#94a3b8' : '#64748b';
+  const gridColor = isDark ? '#334155' : '#e2e8f0';
+  const tooltipStyle = {
+    background: isDark ? '#171928' : '#ffffff',
+    border: `1px solid ${gridColor}`,
+    borderRadius: 12,
+    color: isDark ? '#e8ecf4' : '#111827',
+    fontSize: 12,
+  } as const;
   const { classes, loading: classesLoading } = useStudentClasses();
   const [selectedClassId, setSelectedClassId] = useState<string>('');
   const [period, setPeriod] = useState<Period>('midterm');
@@ -250,17 +262,19 @@ export function StudentAnalytics() {
                   data={trendData}
                   margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
                   <XAxis
                     dataKey="label"
-                    tick={{ fontSize: 10 }}
+                    tick={{ fontSize: 10, fill: axisColor }}
+                    stroke={gridColor}
                     interval={0}
                     angle={-25}
                     textAnchor="end"
                     height={60}
                   />
-                  <YAxis domain={[0, 100]} tick={{ fontSize: 10 }} />
+                  <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: axisColor }} stroke={gridColor} />
                   <Tooltip
+                    contentStyle={tooltipStyle}
                     formatter={(v: number) => `${v}%`}
                     labelFormatter={(l) => `Item: ${l}`}
                   />
@@ -285,10 +299,10 @@ export function StudentAnalytics() {
                   data={categoryRows}
                   margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                  <YAxis domain={[0, 100]} tick={{ fontSize: 10 }} />
-                  <Tooltip formatter={(v: number) => `${v}%`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: axisColor }} stroke={gridColor} />
+                  <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: axisColor }} stroke={gridColor} />
+                  <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => `${v}%`} />
                   <Bar dataKey="avgPct" fill="#22c55e" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -317,8 +331,8 @@ export function StudentAnalytics() {
                       <Cell key={idx} fill={PIE_COLORS[idx % PIE_COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(v: number) => `${v} pts`} />
-                  <Legend />
+                  <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => `${v} pts`} />
+                  <Legend wrapperStyle={{ fontSize: 12, color: axisColor }} />
                 </PieChart>
               </ResponsiveContainer>
             )}
