@@ -81,7 +81,7 @@ export function AdminAppeals() {
       </div>
 
       {error && (
-        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
       )}
 
       {loading ? (
@@ -123,7 +123,7 @@ export function AdminAppeals() {
                     {a.reason}
                   </p>
                   {a.teacher_response && (
-                    <p className="mt-2 rounded-md bg-brand-500/10 px-3 py-2 text-sm text-brand-700 dark:text-brand-300">
+                    <p className="mt-2 rounded-xl bg-brand-500/10 px-4 py-3 text-sm font-medium text-brand-700 ring-1 ring-brand-500/30 dark:text-brand-300">
                       <strong>Resolver response:</strong> {a.teacher_response}
                     </p>
                   )}
@@ -223,7 +223,7 @@ function AdminResolveAppealModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm animate-fade-in">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <div>
           <h3 className="text-lg font-semibold">Resolve appeal (admin)</h3>
@@ -315,7 +315,7 @@ function AdminResolveAppealModal({
         </div>
 
         {error && (
-          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
         )}
 
         <div className="flex justify-end gap-2 pt-2">

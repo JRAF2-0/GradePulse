@@ -68,10 +68,10 @@ function NameForm({
     <form onSubmit={onSubmit} className="card space-y-4">
       <h2 className="text-lg font-semibold">Account info</h2>
       {error && (
-        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
       )}
       {success && (
-        <div className="rounded-md bg-emerald-500/10 px-3 py-2 text-sm text-emerald-600 dark:text-emerald-300">
+        <div className="rounded-xl bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-600 ring-1 ring-emerald-500/30 dark:text-emerald-300">
           Name updated.
         </div>
       )}
@@ -142,10 +142,10 @@ function PasswordForm() {
     <form onSubmit={onSubmit} className="card space-y-4">
       <h2 className="text-lg font-semibold">Change password</h2>
       {error && (
-        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
       )}
       {success && (
-        <div className="rounded-md bg-emerald-500/10 px-3 py-2 text-sm text-emerald-600 dark:text-emerald-300">
+        <div className="rounded-xl bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-600 ring-1 ring-emerald-500/30 dark:text-emerald-300">
           Password updated. Use the new password next time you sign in.
         </div>
       )}

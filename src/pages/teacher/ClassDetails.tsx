@@ -39,7 +39,7 @@ export function TeacherClassDetails() {
   if (loading) return <div className="card text-sm text-content-subtle">Loading…</div>;
   if (error || !data)
     return (
-      <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">
+      <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
         {error ?? 'Class not found'}
       </div>
     );
@@ -143,7 +143,7 @@ export function TeacherClassDetails() {
       )}
 
       {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm animate-fade-in">
           <div className="card w-full max-w-md space-y-4">
             <h3 className="text-lg font-semibold text-red-600 dark:text-red-300">Delete this class?</h3>
             <div className="space-y-2 text-sm text-content-muted">
@@ -167,7 +167,7 @@ export function TeacherClassDetails() {
               </p>
             </div>
             {deleteError && (
-              <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">
+              <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
                 {deleteError}
               </div>
             )}
@@ -343,7 +343,7 @@ function CategoriesTab({
           (must equal 100% before entering scores)
         </p>
         {error && (
-          <div className="mb-3 rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">
+          <div className="mb-3 rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
             {error}
           </div>
         )}
@@ -466,7 +466,7 @@ function ItemsTab({
       <div className="card">
         <h2 className="mb-3 text-lg font-semibold">Add Grade Item</h2>
         {error && (
-          <div className="mb-3 rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">
+          <div className="mb-3 rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
             {error}
           </div>
         )}
@@ -1011,7 +1011,7 @@ function CommentsModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm animate-fade-in">
       <div className="card w-full max-w-md space-y-4">
         <div>
           <h3 className="text-lg font-semibold">Comments</h3>
@@ -1021,7 +1021,7 @@ function CommentsModal({
         </div>
 
         {error && (
-          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
         )}
 
         <div className="max-h-64 space-y-2 overflow-y-auto">
@@ -1198,7 +1198,7 @@ function RequestChangeModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm animate-fade-in">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">Request grade change</h3>
         <div className="rounded-md bg-amber-500/10 px-3 py-2 text-xs text-amber-700 dark:text-amber-300 dark:text-amber-200">
@@ -1214,7 +1214,7 @@ function RequestChangeModal({
           </div>
         </div>
         {error && (
-          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
         )}
         <div>
           <label className="label">New score</label>
@@ -1367,7 +1367,7 @@ function AttendanceTab({
       </div>
 
       {error && (
-        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
       )}
 
       <div className="card overflow-x-auto p-0">
@@ -1475,10 +1475,10 @@ function FinalizeTab({ classId, onChange }: { classId: string; onChange: () => v
         prevents further edits to scores in that period.
       </p>
       {error && (
-        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
       )}
       {result && (
-        <div className="rounded-md bg-emerald-500/10 px-3 py-2 text-sm text-emerald-600 dark:text-emerald-300">
+        <div className="rounded-xl bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-600 ring-1 ring-emerald-500/30 dark:text-emerald-300">
           {result}
         </div>
       )}
@@ -1532,7 +1532,7 @@ function AppealsTab({ classId }: { classId: string }) {
       </div>
 
       {error && (
-        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
       )}
 
       {loading ? (
@@ -1566,7 +1566,7 @@ function AppealsTab({ classId }: { classId: string }) {
                     {a.reason}
                   </p>
                   {a.teacher_response && (
-                    <p className="mt-2 rounded-md bg-brand-500/10 px-3 py-2 text-sm text-brand-700 dark:text-brand-300">
+                    <p className="mt-2 rounded-xl bg-brand-500/10 px-4 py-3 text-sm font-medium text-brand-700 ring-1 ring-brand-500/30 dark:text-brand-300">
                       <strong>Your response:</strong> {a.teacher_response}
                     </p>
                   )}
@@ -1665,7 +1665,7 @@ function ResolveAppealModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm animate-fade-in">
       <form className="card w-full max-w-md space-y-4" onSubmit={(e) => e.preventDefault()}>
         <h3 className="text-lg font-semibold">Review Appeal</h3>
         <div className="rounded-md bg-surface-2 px-3 py-2 text-sm">
@@ -1682,7 +1682,7 @@ function ResolveAppealModal({
         </div>
 
         {error && (
-          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
         )}
 
         <div className="rounded-md border border-amber-200 bg-amber-500/10 px-3 py-3">

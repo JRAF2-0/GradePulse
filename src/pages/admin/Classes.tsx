@@ -94,7 +94,7 @@ export function AdminClasses() {
       </header>
 
       {error && (
-        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
       )}
 
       <div className="card overflow-x-auto p-0">

@@ -25,7 +25,7 @@ export function StudentClassDetails() {
   if (loading) return <div className="card text-sm text-content-subtle">Loading…</div>;
   if (error || !data)
     return (
-      <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">
+      <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
         {error ?? 'Class not found'}
       </div>
     );
@@ -412,7 +412,7 @@ function AppealModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm animate-fade-in">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">File an Appeal</h3>
         <div className="rounded-md bg-surface-2 px-3 py-2 text-sm">
@@ -427,7 +427,7 @@ function AppealModal({
           </div>
         </div>
         {error && (
-          <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
         )}
         <div>
           <label className="label">Reason</label>

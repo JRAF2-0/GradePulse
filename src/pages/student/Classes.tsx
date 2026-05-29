@@ -54,7 +54,7 @@ export function StudentClasses() {
       </header>
 
       {error && (
-        <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
       )}
 
       {loading ? (
@@ -98,7 +98,7 @@ export function StudentClasses() {
       )}
 
       {leaving && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm animate-fade-in">
           <div className="card w-full max-w-md space-y-4">
             <h3 className="text-lg font-semibold">Leave class?</h3>
             <p className="text-sm text-content-muted">
@@ -107,7 +107,7 @@ export function StudentClasses() {
               this class's grades. You can rejoin if you still have the class code.
             </p>
             {actionError && (
-              <div className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-300">
+              <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
                 {actionError}
               </div>
             )}
