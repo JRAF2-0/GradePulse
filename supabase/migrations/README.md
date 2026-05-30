@@ -53,6 +53,9 @@ V2 introduces new roles (`department_head`, `parent`), tables (`departments`, `p
 | `0017_view_student_authz.sql` | `can_view_student()` guard baked into the 4 student-scoped analytics RPCs so they can't be called for unauthorized students |
 | `0018_bias_signals.sql` | `compute_bias_signals()` RPC — read-only statistical anomaly flags for admins (system-wide) + department heads (dept-scoped) |
 | `0019_security_hardening.sql` | Lock-bypass now requires admin/dept_head actor; pins `search_path` on every SECURITY DEFINER function (anti search-path hijack) |
+| `0020_user_personal_info.sql` | Add role-agnostic personal info columns (`phone`, `birthdate`, `gender`, `address`) to `users` — collected on Pending page, reused across Profile/admin/teacher surfaces |
+| `0021_student_teacher_self_update.sql` | RLS UPDATE policies so a user can fill their own students/teachers row (student_no/course/year/section / employee_no/department) after admin assigns their role |
+| `0022_user_profile_v2.sql` | Production-level profile expansion: `avatar_url`, `civil_status`, `nationality`, emergency contact, structured address fields, `updated_at` + auto-update trigger; `avatars` storage bucket with per-user RLS |
 
 ## Convention
 

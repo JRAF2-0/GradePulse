@@ -187,6 +187,23 @@ function RoleBadge({ role }: { role: UserRole }) {
   return <span className={cls}>{label}</span>;
 }
 
+interface PersonalInfo {
+  avatar_url: string | null;
+  phone: string | null;
+  birthdate: string | null;
+  gender: string | null;
+  civil_status: string | null;
+  nationality: string | null;
+  address_street: string | null;
+  address_city: string | null;
+  address_province: string | null;
+  address_postal_code: string | null;
+  address_country: string | null;
+  emergency_contact_name: string | null;
+  emergency_contact_phone: string | null;
+  emergency_contact_relation: string | null;
+}
+
 function AssignRoleModal({
   user,
   departments,
@@ -206,8 +223,22 @@ function AssignRoleModal({
   const [employeeNo, setEmployeeNo] = useState(user.employee_no ?? '');
   const [department, setDepartment] = useState(user.department ?? '');
   const [departmentId, setDepartmentId] = useState<string>(user.department_id ?? '');
+  const [personal, setPersonal] = useState<PersonalInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    void (async () => {
+      const { data } = await supabase
+        .from('users')
+        .select(
+          'avatar_url, phone, birthdate, gender, civil_status, nationality, address_street, address_city, address_province, address_postal_code, address_country, emergency_contact_name, emergency_contact_phone, emergency_contact_relation',
+        )
+        .eq('id', user.id)
+        .maybeSingle();
+      setPersonal((data as PersonalInfo | null) ?? null);
+    })();
+  }, [user.id]);
 
   const needsDept = role === 'teacher' || role === 'department_head';
   const needsDeptRequired = role === 'department_head';
@@ -260,6 +291,80 @@ function AssignRoleModal({
             <option value="admin">Admin</option>
             <option value="pending">Pending (revoke access)</option>
           </select>
+        </div>
+
+        <div className="rounded-xl bg-surface-2 p-3 ring-1 ring-line">
+          <div className="mb-2 flex items-center gap-2">
+            {personal?.avatar_url ? (
+              <img
+                src={personal.avatar_url}
+                alt={user.full_name}
+                className="h-9 w-9 shrink-0 rounded-lg object-cover ring-1 ring-line"
+              />
+            ) : (
+              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-600 text-xs font-bold text-white">
+                {user.full_name
+                  .split(' ')
+                  .map((s) => s[0])
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .join('')
+                  .toUpperCase()}
+              </span>
+            )}
+            <div className="text-xs font-semibold uppercase tracking-wide text-content-subtle">
+              Personal info (filled by user)
+            </div>
+          </div>
+          <dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
+            <dt className="text-content-subtle">Email</dt>
+            <dd className="truncate text-content-muted">{user.email}</dd>
+            <dt className="text-content-subtle">Phone</dt>
+            <dd className="truncate text-content-muted">{personal?.phone ?? '—'}</dd>
+            <dt className="text-content-subtle">Birthdate</dt>
+            <dd className="truncate text-content-muted">{personal?.birthdate ?? '—'}</dd>
+            <dt className="text-content-subtle">Gender</dt>
+            <dd className="truncate text-content-muted">
+              {personal?.gender ? personal.gender.replace(/_/g, ' ') : '—'}
+            </dd>
+            <dt className="text-content-subtle">Civil status</dt>
+            <dd className="truncate text-content-muted">
+              {personal?.civil_status ? personal.civil_status.replace(/_/g, ' ') : '—'}
+            </dd>
+            <dt className="text-content-subtle">Nationality</dt>
+            <dd className="truncate text-content-muted">{personal?.nationality ?? '—'}</dd>
+            <dt className="text-content-subtle">Address</dt>
+            <dd
+              className="truncate text-content-muted"
+              title={[
+                personal?.address_street,
+                personal?.address_city,
+                personal?.address_province,
+                personal?.address_postal_code,
+                personal?.address_country,
+              ]
+                .filter(Boolean)
+                .join(', ')}
+            >
+              {[personal?.address_street, personal?.address_city, personal?.address_country]
+                .filter(Boolean)
+                .join(', ') || '—'}
+            </dd>
+            <dt className="text-content-subtle">Emergency contact</dt>
+            <dd className="truncate text-content-muted">
+              {personal?.emergency_contact_name
+                ? `${personal.emergency_contact_name}${
+                    personal.emergency_contact_relation
+                      ? ` (${personal.emergency_contact_relation})`
+                      : ''
+                  }${
+                    personal.emergency_contact_phone
+                      ? ` · ${personal.emergency_contact_phone}`
+                      : ''
+                  }`
+                : '—'}
+            </dd>
+          </dl>
         </div>
 
         {role === 'student' && (

@@ -95,9 +95,17 @@ export function Topbar({ onOpenMobile }: Props) {
             onClick={() => setMenuOpen((v) => !v)}
             className="flex items-center gap-2 rounded-xl py-1.5 pl-1.5 pr-2.5 transition hover:bg-surface-3"
           >
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-xs font-bold text-white">
-              {initials}
-            </span>
+            {profile?.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt={profile.full_name ?? 'avatar'}
+                className="h-8 w-8 rounded-lg object-cover ring-1 ring-line"
+              />
+            ) : (
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-xs font-bold text-white">
+                {initials}
+              </span>
+            )}
             <span className="hidden text-left sm:block">
               <span className="block max-w-[140px] truncate text-sm font-medium text-content">
                 {profile?.full_name}

@@ -4,6 +4,7 @@ import { ClipboardCheck, Building2, ShieldAlert, ArrowRight } from 'lucide-react
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 import { StatTile } from '@/components/StatTile';
+import { RoleProfileBanner } from '@/components/RoleProfileBanner';
 
 interface DeptInfo {
   id: string;
@@ -49,6 +50,8 @@ export function DepartmentHeadDashboard() {
           Welcome, {profile?.full_name}. {dept ? `You lead ${dept.name} (${dept.code}).` : ''}
         </p>
       </header>
+
+      <RoleProfileBanner />
 
       {loading ? (
         <div className="grid gap-4 sm:grid-cols-3">

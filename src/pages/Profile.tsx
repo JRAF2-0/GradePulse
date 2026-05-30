@@ -2,19 +2,27 @@ import { FormEvent, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { humanizeError } from '@/utils/errorMessage';
+import { PersonalInfoCard } from '@/components/PersonalInfoCard';
+import { RoleSpecificInfoCard } from '@/components/RoleSpecificInfoCard';
 
 export function Profile() {
   const { profile, refreshProfile } = useAuth();
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
+    <div className="mx-auto max-w-2xl space-y-6">
       <header>
         <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
-        <p className="text-sm text-content-muted">Update your name or change your password.</p>
+        <p className="mt-1 text-content-muted">
+          Manage your account, personal info, and password.
+        </p>
       </header>
 
       {!profile ? (
-        <div className="card text-sm text-content-subtle">Loading…</div>
+        <div className="space-y-4">
+          <div className="skeleton h-40" />
+          <div className="skeleton h-60" />
+          <div className="skeleton h-40" />
+        </div>
       ) : (
         <>
           <NameForm
@@ -22,6 +30,8 @@ export function Profile() {
             email={profile.email}
             onSaved={() => void refreshProfile()}
           />
+          <PersonalInfoCard />
+          <RoleSpecificInfoCard />
           <PasswordForm />
         </>
       )}

@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { formatNumeric } from '@/utils/conversionTable';
 import { RiskBadge } from '@/components/RiskBadge';
 import { StatTile, type Tone } from '@/components/StatTile';
+import { RoleProfileBanner } from '@/components/RoleProfileBanner';
 import type { PeriodGrade } from '@/hooks/useStudentClassDetail';
 import type { RiskLevel } from '@/types/database';
 
@@ -140,6 +141,8 @@ export function StudentDashboard() {
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
         <p className="mt-1 text-content-muted">Your grade overview across all classes.</p>
       </header>
+
+      <RoleProfileBanner />
 
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatTile icon={BookOpen} label="Classes" value={classes.length} tone="brand" />

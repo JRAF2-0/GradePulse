@@ -68,11 +68,30 @@ export type AuditAction =
   | 'grade_change_approved'
   | 'grade_change_rejected';
 
+export type Gender = 'male' | 'female' | 'other' | 'prefer_not_to_say';
+export type CivilStatus = 'single' | 'married' | 'widowed' | 'separated' | 'divorced';
+
 export interface DbUser {
   id: string;
   email: string;
   full_name: string;
   role: UserRole;
+  phone: string | null;
+  birthdate: string | null;
+  gender: Gender | null;
+  address: string | null;
+  avatar_url: string | null;
+  civil_status: CivilStatus | null;
+  nationality: string | null;
+  emergency_contact_name: string | null;
+  emergency_contact_phone: string | null;
+  emergency_contact_relation: string | null;
+  address_street: string | null;
+  address_city: string | null;
+  address_province: string | null;
+  address_postal_code: string | null;
+  address_country: string | null;
+  updated_at: string | null;
   created_at: string;
 }
 

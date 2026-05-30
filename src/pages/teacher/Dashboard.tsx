@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen, Users, BarChart3, Plus, ArrowRight } from 'lucide-react';
 import { useTeacherClasses } from '@/hooks/useTeacherClasses';
 import { StatTile } from '@/components/StatTile';
+import { RoleProfileBanner } from '@/components/RoleProfileBanner';
 
 export function TeacherDashboard() {
   const { classes, loading } = useTeacherClasses();
@@ -20,6 +21,8 @@ export function TeacherDashboard() {
           <Plus className="h-4 w-4" /> Create Class
         </Link>
       </header>
+
+      <RoleProfileBanner />
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <StatTile icon={BookOpen} label="Active Classes" value={loading ? '…' : classes.length} tone="brand" />
