@@ -15,20 +15,6 @@
 
 ---
 
-## Demo accounts
-
-The login page has one-click "fill" buttons for each role. Same password for all: `Demo123!`
-
-| Role            | Email                  | What you'll see                                                                  |
-| --------------- | ---------------------- | -------------------------------------------------------------------------------- |
-| Student         | `student@demo.com`     | Bento dashboard, CGPA, risk badge, class details, analytics, transcript PDF      |
-| Teacher         | `teacher@demo.com`     | Class roster, grade entry with weighted categories, attendance, comments         |
-| Parent          | `parent@demo.com`      | Read-only view of linked children's grades and attendance                        |
-| Department Head | `depthead@demo.com`    | Pending grade-change approvals + department-scoped bias signals                  |
-| Admin           | `admin@demo.com`       | User directory, role assignment, audit logs, appeals, bias signals, departments  |
-
----
-
 ## Screenshots
 
 _All shown in dark mode (default). Light mode toggle available in the topbar._

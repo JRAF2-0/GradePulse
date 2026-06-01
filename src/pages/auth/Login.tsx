@@ -4,16 +4,6 @@ import { useAuth } from '@/context/AuthContext';
 import { humanizeError } from '@/utils/errorMessage';
 import { Logo } from '@/components/Logo';
 
-// Click-to-fill demo credentials shown below the form. Update after
-// creating these accounts in the live Supabase project.
-const DEMO_ACCOUNTS: { role: string; email: string; password: string }[] = [
-  { role: 'Student', email: 'student@demo.com', password: 'Demo123!' },
-  { role: 'Teacher', email: 'teacher@demo.com', password: 'Demo123!' },
-  { role: 'Parent', email: 'parent@demo.com', password: 'Demo123!' },
-  { role: 'Dept Head', email: 'depthead@demo.com', password: 'Demo123!' },
-  { role: 'Admin', email: 'admin@demo.com', password: 'Demo123!' },
-];
-
 export function Login() {
   const { signIn, session, profile } = useAuth();
   const navigate = useNavigate();
@@ -157,35 +147,6 @@ export function Login() {
             </Link>
           </div>
         </form>
-
-        <div className="mt-4 rounded-2xl border border-line bg-surface/60 p-4 backdrop-blur-xl">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wide text-content-subtle">
-              Demo accounts
-            </span>
-            <span className="text-xs text-content-subtle">Click to fill</span>
-          </div>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {DEMO_ACCOUNTS.map((d) => (
-              <button
-                key={d.role}
-                type="button"
-                onClick={() => {
-                  setEmail(d.email);
-                  setPassword(d.password);
-                  setError(null);
-                }}
-                className="rounded-xl bg-surface-2 px-3 py-2 text-left text-xs ring-1 ring-line transition hover:bg-surface-3"
-              >
-                <div className="font-semibold text-content">{d.role}</div>
-                <div className="truncate text-content-muted">{d.email}</div>
-              </button>
-            ))}
-          </div>
-          <p className="mt-2 text-xs text-content-subtle">
-            Password for all: <span className="font-mono">Demo123!</span>
-          </p>
-        </div>
       </div>
     </div>
   );
