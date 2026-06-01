@@ -41,8 +41,8 @@ export function AdminAppeals() {
       <header>
         <h1 className="text-3xl font-bold tracking-tight">Appeals (system-wide)</h1>
         <p className="text-sm text-content-muted">
-          Review and resolve grade appeals filed by students. Teachers handle appeals within
-          their own classes; admins have escalation authority across all classes.
+          Review and resolve grade appeals filed by students. Teachers handle appeals within their
+          own classes; admins have escalation authority across all classes.
         </p>
       </header>
 
@@ -81,7 +81,9 @@ export function AdminAppeals() {
       </div>
 
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
 
       {loading ? (
@@ -102,9 +104,7 @@ export function AdminAppeals() {
                   </div>
                   <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
                     <span className="font-semibold">{a.student_name}</span>
-                    <span className="text-xs text-content-subtle">
-                      ({a.student_no ?? '—'})
-                    </span>
+                    <span className="text-xs text-content-subtle">({a.student_no ?? '—'})</span>
                     <span className="text-xs text-content-subtle">·</span>
                     <span className="font-mono text-xs uppercase text-content-subtle">
                       {a.subject_code}
@@ -131,10 +131,7 @@ export function AdminAppeals() {
                 <div className="flex flex-col items-end gap-2">
                   <AppealStatusBadge status={a.status} />
                   {a.status === 'pending' && (
-                    <button
-                      onClick={() => setResolving(a)}
-                      className="btn-primary text-xs"
-                    >
+                    <button onClick={() => setResolving(a)} className="btn-primary text-xs">
                       Review
                     </button>
                   )}
@@ -234,8 +231,7 @@ function AdminResolveAppealModal({
 
         <div className="rounded-md border border-line p-3 text-sm">
           <div>
-            <strong>{appeal.student_name}</strong> on{' '}
-            <strong>{appeal.item_title}</strong>
+            <strong>{appeal.student_name}</strong> on <strong>{appeal.item_title}</strong>
           </div>
           <div className="mt-1 text-xs text-content-subtle">
             Current score: {appeal.score_value ?? '—'} / {appeal.max_score}
@@ -315,7 +311,9 @@ function AdminResolveAppealModal({
         </div>
 
         {error && (
-          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+            {error}
+          </div>
         )}
 
         <div className="flex justify-end gap-2 pt-2">

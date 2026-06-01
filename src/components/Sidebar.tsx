@@ -38,7 +38,11 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
       >
         {/* Brand */}
         <div className="flex h-16 items-center justify-between px-4">
-          <Link to={home} className="flex items-center gap-2 overflow-hidden" onClick={onCloseMobile}>
+          <Link
+            to={home}
+            className="flex items-center gap-2 overflow-hidden"
+            onClick={onCloseMobile}
+          >
             <Logo size="sm" withWordmark={!collapsed} />
           </Link>
           <button

@@ -80,7 +80,9 @@ export function NotificationBell() {
                   }`}
                 >
                   <span className="text-content">{n.message}</span>
-                  <span className="text-xs text-content-subtle">{formatRelative(n.created_at)}</span>
+                  <span className="text-xs text-content-subtle">
+                    {formatRelative(n.created_at)}
+                  </span>
                 </button>
               ))
             )}

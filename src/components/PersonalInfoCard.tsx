@@ -155,7 +155,7 @@ export function PersonalInfoCard({ defaultMode = 'read' }: Props) {
     const payload: Record<string, string | null> = {};
     (Object.keys(draft) as (keyof Draft)[]).forEach((k) => {
       const raw = draft[k];
-      payload[k] = typeof raw === 'string' ? (raw.trim() || null) : (raw ?? null);
+      payload[k] = typeof raw === 'string' ? raw.trim() || null : (raw ?? null);
     });
     const { error: err } = await supabase.from('users').update(payload).eq('id', profile.id);
     setBusy(false);
@@ -205,9 +205,7 @@ export function PersonalInfoCard({ defaultMode = 'read' }: Props) {
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <span className="badge-neutral capitalize">{profile.role.replace(/_/g, ' ')}</span>
             <span className="text-xs text-content-subtle">
-              {profile.updated_at
-                ? `Updated ${formatDate(profile.updated_at)}`
-                : 'Not updated yet'}
+              {profile.updated_at ? `Updated ${formatDate(profile.updated_at)}` : 'Not updated yet'}
             </span>
           </div>
         </div>
@@ -278,9 +276,7 @@ export function PersonalInfoCard({ defaultMode = 'read' }: Props) {
                 <select
                   className="input"
                   value={draft.gender ?? ''}
-                  onChange={(e) =>
-                    setField('gender', (e.target.value as Gender) || null)
-                  }
+                  onChange={(e) => setField('gender', (e.target.value as Gender) || null)}
                 >
                   <option value="">— Select —</option>
                   <option value="male">Male</option>
@@ -420,9 +416,7 @@ export function PersonalInfoCard({ defaultMode = 'read' }: Props) {
                 <input
                   className="input"
                   value={draft.emergency_contact_name ?? ''}
-                  onChange={(e) =>
-                    setField('emergency_contact_name', e.target.value || null)
-                  }
+                  onChange={(e) => setField('emergency_contact_name', e.target.value || null)}
                   placeholder="Maria Dela Cruz"
                 />
               }
@@ -435,9 +429,7 @@ export function PersonalInfoCard({ defaultMode = 'read' }: Props) {
                   type="tel"
                   className="input"
                   value={draft.emergency_contact_phone ?? ''}
-                  onChange={(e) =>
-                    setField('emergency_contact_phone', e.target.value || null)
-                  }
+                  onChange={(e) => setField('emergency_contact_phone', e.target.value || null)}
                   placeholder="+63 9xx xxx xxxx"
                 />
               }
@@ -448,9 +440,7 @@ export function PersonalInfoCard({ defaultMode = 'read' }: Props) {
                 <input
                   className="input"
                   value={draft.emergency_contact_relation ?? ''}
-                  onChange={(e) =>
-                    setField('emergency_contact_relation', e.target.value || null)
-                  }
+                  onChange={(e) => setField('emergency_contact_relation', e.target.value || null)}
                   placeholder="Mother / Father / Guardian"
                 />
               }

@@ -1,11 +1,7 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
-import {
-  useClassDetail,
-  categoriesForPeriod,
-  weightTotal,
-} from '@/hooks/useClassDetail';
+import { useClassDetail, categoriesForPeriod, weightTotal } from '@/hooks/useClassDetail';
 import { useClassAppeals, type AppealRow } from '@/hooks/useAppeals';
 import { humanizeError } from '@/utils/errorMessage';
 import { useAuth } from '@/context/AuthContext';
@@ -116,11 +112,7 @@ export function TeacherClassDetails() {
         <CategoriesTab classId={data.class.id} categories={data.categories} onChange={refresh} />
       )}
       {tab === 'items' && (
-        <ItemsTab
-          categories={data.categories}
-          items={data.items}
-          onChange={refresh}
-        />
+        <ItemsTab categories={data.categories} items={data.items} onChange={refresh} />
       )}
       {tab === 'grades' && (
         <GradesTab
@@ -134,18 +126,16 @@ export function TeacherClassDetails() {
           onChange={refresh}
         />
       )}
-      {tab === 'attendance' && (
-        <AttendanceTab classId={data.class.id} roster={data.roster} />
-      )}
+      {tab === 'attendance' && <AttendanceTab classId={data.class.id} roster={data.roster} />}
       {tab === 'appeals' && <AppealsTab classId={data.class.id} />}
-      {tab === 'finalize' && (
-        <FinalizeTab classId={data.class.id} onChange={refresh} />
-      )}
+      {tab === 'finalize' && <FinalizeTab classId={data.class.id} onChange={refresh} />}
 
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm animate-fade-in">
           <div className="card w-full max-w-md space-y-4">
-            <h3 className="text-lg font-semibold text-red-600 dark:text-red-300">Delete this class?</h3>
+            <h3 className="text-lg font-semibold text-red-600 dark:text-red-300">
+              Delete this class?
+            </h3>
             <div className="space-y-2 text-sm text-content-muted">
               <p>
                 You're about to permanently delete{' '}
@@ -331,11 +321,7 @@ function CategoriesTab({
           Total weight for <span className="capitalize">{period}</span>:{' '}
           <strong
             className={
-              total === 100
-                ? 'text-emerald-600'
-                : total > 100
-                  ? 'text-red-600'
-                  : 'text-amber-600'
+              total === 100 ? 'text-emerald-600' : total > 100 ? 'text-red-600' : 'text-amber-600'
             }
           >
             {total}%
@@ -612,9 +598,7 @@ function GradesTab({
   const isLocked = (studentId: string, itemId: string): boolean => {
     const period = periodForItem(itemId);
     if (!period) return false;
-    return finalized.some(
-      (f) => f.student_id === studentId && f.period === period,
-    );
+    return finalized.some((f) => f.student_id === studentId && f.period === period);
   };
 
   const findScoreId = (studentId: string, itemId: string): string | undefined =>
@@ -638,9 +622,7 @@ function GradesTab({
     for (const r of roster) {
       for (const i of items) {
         const key = `${r.student_id}|${i.id}`;
-        const s = scores.find(
-          (sc) => sc.student_id === r.student_id && sc.grade_item_id === i.id,
-        );
+        const s = scores.find((sc) => sc.student_id === r.student_id && sc.grade_item_id === i.id);
         map[key] = {
           score: s?.score?.toString() ?? '',
           status: s?.status ?? 'graded',
@@ -676,12 +658,7 @@ function GradesTab({
     setCells((c) => ({ ...c, [key]: { ...c[key], ...patch, dirty: true } }));
   };
 
-  const saveCell = async (
-    studentId: string,
-    itemId: string,
-    cell: CellState,
-    asDraft: boolean,
-  ) => {
+  const saveCell = async (studentId: string, itemId: string, cell: CellState, asDraft: boolean) => {
     const key = `${studentId}|${itemId}`;
     // If the period is finalized, route this through the approval workflow
     // instead of attempting a direct write (which the lock trigger would
@@ -701,9 +678,7 @@ function GradesTab({
       }
       const item = items.find((i) => i.id === itemId);
       const roster_entry = roster.find((r) => r.student_id === studentId);
-      const oldScore = scores.find(
-        (s) => s.student_id === studentId && s.grade_item_id === itemId,
-      );
+      const oldScore = scores.find((s) => s.student_id === studentId && s.grade_item_id === itemId);
       setRequestModal({
         studentId,
         itemId,
@@ -720,19 +695,17 @@ function GradesTab({
     }
     setCells((c) => ({ ...c, [key]: { ...c[key], saving: true, error: undefined } }));
     const scoreVal = cell.status === 'graded' ? Number(cell.score) || 0 : null;
-    const { error: err } = await supabase
-      .from('scores')
-      .upsert(
-        {
-          student_id: studentId,
-          grade_item_id: itemId,
-          score: scoreVal,
-          status: cell.status,
-          remarks: cell.remarks || null,
-          is_draft: asDraft,
-        },
-        { onConflict: 'grade_item_id,student_id' },
-      );
+    const { error: err } = await supabase.from('scores').upsert(
+      {
+        student_id: studentId,
+        grade_item_id: itemId,
+        score: scoreVal,
+        status: cell.status,
+        remarks: cell.remarks || null,
+        is_draft: asDraft,
+      },
+      { onConflict: 'grade_item_id,student_id' },
+    );
     if (err) {
       setCells((c) => ({
         ...c,
@@ -747,9 +720,7 @@ function GradesTab({
     onChange();
     // Auto-clear the "Saved" flash after 2.5s
     setTimeout(() => {
-      setCells((c) =>
-        c[key] ? { ...c, [key]: { ...c[key], saved: false } } : c,
-      );
+      setCells((c) => (c[key] ? { ...c, [key]: { ...c[key], saved: false } } : c));
     }, 2500);
   };
 
@@ -773,9 +744,9 @@ function GradesTab({
         <div className="rounded-md border border-amber-200 bg-amber-500/10 px-3 py-3 text-sm text-amber-700 dark:text-amber-300 dark:text-amber-200">
           <strong>{unpublishedItems.length}</strong> grade item
           {unpublishedItems.length === 1 ? ' is' : 's are'} still hidden from students (
-          {unpublishedItems.map((i) => i.title).join(', ')}). Scores you save here are stored,
-          but students won't see them until you publish each item in the{' '}
-          <strong>Grade Items</strong> tab.
+          {unpublishedItems.map((i) => i.title).join(', ')}). Scores you save here are stored, but
+          students won't see them until you publish each item in the <strong>Grade Items</strong>{' '}
+          tab.
         </div>
       )}
       <div className="flex justify-end gap-2">
@@ -807,9 +778,7 @@ function GradesTab({
           <tbody className="divide-y divide-line">
             {roster.map((r) => (
               <tr key={r.student_id}>
-                <td className="sticky left-0 bg-surface px-4 py-2 font-medium">
-                  {r.full_name}
-                </td>
+                <td className="sticky left-0 bg-surface px-4 py-2 font-medium">{r.full_name}</td>
                 {items.map((i) => {
                   const key = `${r.student_id}|${i.id}`;
                   const cell = cells[key];
@@ -828,15 +797,15 @@ function GradesTab({
                           className={`input h-8 text-center ${cell?.dirty ? 'ring-2 ring-amber-500/30' : ''} ${locked ? 'border-amber-300 bg-amber-500/10' : ''}`}
                           value={cell?.score ?? ''}
                           onChange={(e) => update(key, { score: e.target.value })}
-                          onBlur={() => cell?.dirty && void saveCell(r.student_id, i.id, cell, false)}
+                          onBlur={() =>
+                            cell?.dirty && void saveCell(r.student_id, i.id, cell, false)
+                          }
                           title={locked ? 'Period finalized — changes require approval' : undefined}
                         />
                         <select
                           className="input h-7 text-xs"
                           value={cell?.status ?? 'graded'}
-                          onChange={(e) =>
-                            update(key, { status: e.target.value as ScoreStatus })
-                          }
+                          onChange={(e) => update(key, { status: e.target.value as ScoreStatus })}
                           disabled={locked}
                         >
                           <option value="graded">graded</option>
@@ -880,13 +849,9 @@ function GradesTab({
                         ) : cell?.saving ? (
                           <div className="text-xs text-content-subtle">Saving…</div>
                         ) : cell?.saved ? (
-                          <div className="text-xs font-medium text-emerald-600">
-                            ✓ Saved
-                          </div>
+                          <div className="text-xs font-medium text-emerald-600">✓ Saved</div>
                         ) : locked ? (
-                          <div className="text-xs font-medium text-amber-700">
-                            🔒 Locked
-                          </div>
+                          <div className="text-xs font-medium text-amber-700">🔒 Locked</div>
                         ) : null}
                       </div>
                     </td>
@@ -898,9 +863,9 @@ function GradesTab({
         </table>
       </div>
       <p className="text-xs text-content-subtle">
-        Tip: cells with amber border are unsaved. Score saves on blur. Use the buttons at the
-        top to bulk save as draft or publish. Cells in a finalized period are locked — editing
-        them opens a request-change dialog that goes to the Department Head for approval.
+        Tip: cells with amber border are unsaved. Score saves on blur. Use the buttons at the top to
+        bulk save as draft or publish. Cells in a finalized period are locked — editing them opens a
+        request-change dialog that goes to the Department Head for approval.
       </p>
 
       {requestModal && (
@@ -1021,7 +986,9 @@ function CommentsModal({
         </div>
 
         {error && (
-          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+            {error}
+          </div>
         )}
 
         <div className="max-h-64 space-y-2 overflow-y-auto">
@@ -1071,16 +1038,10 @@ function CommentsModal({
                         onChange={(e) => setEditBody(e.target.value)}
                       />
                       <div className="flex justify-end gap-2">
-                        <button
-                          onClick={() => setEditing(null)}
-                          className="btn-secondary text-xs"
-                        >
+                        <button onClick={() => setEditing(null)} className="btn-secondary text-xs">
                           Cancel
                         </button>
-                        <button
-                          onClick={() => void onSaveEdit(c)}
-                          className="btn-primary text-xs"
-                        >
+                        <button onClick={() => void onSaveEdit(c)} className="btn-primary text-xs">
                           Save
                         </button>
                       </div>
@@ -1202,8 +1163,8 @@ function RequestChangeModal({
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">Request grade change</h3>
         <div className="rounded-md bg-amber-500/10 px-3 py-2 text-xs text-amber-700 dark:text-amber-300 dark:text-amber-200">
-          This period is finalized. Your change will be sent to the Department Head for
-          approval. The student's grade won't update until the request is approved.
+          This period is finalized. Your change will be sent to the Department Head for approval.
+          The student's grade won't update until the request is approved.
         </div>
         <div className="text-sm text-content-muted">
           <div>
@@ -1214,7 +1175,9 @@ function RequestChangeModal({
           </div>
         </div>
         {error && (
-          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+            {error}
+          </div>
         )}
         <div>
           <label className="label">New score</label>
@@ -1267,25 +1230,28 @@ function AttendanceTab({
   const [savingId, setSavingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchForDate = async (d: string) => {
-    setLoading(true);
-    setError(null);
-    const { data, error: err } = await supabase
-      .from('attendance')
-      .select('*')
-      .eq('class_id', classId)
-      .eq('attended_at', d);
-    setLoading(false);
-    if (err) {
-      setError(humanizeError(err));
-      return;
-    }
-    setRecords((data as DbAttendance[]) ?? []);
-  };
+  const fetchForDate = useCallback(
+    async (d: string) => {
+      setLoading(true);
+      setError(null);
+      const { data, error: err } = await supabase
+        .from('attendance')
+        .select('*')
+        .eq('class_id', classId)
+        .eq('attended_at', d);
+      setLoading(false);
+      if (err) {
+        setError(humanizeError(err));
+        return;
+      }
+      setRecords((data as DbAttendance[]) ?? []);
+    },
+    [classId],
+  );
 
   useEffect(() => {
     void fetchForDate(date);
-  }, [classId, date]);
+  }, [date, fetchForDate]);
 
   const mark = async (studentId: string, status: AttendanceStatus) => {
     if (!user) return;
@@ -1332,8 +1298,7 @@ function AttendanceTab({
     await fetchForDate(date);
   };
 
-  const statusFor = (studentId: string) =>
-    records.find((r) => r.student_id === studentId)?.status;
+  const statusFor = (studentId: string) => records.find((r) => r.student_id === studentId)?.status;
 
   if (roster.length === 0) {
     return (
@@ -1367,7 +1332,9 @@ function AttendanceTab({
       </div>
 
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
 
       <div className="card overflow-x-auto p-0">
@@ -1424,8 +1391,8 @@ function AttendanceTab({
         </table>
       </div>
       <p className="text-xs text-content-subtle">
-        Tip: pick a date, then click a status per student. Use the bulk buttons to mark the
-        whole class quickly.
+        Tip: pick a date, then click a status per student. Use the bulk buttons to mark the whole
+        class quickly.
       </p>
     </div>
   );
@@ -1433,9 +1400,12 @@ function AttendanceTab({
 
 function statusButtonClass(status: AttendanceStatus, active: boolean): string {
   if (!active) return 'bg-surface-3 text-content-muted hover:bg-surface-3';
-  if (status === 'present') return 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/30';
-  if (status === 'late') return 'bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-1 ring-amber-500/30';
-  if (status === 'absent') return 'bg-red-500/15 text-red-700 dark:text-red-300 ring-1 ring-red-500/30';
+  if (status === 'present')
+    return 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/30';
+  if (status === 'late')
+    return 'bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-1 ring-amber-500/30';
+  if (status === 'absent')
+    return 'bg-red-500/15 text-red-700 dark:text-red-300 ring-1 ring-red-500/30';
   return 'bg-surface-3 text-content ring-1 ring-line';
 }
 
@@ -1471,11 +1441,13 @@ function FinalizeTab({ classId, onChange }: { classId: string; onChange: () => v
     <div className="card space-y-3">
       <h2 className="text-lg font-semibold">Finalize Grades</h2>
       <p className="text-sm text-content-muted">
-        Locking a period takes a snapshot of every enrolled student's computed grade and
-        prevents further edits to scores in that period.
+        Locking a period takes a snapshot of every enrolled student's computed grade and prevents
+        further edits to scores in that period.
       </p>
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
       {result && (
         <div className="rounded-xl bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-600 ring-1 ring-emerald-500/30 dark:text-emerald-300">
@@ -1532,7 +1504,9 @@ function AppealsTab({ classId }: { classId: string }) {
       </div>
 
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
 
       {loading ? (
@@ -1574,10 +1548,7 @@ function AppealsTab({ classId }: { classId: string }) {
                 <div className="flex flex-col items-end gap-2">
                   <AppealStatusBadge status={a.status} />
                   {a.status === 'pending' && (
-                    <button
-                      onClick={() => setResolving(a)}
-                      className="btn-primary text-xs"
-                    >
+                    <button onClick={() => setResolving(a)} className="btn-primary text-xs">
                       Review
                     </button>
                   )}
@@ -1682,7 +1653,9 @@ function ResolveAppealModal({
         </div>
 
         {error && (
-          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+            {error}
+          </div>
         )}
 
         <div className="rounded-md border border-amber-200 bg-amber-500/10 px-3 py-3">

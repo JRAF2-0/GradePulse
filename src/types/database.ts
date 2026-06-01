@@ -8,21 +8,9 @@
  *   npx supabase gen types typescript --project-id <your-project-id> > src/types/database.ts
  */
 
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[];
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
-export type UserRole =
-  | 'pending'
-  | 'student'
-  | 'teacher'
-  | 'admin'
-  | 'department_head'
-  | 'parent';
+export type UserRole = 'pending' | 'student' | 'teacher' | 'admin' | 'department_head' | 'parent';
 export type Period = 'midterm' | 'finals';
 export type Semester = '1st' | '2nd' | 'summer';
 export type ScoreStatus = 'graded' | 'missing' | 'late' | 'excused';

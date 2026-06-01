@@ -56,11 +56,15 @@ export function StatTile({
     <>
       <div className="flex items-start justify-between gap-3">
         <div className="text-sm font-semibold text-content-muted">{label}</div>
-        <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${t.icon}`}>
+        <span
+          className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${t.icon}`}
+        >
           <Icon className="h-5 w-5" strokeWidth={1.9} />
         </span>
       </div>
-      <div className={`mt-3 text-4xl font-bold leading-none tracking-tight ${t.value}`}>{value}</div>
+      <div className={`mt-3 text-4xl font-bold leading-none tracking-tight ${t.value}`}>
+        {value}
+      </div>
       {hint && <div className="mt-2 text-xs text-content-subtle">{hint}</div>}
     </>
   );

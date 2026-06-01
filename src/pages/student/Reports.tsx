@@ -93,7 +93,10 @@ export function StudentReports() {
           const scoresRes = await supabase
             .from('scores')
             .select('*')
-            .in('grade_item_id', items.map((i) => i.id))
+            .in(
+              'grade_item_id',
+              items.map((i) => i.id),
+            )
             .eq('student_id', studentId)
             .eq('is_draft', false);
           scores = scoresRes.data ?? [];
@@ -140,9 +143,7 @@ export function StudentReports() {
         const totalMax = catItems.reduce((s, i) => s + Number(i.max_score), 0);
         const earned = catItems.reduce((s, i) => {
           const sc = data.scores.find((x) => x.grade_item_id === i.id);
-          return (
-            s + (sc?.status === 'graded' && sc.score != null ? Number(sc.score) : 0)
-          );
+          return s + (sc?.status === 'graded' && sc.score != null ? Number(sc.score) : 0);
         }, 0);
         const catPct = totalMax > 0 ? (earned / totalMax) * 100 : 0;
         if (catItems.length === 0) {
@@ -166,17 +167,38 @@ export function StudentReports() {
 
     rows.push([]);
     rows.push(['', '', '', '', '', '', '', '']);
-    rows.push(['Midterm Grade', '', '', '', '', data.midterm.percentage.toFixed(2) + '%',
-      formatNumeric(data.midterm.numeric_grade), data.midterm.remarks]);
-    rows.push(['Finals Grade', '', '', '', '', data.finals.percentage.toFixed(2) + '%',
-      formatNumeric(data.finals.numeric_grade), data.finals.remarks]);
-    rows.push(['Final Grade', '', '', '', '', data.final.percentage.toFixed(2) + '%',
-      formatNumeric(data.final.numeric_grade), data.final.remarks]);
+    rows.push([
+      'Midterm Grade',
+      '',
+      '',
+      '',
+      '',
+      data.midterm.percentage.toFixed(2) + '%',
+      formatNumeric(data.midterm.numeric_grade),
+      data.midterm.remarks,
+    ]);
+    rows.push([
+      'Finals Grade',
+      '',
+      '',
+      '',
+      '',
+      data.finals.percentage.toFixed(2) + '%',
+      formatNumeric(data.finals.numeric_grade),
+      data.finals.remarks,
+    ]);
+    rows.push([
+      'Final Grade',
+      '',
+      '',
+      '',
+      '',
+      data.final.percentage.toFixed(2) + '%',
+      formatNumeric(data.final.numeric_grade),
+      data.final.remarks,
+    ]);
 
-    downloadCsv(
-      `gradepulse_${data.subjectCode}_${profile.full_name.replace(/\s+/g, '_')}`,
-      rows,
-    );
+    downloadCsv(`gradepulse_${data.subjectCode}_${profile.full_name.replace(/\s+/g, '_')}`, rows);
   };
 
   const exportPdf = () => {
@@ -194,18 +216,10 @@ export function StudentReports() {
         const totalMax = catItems.reduce((s, i) => s + Number(i.max_score), 0);
         const earned = catItems.reduce((s, i) => {
           const sc = data.scores.find((x) => x.grade_item_id === i.id);
-          return (
-            s + (sc?.status === 'graded' && sc.score != null ? Number(sc.score) : 0)
-          );
+          return s + (sc?.status === 'graded' && sc.score != null ? Number(sc.score) : 0);
         }, 0);
         const catPct = totalMax > 0 ? (earned / totalMax) * 100 : 0;
-        body.push([
-          `${cat.name} (${cat.weight}%)`,
-          '',
-          '',
-          '',
-          `${catPct.toFixed(2)}%`,
-        ]);
+        body.push([`${cat.name} (${cat.weight}%)`, '', '', '', `${catPct.toFixed(2)}%`]);
         catItems.forEach((i) => {
           const sc = data.scores.find((x) => x.grade_item_id === i.id);
           body.push([
@@ -220,7 +234,11 @@ export function StudentReports() {
 
       const pg = period === 'midterm' ? data.midterm : data.finals;
       body.push([
-        { content: `${period.toUpperCase()} TOTAL`, colSpan: 2, styles: { fontStyle: 'bold' } } as never,
+        {
+          content: `${period.toUpperCase()} TOTAL`,
+          colSpan: 2,
+          styles: { fontStyle: 'bold' },
+        } as never,
         { content: `${pg.percentage.toFixed(2)}%`, styles: { fontStyle: 'bold' } } as never,
         { content: formatNumeric(pg.numeric_grade), styles: { fontStyle: 'bold' } } as never,
         { content: pg.remarks, styles: { fontStyle: 'bold' } } as never,
@@ -277,11 +295,7 @@ export function StudentReports() {
           ) : classes.length === 0 ? (
             <p className="text-sm text-content-subtle">You're not enrolled in any class yet.</p>
           ) : (
-            <select
-              className="input"
-              value={classId}
-              onChange={(e) => setClassId(e.target.value)}
-            >
+            <select className="input" value={classId} onChange={(e) => setClassId(e.target.value)}>
               <option value="">— select —</option>
               {classes.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -293,7 +307,9 @@ export function StudentReports() {
         </div>
 
         {error && (
-          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+            {error}
+          </div>
         )}
 
         {busy && <p className="text-sm text-content-subtle">Loading report data…</p>}
@@ -301,9 +317,22 @@ export function StudentReports() {
         {data && !busy && (
           <>
             <div className="grid gap-3 sm:grid-cols-3">
-              <SummaryStat label="Midterm" pct={data.midterm.percentage} remarks={data.midterm.remarks} />
-              <SummaryStat label="Finals" pct={data.finals.percentage} remarks={data.finals.remarks} />
-              <SummaryStat label="Final" pct={data.final.percentage} remarks={data.final.remarks} primary />
+              <SummaryStat
+                label="Midterm"
+                pct={data.midterm.percentage}
+                remarks={data.midterm.remarks}
+              />
+              <SummaryStat
+                label="Finals"
+                pct={data.finals.percentage}
+                remarks={data.finals.remarks}
+              />
+              <SummaryStat
+                label="Final"
+                pct={data.final.percentage}
+                remarks={data.final.remarks}
+                primary
+              />
             </div>
             <div className="flex gap-2 pt-2">
               <button onClick={exportCsv} className="btn-secondary">
@@ -332,7 +361,9 @@ function SummaryStat({
   primary?: boolean;
 }) {
   return (
-    <div className={`rounded-md p-3 ring-1 ${primary ? 'bg-brand-500/10 ring-brand-500/30' : 'bg-surface-2 ring-line'}`}>
+    <div
+      className={`rounded-md p-3 ring-1 ${primary ? 'bg-brand-500/10 ring-brand-500/30' : 'bg-surface-2 ring-line'}`}
+    >
       <div className="text-xs uppercase tracking-wide text-content-subtle">{label}</div>
       <div className="mt-1 text-xl font-bold">{pct.toFixed(2)}%</div>
       <div className="text-xs text-content-muted">{remarks}</div>
@@ -387,9 +418,7 @@ function TranscriptSection() {
         .select('id, student_no, course')
         .eq('user_id', user.id)
         .maybeSingle();
-      const row = data as
-        | { id: string; student_no: string | null; course: string | null }
-        | null;
+      const row = data as { id: string; student_no: string | null; course: string | null } | null;
       setStudentId(row?.id ?? null);
       setStudentNo(row?.student_no ?? null);
       setStudentCourse(row?.course ?? null);
@@ -474,9 +503,7 @@ function TranscriptSection() {
 
   const totalUnits = rows.reduce((s, r) => s + r.units, 0);
   const weightedGpa =
-    totalUnits > 0
-      ? rows.reduce((s, r) => s + r.finalNumeric * r.units, 0) / totalUnits
-      : 0;
+    totalUnits > 0 ? rows.reduce((s, r) => s + r.finalNumeric * r.units, 0) / totalUnits : 0;
 
   const downloadTranscript = () => {
     if (!profile) return;
@@ -517,13 +544,7 @@ function TranscriptSection() {
         {
           title: 'Summary',
           head: [['Total Units', 'Weighted GPA', "Dean's List"]],
-          body: [
-            [
-              totalUnits.toFixed(1),
-              formatNumeric(weightedGpa),
-              deansList ? 'Yes' : 'No',
-            ],
-          ],
+          body: [[totalUnits.toFixed(1), formatNumeric(weightedGpa), deansList ? 'Yes' : 'No']],
         },
       ],
       filename: `gradepulse_transcript_${term.year}_${term.sem}_${profile.full_name.replace(/\s+/g, '_')}`,
@@ -535,8 +556,8 @@ function TranscriptSection() {
       <div>
         <h2 className="text-lg font-semibold">Semester Transcript</h2>
         <p className="text-xs text-content-subtle">
-          A full grade summary for one term — every class, final grade, units, weighted GPA,
-          and Dean's List eligibility.
+          A full grade summary for one term — every class, final grade, units, weighted GPA, and
+          Dean's List eligibility.
         </p>
       </div>
 
@@ -547,11 +568,7 @@ function TranscriptSection() {
         ) : termOptions.length === 0 ? (
           <p className="text-sm text-content-subtle">No classes joined yet.</p>
         ) : (
-          <select
-            className="input"
-            value={termKey}
-            onChange={(e) => setTermKey(e.target.value)}
-          >
+          <select className="input" value={termKey} onChange={(e) => setTermKey(e.target.value)}>
             <option value="">— select —</option>
             {termOptions.map((t) => (
               <option key={t.key} value={t.key}>
@@ -563,7 +580,9 @@ function TranscriptSection() {
       </div>
 
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
 
       {loading && <p className="text-sm text-content-subtle">Building transcript…</p>}
@@ -596,9 +615,7 @@ function TranscriptSection() {
                     </td>
                     <td className="px-3 py-2 text-xs">
                       {r.remarks}
-                      {!r.finalized && (
-                        <span className="ml-1 text-amber-700">(provisional)</span>
-                      )}
+                      {!r.finalized && <span className="ml-1 text-amber-700">(provisional)</span>}
                     </td>
                   </tr>
                 ))}
@@ -608,13 +625,9 @@ function TranscriptSection() {
                   </td>
                   <td className="px-3 py-2 text-right">{totalUnits.toFixed(1)}</td>
                   <td></td>
-                  <td className="px-3 py-2 text-right font-mono">
-                    {formatNumeric(weightedGpa)}
-                  </td>
+                  <td className="px-3 py-2 text-right font-mono">{formatNumeric(weightedGpa)}</td>
                   <td className="px-3 py-2 text-xs">
-                    {deansList && (
-                      <span className="badge-success">🏅 Dean's List</span>
-                    )}
+                    {deansList && <span className="badge-success">🏅 Dean's List</span>}
                   </td>
                 </tr>
               </tbody>

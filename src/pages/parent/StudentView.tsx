@@ -4,10 +4,7 @@ import { supabase } from '@/lib/supabase';
 import { formatNumeric } from '@/utils/conversionTable';
 import { humanizeError } from '@/utils/errorMessage';
 import { RiskBadge } from '@/components/RiskBadge';
-import type {
-  AttendanceSummary,
-  RiskLevel,
-} from '@/types/database';
+import type { AttendanceSummary, RiskLevel } from '@/types/database';
 
 interface ChildInfo {
   id: string;
@@ -50,9 +47,7 @@ export function ParentStudentView() {
       // Child profile (RLS only returns rows for linked students)
       const { data: studentRow, error: sErr } = await supabase
         .from('students')
-        .select(
-          'id, student_no, course, year_level, section, user:users(full_name)',
-        )
+        .select('id, student_no, course, year_level, section, user:users(full_name)')
         .eq('id', studentId)
         .maybeSingle();
       if (cancelled) return;
@@ -164,7 +159,9 @@ export function ParentStudentView() {
         <Link to="/parent" className="text-sm text-brand-600 hover:underline">
           ← Back to children
         </Link>
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       </div>
     );
   if (!child) return null;
@@ -230,9 +227,7 @@ export function ParentStudentView() {
                       {c.semester} · {c.schoolYear}
                       {c.section ? ` · ${c.section}` : ''}
                     </td>
-                    <td className="px-4 py-3 text-right font-semibold">
-                      {c.finalPct.toFixed(2)}%
-                    </td>
+                    <td className="px-4 py-3 text-right font-semibold">{c.finalPct.toFixed(2)}%</td>
                     <td className="px-4 py-3 text-right font-mono">
                       {formatNumeric(c.finalNumeric)}
                     </td>

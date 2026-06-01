@@ -25,9 +25,9 @@ export function Pending() {
           </div>
           <h1 className="mb-2 text-2xl font-bold tracking-tight">Awaiting Approval</h1>
           <p className="text-content-muted">
-            Hi {profile?.full_name ?? 'there'} — your account is pending admin review.
-            While you wait, you can complete your profile below. An admin will assign your
-            role (student or teacher) soon.
+            Hi {profile?.full_name ?? 'there'} — your account is pending admin review. While you
+            wait, you can complete your profile below. An admin will assign your role (student or
+            teacher) soon.
           </p>
           <button onClick={() => void signOut()} className="btn-secondary mt-6">
             Sign out

@@ -24,12 +24,7 @@ const FULL_PX: Record<NonNullable<Props['size']>, string> = {
   lg: 'h-20',
 };
 
-export function Logo({
-  size = 'sm',
-  withWordmark = false,
-  full = false,
-  className = '',
-}: Props) {
+export function Logo({ size = 'sm', withWordmark = false, full = false, className = '' }: Props) {
   if (full) {
     // Whole branded logo (icon + "GradePulse" baked into the image).
     return (

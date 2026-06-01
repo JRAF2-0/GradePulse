@@ -51,9 +51,7 @@ export function AdminParentLinks() {
       supabase.from('users').select('id, full_name, email, role').eq('role', 'parent'),
       supabase
         .from('students')
-        .select(
-          'id, student_no, course, year_level, section, user:users(id, full_name, email)',
-        ),
+        .select('id, student_no, course, year_level, section, user:users(id, full_name, email)'),
     ]);
     setLoading(false);
     if (linksRes.error) {
@@ -90,8 +88,7 @@ export function AdminParentLinks() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Parent ↔ Student Links</h1>
           <p className="text-sm text-content-muted">
-            Link a parent account to one or more students so they can view their
-            children's grades.
+            Link a parent account to one or more students so they can view their children's grades.
           </p>
         </div>
         <button
@@ -111,7 +108,9 @@ export function AdminParentLinks() {
       </header>
 
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
 
       <div className="card overflow-x-auto p-0">
@@ -145,9 +144,7 @@ export function AdminParentLinks() {
                     <div className="font-medium">{l.parent?.full_name}</div>
                     <div className="text-xs text-content-subtle">{l.parent?.email}</div>
                   </td>
-                  <td className="px-4 py-2 font-medium">
-                    {l.student?.user?.full_name ?? '—'}
-                  </td>
+                  <td className="px-4 py-2 font-medium">{l.student?.user?.full_name ?? '—'}</td>
                   <td className="px-4 py-2 text-content-muted">{l.relationship ?? '—'}</td>
                   <td className="px-4 py-2 text-content-subtle">
                     {new Date(l.created_at).toLocaleDateString()}
@@ -229,7 +226,9 @@ function NewLinkModal({
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">Link parent to student</h3>
         {error && (
-          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+            {error}
+          </div>
         )}
         <div>
           <label className="label">Parent</label>

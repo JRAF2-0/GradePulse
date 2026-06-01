@@ -37,4 +37,10 @@ vite.config.d.ts
 # Supabase
 supabase/.temp
 supabase/.branches
+supabase/migrations/
+
+# Internal product specs (kept local, not published)
+GRADEPULSE_V1.md
+V2_FEATURES.md
+V3_FEATURES.md
 

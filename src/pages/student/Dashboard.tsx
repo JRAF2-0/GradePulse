@@ -85,12 +85,12 @@ export function StudentDashboard() {
         year: c.school_year,
         sem: c.semester,
       }));
-      const uniqueTerms = Array.from(
-        new Set(termPairs.map((t) => `${t.year}__${t.sem}`)),
-      ).map((k) => {
-        const [year, sem] = k.split('__');
-        return { year, sem };
-      });
+      const uniqueTerms = Array.from(new Set(termPairs.map((t) => `${t.year}__${t.sem}`))).map(
+        (k) => {
+          const [year, sem] = k.split('__');
+          return { year, sem };
+        },
+      );
       // Try each term — set on first eligibility hit
       let found: { year: string; sem: string } | null = null;
       for (const term of uniqueTerms) {
@@ -111,12 +111,16 @@ export function StudentDashboard() {
   }, [user, classes]);
 
   const overallAverage =
-    rows.length > 0
-      ? rows.reduce((s, r) => s + r.final.percentage, 0) / rows.length
-      : 0;
+    rows.length > 0 ? rows.reduce((s, r) => s + r.final.percentage, 0) / rows.length : 0;
 
   const avgTone: Tone =
-    overallAverage >= 75 ? 'success' : overallAverage >= 70 ? 'warning' : overallAverage > 0 ? 'danger' : 'neutral';
+    overallAverage >= 75
+      ? 'success'
+      : overallAverage >= 70
+        ? 'warning'
+        : overallAverage > 0
+          ? 'danger'
+          : 'neutral';
   const statusLabel =
     overallAverage >= 75
       ? 'Passing'
@@ -125,7 +129,14 @@ export function StudentDashboard() {
         : overallAverage > 0
           ? 'Failing'
           : 'No grades yet';
-  const riskTone: Tone = risk === 'high' ? 'danger' : risk === 'medium' ? 'warning' : risk === 'low' ? 'success' : 'neutral';
+  const riskTone: Tone =
+    risk === 'high'
+      ? 'danger'
+      : risk === 'medium'
+        ? 'warning'
+        : risk === 'low'
+          ? 'success'
+          : 'neutral';
   const barColor =
     avgTone === 'success'
       ? 'bg-emerald-500'
@@ -161,7 +172,9 @@ export function StudentDashboard() {
           tone="brand"
           hint={
             deansList ? (
-              <span className="badge-success">🏅 Dean's List · {deansList.sem} {deansList.year}</span>
+              <span className="badge-success">
+                🏅 Dean's List · {deansList.sem} {deansList.year}
+              </span>
             ) : (
               'PH scale (1.00 best)'
             )
@@ -171,7 +184,13 @@ export function StudentDashboard() {
           icon={ShieldCheck}
           label="Risk Level"
           value={
-            risk ? <RiskBadge level={risk} /> : <span className="text-base text-content-subtle">{computing ? 'Calculating…' : '—'}</span>
+            risk ? (
+              <RiskBadge level={risk} />
+            ) : (
+              <span className="text-base text-content-subtle">
+                {computing ? 'Calculating…' : '—'}
+              </span>
+            )
           }
           tone={riskTone}
           hint="Based on grades + attendance"
@@ -247,8 +266,12 @@ export function StudentDashboard() {
                         {r.title}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-right text-content-muted">{r.midterm.percentage.toFixed(2)}%</td>
-                    <td className="px-4 py-3 text-right text-content-muted">{r.finals.percentage.toFixed(2)}%</td>
+                    <td className="px-4 py-3 text-right text-content-muted">
+                      {r.midterm.percentage.toFixed(2)}%
+                    </td>
+                    <td className="px-4 py-3 text-right text-content-muted">
+                      {r.finals.percentage.toFixed(2)}%
+                    </td>
                     <td className="px-4 py-3 text-right font-semibold text-content">
                       {r.final.percentage.toFixed(2)}%
                     </td>

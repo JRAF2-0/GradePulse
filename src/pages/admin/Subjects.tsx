@@ -67,7 +67,9 @@ export function AdminSubjects() {
       </header>
 
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
 
       <div className="card overflow-x-auto p-0">
@@ -182,7 +184,9 @@ function SubjectForm({
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">{subject ? 'Edit Subject' : 'New Subject'}</h3>
         {error && (
-          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+            {error}
+          </div>
         )}
         <div>
           <label className="label">Code</label>

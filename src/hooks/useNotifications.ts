@@ -45,16 +45,10 @@ export function useNotifications() {
     };
   }, [user, fetchAll]);
 
-  const markRead = useCallback(
-    async (id: string) => {
-      const { error } = await supabase
-        .from('notifications')
-        .update({ is_read: true })
-        .eq('id', id);
-      if (error) console.error(error);
-    },
-    [],
-  );
+  const markRead = useCallback(async (id: string) => {
+    const { error } = await supabase.from('notifications').update({ is_read: true }).eq('id', id);
+    if (error) console.error(error);
+  }, []);
 
   const markAllRead = useCallback(async () => {
     if (!user) return;

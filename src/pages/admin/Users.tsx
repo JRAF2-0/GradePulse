@@ -60,7 +60,9 @@ export function AdminUsers() {
       </header>
 
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
 
       <section>
@@ -275,7 +277,9 @@ function AssignRoleModal({
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">Assign role — {user.full_name}</h3>
         {error && (
-          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+            {error}
+          </div>
         )}
         <div>
           <label className="label">Role</label>
@@ -358,9 +362,7 @@ function AssignRoleModal({
                       ? ` (${personal.emergency_contact_relation})`
                       : ''
                   }${
-                    personal.emergency_contact_phone
-                      ? ` · ${personal.emergency_contact_phone}`
-                      : ''
+                    personal.emergency_contact_phone ? ` · ${personal.emergency_contact_phone}` : ''
                   }`
                 : '—'}
             </dd>
@@ -371,12 +373,21 @@ function AssignRoleModal({
           <>
             <div>
               <label className="label">Student number</label>
-              <input className="input" value={studentNo} onChange={(e) => setStudentNo(e.target.value)} />
+              <input
+                className="input"
+                value={studentNo}
+                onChange={(e) => setStudentNo(e.target.value)}
+              />
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div>
                 <label className="label">Course</label>
-                <input className="input" value={course} onChange={(e) => setCourse(e.target.value)} placeholder="BSIT" />
+                <input
+                  className="input"
+                  value={course}
+                  onChange={(e) => setCourse(e.target.value)}
+                  placeholder="BSIT"
+                />
               </div>
               <div>
                 <label className="label">Year</label>
@@ -391,7 +402,12 @@ function AssignRoleModal({
               </div>
               <div>
                 <label className="label">Section</label>
-                <input className="input" value={section} onChange={(e) => setSection(e.target.value)} placeholder="3A" />
+                <input
+                  className="input"
+                  value={section}
+                  onChange={(e) => setSection(e.target.value)}
+                  placeholder="3A"
+                />
               </div>
             </div>
           </>
@@ -401,7 +417,11 @@ function AssignRoleModal({
           <>
             <div>
               <label className="label">Employee number</label>
-              <input className="input" value={employeeNo} onChange={(e) => setEmployeeNo(e.target.value)} />
+              <input
+                className="input"
+                value={employeeNo}
+                onChange={(e) => setEmployeeNo(e.target.value)}
+              />
             </div>
             <div>
               <label className="label">

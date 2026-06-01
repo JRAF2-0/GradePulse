@@ -33,7 +33,12 @@ export function AdminDepartments() {
   }, [fetchRows]);
 
   const onDelete = async (row: DepartmentRow) => {
-    if (!confirm(`Delete department "${row.name}"? Teachers and subjects linked to it will be unlinked.`)) return;
+    if (
+      !confirm(
+        `Delete department "${row.name}"? Teachers and subjects linked to it will be unlinked.`,
+      )
+    )
+      return;
     const { error: err } = await supabase.from('departments').delete().eq('id', row.id);
     if (err) {
       setError(humanizeError(err));
@@ -57,7 +62,9 @@ export function AdminDepartments() {
       </header>
 
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
 
       <div className="card overflow-x-auto p-0">
@@ -90,10 +97,7 @@ export function AdminDepartments() {
                   <td className="px-4 py-2 font-medium">{d.name}</td>
                   <td className="px-4 py-2 text-content-muted">{d.head?.full_name ?? '—'}</td>
                   <td className="px-4 py-2 text-right">
-                    <button
-                      onClick={() => setEditing(d)}
-                      className="btn-secondary mr-2 text-xs"
-                    >
+                    <button onClick={() => setEditing(d)} className="btn-secondary mr-2 text-xs">
                       Edit
                     </button>
                     <button
@@ -169,11 +173,11 @@ function DepartmentForm({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm animate-fade-in">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
-        <h3 className="text-lg font-semibold">
-          {initial ? 'Edit department' : 'New department'}
-        </h3>
+        <h3 className="text-lg font-semibold">{initial ? 'Edit department' : 'New department'}</h3>
         {error && (
-          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+            {error}
+          </div>
         )}
         <div>
           <label className="label">Code</label>

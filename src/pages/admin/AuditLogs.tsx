@@ -119,7 +119,9 @@ export function AdminAuditLogs() {
       </div>
 
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
 
       <div className="card overflow-x-auto p-0">
@@ -247,11 +249,7 @@ function ChangeSummary({ log }: { log: AuditLogRow }) {
       );
     }
     if (log.action === 'delete') {
-      return (
-        <span className="text-red-600">
-          deleted ({oldScore ?? '—'})
-        </span>
-      );
+      return <span className="text-red-600">deleted ({oldScore ?? '—'})</span>;
     }
     return (
       <span>
@@ -301,13 +299,17 @@ function DiffModal({ log, onClose }: { log: AuditLogRow; onClose: () => void }) 
 
         <div className="grid gap-3 md:grid-cols-2">
           <div>
-            <div className="mb-1 text-xs font-semibold uppercase text-content-subtle">Old value</div>
+            <div className="mb-1 text-xs font-semibold uppercase text-content-subtle">
+              Old value
+            </div>
             <pre className="max-h-96 overflow-auto rounded-xl bg-red-500/10 p-3 text-xs text-red-700 ring-1 ring-red-500/30 dark:text-red-200">
               {log.old_value ? JSON.stringify(log.old_value, null, 2) : '—'}
             </pre>
           </div>
           <div>
-            <div className="mb-1 text-xs font-semibold uppercase text-content-subtle">New value</div>
+            <div className="mb-1 text-xs font-semibold uppercase text-content-subtle">
+              New value
+            </div>
             <pre className="max-h-96 overflow-auto rounded-xl bg-emerald-500/10 p-3 text-xs text-emerald-700 ring-1 ring-emerald-500/30 dark:text-emerald-200">
               {log.new_value ? JSON.stringify(log.new_value, null, 2) : '—'}
             </pre>

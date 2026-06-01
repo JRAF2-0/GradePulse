@@ -6,9 +6,7 @@ import { Topbar } from './Topbar';
 const COLLAPSE_KEY = 'gradepulse-sidebar-collapsed';
 
 export function Layout() {
-  const [collapsed, setCollapsed] = useState(
-    () => localStorage.getItem(COLLAPSE_KEY) === '1',
-  );
+  const [collapsed, setCollapsed] = useState(() => localStorage.getItem(COLLAPSE_KEY) === '1');
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {

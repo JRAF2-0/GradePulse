@@ -116,9 +116,7 @@ function GradeCard({
       <div className="text-xs uppercase tracking-wide text-content-subtle">{label}</div>
       <div className="mt-1 flex items-baseline gap-2">
         <span className="text-3xl font-bold">{grade.percentage.toFixed(2)}%</span>
-        <span className="text-sm text-content-subtle">
-          ≈ {formatNumeric(grade.numeric_grade)}
-        </span>
+        <span className="text-sm text-content-subtle">≈ {formatNumeric(grade.numeric_grade)}</span>
       </div>
       <div className="mt-2">
         <span className={remarkClass}>{grade.remarks}</span>
@@ -127,13 +125,7 @@ function GradeCard({
   );
 }
 
-function AttendanceSummaryCard({
-  classId,
-  studentId,
-}: {
-  classId: string;
-  studentId: string;
-}) {
+function AttendanceSummaryCard({ classId, studentId }: { classId: string; studentId: string }) {
   const [summary, setSummary] = useState<AttendanceSummary | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -155,9 +147,7 @@ function AttendanceSummaryCard({
   }, [classId, studentId]);
 
   if (loading) {
-    return (
-      <div className="card text-sm text-content-subtle">Loading attendance…</div>
-    );
+    return <div className="card text-sm text-content-subtle">Loading attendance…</div>;
   }
   if (!summary || summary.total === 0) {
     return (
@@ -182,9 +172,21 @@ function AttendanceSummaryCard({
         <div className={`text-3xl font-bold tracking-tight ${pctColor}`}>{pct.toFixed(1)}%</div>
       </div>
       <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
-        <AttendanceStat label="Present" value={summary.present} color="text-emerald-600 dark:text-emerald-300" />
-        <AttendanceStat label="Late" value={summary.late} color="text-amber-600 dark:text-amber-300" />
-        <AttendanceStat label="Absent" value={summary.absent} color="text-red-600 dark:text-red-300" />
+        <AttendanceStat
+          label="Present"
+          value={summary.present}
+          color="text-emerald-600 dark:text-emerald-300"
+        />
+        <AttendanceStat
+          label="Late"
+          value={summary.late}
+          color="text-amber-600 dark:text-amber-300"
+        />
+        <AttendanceStat
+          label="Absent"
+          value={summary.absent}
+          color="text-red-600 dark:text-red-300"
+        />
         <AttendanceStat label="Excused" value={summary.excused} color="text-content-muted" />
       </div>
       <p className="mt-3 text-xs text-content-subtle">
@@ -195,15 +197,7 @@ function AttendanceSummaryCard({
   );
 }
 
-function AttendanceStat({
-  label,
-  value,
-  color,
-}: {
-  label: string;
-  value: number;
-  color: string;
-}) {
+function AttendanceStat({ label, value, color }: { label: string; value: number; color: string }) {
   return (
     <div className="rounded-md border border-line bg-surface-2 px-3 py-2 text-center">
       <div className="text-xs uppercase tracking-wide text-content-subtle">{label}</div>
@@ -250,10 +244,7 @@ function Breakdown({
         const totalMax = catItems.reduce((s, i) => s + Number(i.max_score), 0);
         const earned = catItems.reduce((s, i) => {
           const sc = scores.find((x) => x.grade_item_id === i.id);
-          return (
-            s +
-            (sc && sc.status === 'graded' && sc.score != null ? Number(sc.score) : 0)
-          );
+          return s + (sc && sc.status === 'graded' && sc.score != null ? Number(sc.score) : 0);
         }, 0);
         const catPct = totalMax > 0 ? (earned / totalMax) * 100 : 0;
         const contribution = (catPct * Number(cat.weight)) / 100;
@@ -283,9 +274,7 @@ function Breakdown({
                     const sc = scores.find((s) => s.grade_item_id === i.id);
                     const appeal = sc ? appeals.find((a) => a.score_id === sc.id) : undefined;
                     const itemComments = comments.filter(
-                      (c) =>
-                        c.grade_item_id === i.id ||
-                        (sc && c.score_id === sc.id),
+                      (c) => c.grade_item_id === i.id || (sc && c.score_id === sc.id),
                     );
                     return (
                       <Fragment key={i.id}>
@@ -336,8 +325,8 @@ function Breakdown({
                                       className="rounded-md border border-line bg-surface-2 px-3 py-1.5 text-xs"
                                     >
                                       <div className="text-xs uppercase tracking-wide text-content-subtle">
-                                        💬 {c.grade_item_id ? 'Note to class' : 'From your teacher'} ·{' '}
-                                        {new Date(c.created_at).toLocaleDateString()}
+                                        💬 {c.grade_item_id ? 'Note to class' : 'From your teacher'}{' '}
+                                        · {new Date(c.created_at).toLocaleDateString()}
                                       </div>
                                       <div className="whitespace-pre-wrap text-content-muted">
                                         {c.body}
@@ -438,7 +427,9 @@ function AppealModal({
           </div>
         </div>
         {error && (
-          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+            {error}
+          </div>
         )}
         <div>
           <label className="label">Reason</label>

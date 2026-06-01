@@ -98,9 +98,27 @@ export function AdminDashboard() {
 
       {/* Primary counts */}
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatTile icon={GraduationCap} label="Students" value={v(counts.students)} to="/admin/users" tone="brand" />
-        <StatTile icon={Users} label="Teachers" value={v(counts.teachers)} to="/admin/users" tone="brand" />
-        <StatTile icon={BookOpen} label="Active Classes" value={v(counts.classes)} to="/admin/classes" tone="brand" />
+        <StatTile
+          icon={GraduationCap}
+          label="Students"
+          value={v(counts.students)}
+          to="/admin/users"
+          tone="brand"
+        />
+        <StatTile
+          icon={Users}
+          label="Teachers"
+          value={v(counts.teachers)}
+          to="/admin/users"
+          tone="brand"
+        />
+        <StatTile
+          icon={BookOpen}
+          label="Active Classes"
+          value={v(counts.classes)}
+          to="/admin/classes"
+          tone="brand"
+        />
         <StatTile
           icon={UserPlus}
           label="Pending Approvals"

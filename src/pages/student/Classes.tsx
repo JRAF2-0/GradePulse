@@ -54,7 +54,9 @@ export function StudentClasses() {
       </header>
 
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
 
       {loading ? (
@@ -102,9 +104,12 @@ export function StudentClasses() {
           <div className="card w-full max-w-md space-y-4">
             <h3 className="text-lg font-semibold">Leave class?</h3>
             <p className="text-sm text-content-muted">
-              You'll be removed from <strong>{leaving.subject.code} — {leaving.subject.title}</strong>.
-              Your existing grade records stay in the audit log, but you'll lose access to
-              this class's grades. You can rejoin if you still have the class code.
+              You'll be removed from{' '}
+              <strong>
+                {leaving.subject.code} — {leaving.subject.title}
+              </strong>
+              . Your existing grade records stay in the audit log, but you'll lose access to this
+              class's grades. You can rejoin if you still have the class code.
             </p>
             {actionError && (
               <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">

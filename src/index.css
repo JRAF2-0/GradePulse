@@ -5,33 +5,37 @@
 @layer base {
   /* ---- Theme tokens (RGB triplets so Tailwind /alpha works) ---- */
   :root {
-    --app-bg: 247 249 252;        /* soft off-white */
-    --surface: 255 255 255;       /* white     */
-    --surface-2: 246 248 251;     /* slate-50  */
-    --surface-3: 238 242 248;     /* slate-100 */
-    --content: 17 24 39;          /* gray-900 — strong, not pure black */
-    --content-muted: 51 65 85;    /* slate-700 — very readable */
-    --content-subtle: 100 116 139;/* slate-500 — readable captions */
-    --line: 214 221 232;          /* visible separator */
-    --accent: 26 104 245;         /* brand-600 */
-    --accent-soft: 217 236 255;   /* brand-100 */
+    --app-bg: 247 249 252; /* soft off-white */
+    --surface: 255 255 255; /* white     */
+    --surface-2: 246 248 251; /* slate-50  */
+    --surface-3: 238 242 248; /* slate-100 */
+    --content: 17 24 39; /* gray-900 — strong, not pure black */
+    --content-muted: 51 65 85; /* slate-700 — very readable */
+    --content-subtle: 100 116 139; /* slate-500 — readable captions */
+    --line: 214 221 232; /* visible separator */
+    --accent: 26 104 245; /* brand-600 */
+    --accent-soft: 217 236 255; /* brand-100 */
   }
 
   .dark {
-    --app-bg: 11 13 22;           /* deep slate-indigo */
-    --surface: 23 25 40;          /* elevated panel, cool tint */
-    --surface-2: 30 33 52;        /* secondary panel  */
-    --surface-3: 42 46 70;        /* hover / inputs   */
-    --content: 232 236 244;       /* soft cool white — not stark */
+    --app-bg: 11 13 22; /* deep slate-indigo */
+    --surface: 23 25 40; /* elevated panel, cool tint */
+    --surface-2: 30 33 52; /* secondary panel  */
+    --surface-3: 42 46 70; /* hover / inputs   */
+    --content: 232 236 244; /* soft cool white — not stark */
     --content-muted: 185 193 212; /* cool light slate, very readable */
-    --content-subtle: 150 161 187;/* mid slate, still clearly legible */
-    --line: 58 63 90;             /* visible separator on dark */
-    --accent: 96 165 250;         /* lighter blue for dark */
-    --accent-soft: 30 41 78;      /* deep blue tint   */
+    --content-subtle: 150 161 187; /* mid slate, still clearly legible */
+    --line: 58 63 90; /* visible separator on dark */
+    --accent: 96 165 250; /* lighter blue for dark */
+    --accent-soft: 30 41 78; /* deep blue tint   */
   }
 
   html {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family:
+      'Inter',
+      system-ui,
+      -apple-system,
+      sans-serif;
     -webkit-text-size-adjust: 100%;
   }
   body {
@@ -48,7 +52,9 @@
   }
 
   /* Headings stay tight + bold for clear hierarchy */
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     line-height: 1.25;
   }
 

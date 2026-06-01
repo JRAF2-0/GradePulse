@@ -79,18 +79,23 @@ export function DepartmentHeadDashboard() {
             active={pendingApprovals > 0}
             hint="Tap to review →"
           />
-          <StatTile icon={Building2} label="Department" value={dept.code} tone="brand" hint={dept.name} />
-          <Link
-            to="/department-head/bias-signals"
-            className="card card-hover group flex flex-col"
-          >
+          <StatTile
+            icon={Building2}
+            label="Department"
+            value={dept.code}
+            tone="brand"
+            hint={dept.name}
+          />
+          <Link to="/department-head/bias-signals" className="card card-hover group flex flex-col">
             <div className="flex items-start justify-between gap-3">
               <div className="text-sm font-semibold text-content-muted">Bias signals</div>
               <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-500/15 text-brand-500">
                 <ShieldAlert className="h-5 w-5" strokeWidth={1.9} />
               </span>
             </div>
-            <div className="mt-3 text-2xl font-bold tracking-tight text-content">View anomalies</div>
+            <div className="mt-3 text-2xl font-bold tracking-tight text-content">
+              View anomalies
+            </div>
             <div className="mt-2 flex items-center gap-1 text-xs font-medium text-brand-500">
               Department analytics
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />

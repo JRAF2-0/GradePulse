@@ -15,16 +15,15 @@ interface MaybePostgrestError {
 }
 
 const PG_CODE_MAP: Record<string, string> = {
-  '23503':
-    'This item is still in use elsewhere. Remove or reassign the dependents first.',
+  '23503': 'This item is still in use elsewhere. Remove or reassign the dependents first.',
   '23505': 'That value is already taken. Please use a different one.',
   '23502': 'A required field is missing.',
   '23514': 'That value isn’t allowed by the rules of this field.',
   '42501':
     'You don’t have permission to do this. If you think this is a mistake, contact your admin.',
   '42P01': 'The requested resource doesn’t exist anymore.',
-  'PGRST116': 'No rows matched. The record may have been removed.',
-  'PGRST301': 'You don’t have permission to access this resource.',
+  PGRST116: 'No rows matched. The record may have been removed.',
+  PGRST301: 'You don’t have permission to access this resource.',
 };
 
 const AUTH_MESSAGE_MAP: { match: RegExp; friendly: string }[] = [
@@ -61,7 +60,8 @@ const RPC_MESSAGE_MAP: { match: RegExp; friendly: string }[] = [
   { match: /invalid class code/i, friendly: 'That class code doesn’t match any active class.' },
   {
     match: /only students can join classes by code/i,
-    friendly: 'You need a student profile to join a class. Ask your admin to assign you the student role.',
+    friendly:
+      'You need a student profile to join a class. Ask your admin to assign you the student role.',
   },
   {
     match: /cannot modify score for a finalized period/i,

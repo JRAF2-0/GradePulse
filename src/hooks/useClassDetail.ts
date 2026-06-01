@@ -102,14 +102,10 @@ export function useClassDetail(classId: string | undefined) {
           itemCommentsP,
         ]);
         if (!scoreCommentsRes.error) {
-          comments = comments.concat(
-            (scoreCommentsRes.data as DbScoreComment[]) ?? [],
-          );
+          comments = comments.concat((scoreCommentsRes.data as DbScoreComment[]) ?? []);
         }
         if (!itemCommentsRes.error) {
-          comments = comments.concat(
-            (itemCommentsRes.data as DbScoreComment[]) ?? [],
-          );
+          comments = comments.concat((itemCommentsRes.data as DbScoreComment[]) ?? []);
         }
       }
     }

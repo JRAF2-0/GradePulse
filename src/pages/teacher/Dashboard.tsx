@@ -25,8 +25,18 @@ export function TeacherDashboard() {
       <RoleProfileBanner />
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatTile icon={BookOpen} label="Active Classes" value={loading ? '…' : classes.length} tone="brand" />
-        <StatTile icon={Users} label="Total Students" value={loading ? '…' : totalStudents} tone="brand" />
+        <StatTile
+          icon={BookOpen}
+          label="Active Classes"
+          value={loading ? '…' : classes.length}
+          tone="brand"
+        />
+        <StatTile
+          icon={Users}
+          label="Total Students"
+          value={loading ? '…' : totalStudents}
+          tone="brand"
+        />
         <StatTile
           icon={BarChart3}
           label="Avg. Class Size"
@@ -66,7 +76,9 @@ export function TeacherDashboard() {
                     <div className="font-mono text-xs uppercase text-content-subtle">
                       {c.subject.code}
                     </div>
-                    <h3 className="mt-0.5 truncate font-semibold text-content">{c.subject.title}</h3>
+                    <h3 className="mt-0.5 truncate font-semibold text-content">
+                      {c.subject.title}
+                    </h3>
                     <div className="mt-1 text-sm text-content-muted">
                       {c.section ?? '—'} · {c.semester} · {c.school_year}
                     </div>

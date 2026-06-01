@@ -92,7 +92,10 @@ export function useStudentClassDetail(classId: string | undefined) {
         const scoresRes = await supabase
           .from('scores')
           .select('*')
-          .in('grade_item_id', items.map((i) => i.id))
+          .in(
+            'grade_item_id',
+            items.map((i) => i.id),
+          )
           .eq('student_id', studentId)
           .eq('is_draft', false);
         if (scoresRes.error) {
@@ -110,14 +113,10 @@ export function useStudentClassDetail(classId: string | undefined) {
           supabase.from('score_comments').select('*').in('grade_item_id', itemIds),
         ]);
         if (!scoreCommentsRes.error) {
-          comments = comments.concat(
-            (scoreCommentsRes.data as DbScoreComment[]) ?? [],
-          );
+          comments = comments.concat((scoreCommentsRes.data as DbScoreComment[]) ?? []);
         }
         if (!itemCommentsRes.error) {
-          comments = comments.concat(
-            (itemCommentsRes.data as DbScoreComment[]) ?? [],
-          );
+          comments = comments.concat((itemCommentsRes.data as DbScoreComment[]) ?? []);
         }
       }
     }
@@ -174,12 +173,11 @@ async function callPeriod(
   studentId: string,
   period: Period,
 ): Promise<PeriodGrade> {
-  const { data, error } = await supabase
-    .rpc('compute_period_grade', {
-      p_class_id: classId,
-      p_student_id: studentId,
-      p_period: period,
-    });
+  const { data, error } = await supabase.rpc('compute_period_grade', {
+    p_class_id: classId,
+    p_student_id: studentId,
+    p_period: period,
+  });
   if (error || !data || data.length === 0) {
     return { percentage: 0, numeric_grade: 5.0, remarks: 'No grades yet' };
   }

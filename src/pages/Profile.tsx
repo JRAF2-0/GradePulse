@@ -12,9 +12,7 @@ export function Profile() {
     <div className="mx-auto max-w-2xl space-y-6">
       <header>
         <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
-        <p className="mt-1 text-content-muted">
-          Manage your account, personal info, and password.
-        </p>
+        <p className="mt-1 text-content-muted">Manage your account, personal info, and password.</p>
       </header>
 
       {!profile ? (
@@ -78,7 +76,9 @@ function NameForm({
     <form onSubmit={onSubmit} className="card space-y-4">
       <h2 className="text-lg font-semibold">Account info</h2>
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
       {success && (
         <div className="rounded-xl bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-600 ring-1 ring-emerald-500/30 dark:text-emerald-300">
@@ -88,9 +88,7 @@ function NameForm({
       <div>
         <label className="label">Email</label>
         <input className="input bg-surface-2" value={email} disabled />
-        <p className="mt-1 text-xs text-content-subtle">
-          Contact your admin to change your email.
-        </p>
+        <p className="mt-1 text-xs text-content-subtle">Contact your admin to change your email.</p>
       </div>
       <div>
         <label className="label">Full name</label>
@@ -152,7 +150,9 @@ function PasswordForm() {
     <form onSubmit={onSubmit} className="card space-y-4">
       <h2 className="text-lg font-semibold">Change password</h2>
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
       {success && (
         <div className="rounded-xl bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-600 ring-1 ring-emerald-500/30 dark:text-emerald-300">
@@ -192,10 +192,7 @@ function PasswordForm() {
         Show passwords
       </label>
       <div className="flex justify-end">
-        <button
-          disabled={busy || !password || !confirm}
-          className="btn-primary"
-        >
+        <button disabled={busy || !password || !confirm} className="btn-primary">
           {busy ? 'Updating…' : 'Update password'}
         </button>
       </div>

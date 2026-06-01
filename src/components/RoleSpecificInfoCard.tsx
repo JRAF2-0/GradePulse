@@ -58,7 +58,9 @@ export function RoleSpecificInfoCard() {
     return <StudentFields row={student} onSaved={fetchRow} />;
   }
   if ((role === 'teacher' || role === 'department_head') && teacher) {
-    return <TeacherFields row={teacher} isDeptHead={role === 'department_head'} onSaved={fetchRow} />;
+    return (
+      <TeacherFields row={teacher} isDeptHead={role === 'department_head'} onSaved={fetchRow} />
+    );
   }
   return null;
 }

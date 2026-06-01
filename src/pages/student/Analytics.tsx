@@ -18,12 +18,7 @@ import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useStudentClasses } from '@/hooks/useStudentClasses';
-import type {
-  DbGradeCategory,
-  DbGradeItem,
-  DbScore,
-  Period,
-} from '@/types/database';
+import type { DbGradeCategory, DbGradeItem, DbScore, Period } from '@/types/database';
 
 interface ClassOption {
   id: string;
@@ -155,9 +150,7 @@ export function StudentAnalytics() {
   }, [selectedClassId, studentId]);
 
   const trendData: TrendPoint[] = useMemo(() => {
-    const periodCatIds = new Set(
-      categories.filter((c) => c.period === period).map((c) => c.id),
-    );
+    const periodCatIds = new Set(categories.filter((c) => c.period === period).map((c) => c.id));
     return items
       .filter((i) => periodCatIds.has(i.category_id))
       .map((i) => {
@@ -183,12 +176,7 @@ export function StudentAnalytics() {
         const totalMax = catItems.reduce((s, i) => s + Number(i.max_score), 0);
         const earned = catItems.reduce((s, i) => {
           const sc = scores.find((x) => x.grade_item_id === i.id);
-          return (
-            s +
-            (sc && sc.status === 'graded' && sc.score != null
-              ? Number(sc.score)
-              : 0)
-          );
+          return s + (sc && sc.status === 'graded' && sc.score != null ? Number(sc.score) : 0);
         }, 0);
         const pct = totalMax > 0 ? (earned / totalMax) * 100 : 0;
         return {
@@ -258,10 +246,7 @@ export function StudentAnalytics() {
               <EmptyState text="No graded items yet for this period." />
             ) : (
               <ResponsiveContainer width="100%" height={260}>
-                <LineChart
-                  data={trendData}
-                  margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
-                >
+                <LineChart data={trendData} margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
                   <XAxis
                     dataKey="label"
@@ -272,7 +257,11 @@ export function StudentAnalytics() {
                     textAnchor="end"
                     height={60}
                   />
-                  <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: axisColor }} stroke={gridColor} />
+                  <YAxis
+                    domain={[0, 100]}
+                    tick={{ fontSize: 10, fill: axisColor }}
+                    stroke={gridColor}
+                  />
                   <Tooltip
                     contentStyle={tooltipStyle}
                     formatter={(v: number) => `${v}%`}
@@ -295,13 +284,18 @@ export function StudentAnalytics() {
               <EmptyState text="No categories set up for this period." />
             ) : (
               <ResponsiveContainer width="100%" height={260}>
-                <BarChart
-                  data={categoryRows}
-                  margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
-                >
+                <BarChart data={categoryRows} margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: axisColor }} stroke={gridColor} />
-                  <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: axisColor }} stroke={gridColor} />
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fontSize: 11, fill: axisColor }}
+                    stroke={gridColor}
+                  />
+                  <YAxis
+                    domain={[0, 100]}
+                    tick={{ fontSize: 10, fill: axisColor }}
+                    stroke={gridColor}
+                  />
                   <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => `${v}%`} />
                   <Bar dataKey="avgPct" fill="#22c55e" radius={[6, 6, 0, 0]} />
                 </BarChart>
@@ -368,10 +362,7 @@ export function StudentAnalytics() {
                     </td>
                     <td></td>
                     <td className="py-1 text-right">
-                      {categoryRows
-                        .reduce((s, r) => s + r.contribution, 0)
-                        .toFixed(2)}{' '}
-                      pts
+                      {categoryRows.reduce((s, r) => s + r.contribution, 0).toFixed(2)} pts
                     </td>
                   </tr>
                 )}

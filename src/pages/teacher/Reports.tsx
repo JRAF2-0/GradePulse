@@ -83,7 +83,17 @@ export function TeacherReports() {
       ['Term', `${klass.semester} · ${klass.school_year}`],
       ['Section', klass.section ?? ''],
       [],
-      ['Student #', 'Name', 'Midterm %', 'Midterm Eq.', 'Finals %', 'Finals Eq.', 'Final %', 'Final Eq.', 'Remarks'],
+      [
+        'Student #',
+        'Name',
+        'Midterm %',
+        'Midterm Eq.',
+        'Finals %',
+        'Finals Eq.',
+        'Final %',
+        'Final Eq.',
+        'Remarks',
+      ],
       ...computed.map((r) => [
         r.studentNo ?? '',
         r.fullName,
@@ -121,9 +131,7 @@ export function TeacherReports() {
         const sc = data.scores.find(
           (s) => s.grade_item_id === i.id && s.student_id === r.student_id,
         );
-        row.push(
-          sc?.status === 'graded' && sc.score != null ? sc.score : sc?.status ?? '',
-        );
+        row.push(sc?.status === 'graded' && sc.score != null ? sc.score : (sc?.status ?? ''));
       });
       rows.push(row);
     });
@@ -144,9 +152,7 @@ export function TeacherReports() {
       sections: [
         {
           title: 'Student Grades',
-          head: [
-            ['Student #', 'Name', 'Midterm', 'Finals', 'Final', 'Equiv.', 'Remarks'],
-          ],
+          head: [['Student #', 'Name', 'Midterm', 'Finals', 'Final', 'Equiv.', 'Remarks']],
           body: computed.map((r) => [
             r.studentNo ?? '—',
             r.fullName,
@@ -177,11 +183,7 @@ export function TeacherReports() {
           ) : classes.length === 0 ? (
             <p className="text-sm text-content-subtle">No classes yet.</p>
           ) : (
-            <select
-              className="input"
-              value={classId}
-              onChange={(e) => setClassId(e.target.value)}
-            >
+            <select className="input" value={classId} onChange={(e) => setClassId(e.target.value)}>
               <option value="">— select —</option>
               {classes.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -244,12 +246,8 @@ function Preview({ data, computed }: { data: ClassDetail; computed: ComputedRow[
                 <td className="px-3 py-2">{r.fullName}</td>
                 <td className="px-3 py-2 text-right">{r.midtermPct.toFixed(2)}%</td>
                 <td className="px-3 py-2 text-right">{r.finalsPct.toFixed(2)}%</td>
-                <td className="px-3 py-2 text-right font-semibold">
-                  {r.finalPct.toFixed(2)}%
-                </td>
-                <td className="px-3 py-2 text-right font-mono">
-                  {formatNumeric(r.finalNum)}
-                </td>
+                <td className="px-3 py-2 text-right font-semibold">{r.finalPct.toFixed(2)}%</td>
+                <td className="px-3 py-2 text-right font-mono">{formatNumeric(r.finalNum)}</td>
                 <td className="px-3 py-2">{r.remarks}</td>
               </tr>
             ))

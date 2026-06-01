@@ -3,10 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { humanizeError } from '@/utils/errorMessage';
 import type { BiasSignal, BiasSignalType } from '@/types/database';
 
-const SIGNAL_META: Record<
-  BiasSignalType,
-  { label: string; blurb: string; tone: string }
-> = {
+const SIGNAL_META: Record<BiasSignalType, { label: string; blurb: string; tone: string }> = {
   below_dept_avg: {
     label: 'Below department average',
     blurb: 'Class mean is more than 1 SD under the department mean',
@@ -61,9 +58,7 @@ export function BiasSignals() {
     return c;
   }, [signals]);
 
-  const filtered = signals.filter(
-    (s) => typeFilter === 'all' || s.signal_type === typeFilter,
-  );
+  const filtered = signals.filter((s) => typeFilter === 'all' || s.signal_type === typeFilter);
 
   return (
     <div className="space-y-5">
@@ -75,14 +70,16 @@ export function BiasSignals() {
       </header>
 
       <div className="rounded-md border border-amber-200 bg-amber-500/10 px-4 py-3 text-sm text-amber-700 dark:text-amber-300 dark:text-amber-200">
-        <strong>These are signals, not accusations.</strong> Each flag is a statistical
-        pattern that may have a perfectly valid explanation (a genuinely hard section, a small
-        class, a legitimate bulk correction). Use them as a starting point for a conversation,
-        never as a verdict. Only <strong>finalized</strong> classes are analyzed.
+        <strong>These are signals, not accusations.</strong> Each flag is a statistical pattern that
+        may have a perfectly valid explanation (a genuinely hard section, a small class, a
+        legitimate bulk correction). Use them as a starting point for a conversation, never as a
+        verdict. Only <strong>finalized</strong> classes are analyzed.
       </div>
 
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
 
       <div className="card flex flex-wrap items-center gap-2">

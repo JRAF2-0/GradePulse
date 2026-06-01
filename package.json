@@ -1,13 +1,39 @@
 {
   "name": "gradepulse",
+  "description": "University grade-transparency platform with role-based dashboards for students, teachers, parents, department heads, and admins. React + TypeScript + Vite + Tailwind + Supabase.",
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "license": "MIT",
+  "author": "Jhon Rowel Abines",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JRAF2-0/GradePulse.git"
+  },
+  "homepage": "https://gradepulse-dun.vercel.app/",
+  "keywords": [
+    "react",
+    "typescript",
+    "vite",
+    "tailwindcss",
+    "supabase",
+    "postgresql",
+    "rls",
+    "education",
+    "academic",
+    "grading",
+    "transparency",
+    "portfolio"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint --max-warnings 0 src",
+    "lint:fix": "eslint --fix src",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\""
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
@@ -23,9 +49,16 @@
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "postcss": "^8.4.41",
+    "prettier": "^3.8.3",
     "tailwindcss": "^3.4.10",
     "typescript": "^5.5.3",
     "vite": "^5.4.0"

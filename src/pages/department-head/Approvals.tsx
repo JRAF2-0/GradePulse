@@ -89,13 +89,15 @@ export function DepartmentHeadApprovals() {
       <header>
         <h1 className="text-3xl font-bold tracking-tight">Grade change approvals</h1>
         <p className="text-sm text-content-muted">
-          Teachers submit a request to change a score after a period has been finalized.
-          Approving applies the new score immediately; rejecting keeps the original score.
+          Teachers submit a request to change a score after a period has been finalized. Approving
+          applies the new score immediately; rejecting keeps the original score.
         </p>
       </header>
 
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+          {error}
+        </div>
       )}
 
       <nav className="flex gap-1 border-b border-line">
@@ -131,9 +133,7 @@ export function DepartmentHeadApprovals() {
             ) : visible.length === 0 ? (
               <tr>
                 <td colSpan={8} className="px-4 py-6 text-center text-content-subtle">
-                  {tab === 'pending'
-                    ? 'No pending requests.'
-                    : 'No reviewed requests yet.'}
+                  {tab === 'pending' ? 'No pending requests.' : 'No reviewed requests yet.'}
                 </td>
               </tr>
             ) : (
@@ -159,10 +159,13 @@ export function DepartmentHeadApprovals() {
                       {r.score?.student?.user?.full_name ?? '—'}
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
-                      <span className="text-content-subtle">{r.old_score ?? '—'}</span>{' '}
-                      → <strong>{r.new_score ?? '—'}</strong>
+                      <span className="text-content-subtle">{r.old_score ?? '—'}</span> →{' '}
+                      <strong>{r.new_score ?? '—'}</strong>
                       {r.score?.grade_item?.max_score && (
-                        <span className="text-xs text-content-subtle"> / {r.score.grade_item.max_score}</span>
+                        <span className="text-xs text-content-subtle">
+                          {' '}
+                          / {r.score.grade_item.max_score}
+                        </span>
                       )}
                     </td>
                     <td className="max-w-xs px-4 py-2 text-content-muted">
@@ -178,10 +181,7 @@ export function DepartmentHeadApprovals() {
                     )}
                     <td className="px-4 py-2 text-right">
                       {r.status === 'pending' ? (
-                        <button
-                          onClick={() => setReviewing(r)}
-                          className="btn-secondary text-xs"
-                        >
+                        <button onClick={() => setReviewing(r)} className="btn-secondary text-xs">
                           Review
                         </button>
                       ) : (
@@ -291,15 +291,12 @@ function ReviewModal({
           </h3>
           <p className="text-xs text-content-subtle">
             Filed {new Date(request.created_at).toLocaleString()}
-            {request.reviewed_at &&
-              ` · Reviewed ${new Date(request.reviewed_at).toLocaleString()}`}
+            {request.reviewed_at && ` · Reviewed ${new Date(request.reviewed_at).toLocaleString()}`}
           </p>
         </div>
 
         <div className="rounded-md border border-line p-3 text-sm">
-          <div className="font-medium">
-            {subj ? `${subj.code} — ${subj.title}` : 'Class'}
-          </div>
+          <div className="font-medium">{subj ? `${subj.code} — ${subj.title}` : 'Class'}</div>
           <div className="text-xs text-content-subtle">
             {request.score?.grade_item?.title}
             {request.score?.grade_item?.category &&
@@ -344,13 +341,14 @@ function ReviewModal({
 
         {readOnly && (
           <div className="text-xs text-content-subtle">
-            Status: <StatusBadge status={request.status} /> by{' '}
-            {request.reviewer?.full_name ?? '—'}
+            Status: <StatusBadge status={request.status} /> by {request.reviewer?.full_name ?? '—'}
           </div>
         )}
 
         {error && (
-          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">{error}</div>
+          <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
+            {error}
+          </div>
         )}
 
         <div className="flex justify-end gap-2 pt-2">
