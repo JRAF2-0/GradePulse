@@ -15,6 +15,13 @@ export function Layout() {
 
   return (
     <div className="min-h-screen bg-app">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-xl focus:bg-brand-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg"
+      >
+        Skip to main content
+      </a>
+
       <Sidebar
         collapsed={collapsed}
         onToggleCollapse={() => setCollapsed((v) => !v)}
@@ -28,7 +35,10 @@ export function Layout() {
         }`}
       >
         <Topbar onOpenMobile={() => setMobileOpen(true)} />
-        <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 md:px-8 md:py-8">
+        <main
+          id="main-content"
+          className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 md:px-8 md:py-8"
+        >
           <div className="animate-fade-in">
             <Outlet />
           </div>
