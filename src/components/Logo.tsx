@@ -31,17 +31,21 @@ export function Logo({ size = 'sm', withWordmark = false, full = false, classNam
       <img
         src="/gradepulse-logo.jpg"
         alt="GradePulse"
-        className={`${FULL_PX[size]} w-auto rounded-xl object-contain ${className}`}
+        draggable={false}
+        onDragStart={(e) => e.preventDefault()}
+        className={`${FULL_PX[size]} w-auto select-none rounded-xl object-contain ${className}`}
       />
     );
   }
 
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
+    <span className={`inline-flex select-none items-center gap-2.5 ${className}`}>
       {/* Icon tile — ring + tint so the dark-navy logo stays visible on a dark sidebar */}
       <img
         src="/gradepulse-logo.jpg"
         alt="GradePulse"
+        draggable={false}
+        onDragStart={(e) => e.preventDefault()}
         className={`${ICON_PX[size]} shrink-0 rounded-xl object-cover object-top shadow-sm ring-1 ring-white/15`}
       />
       {withWordmark && (
