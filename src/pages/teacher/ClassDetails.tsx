@@ -131,7 +131,7 @@ export function TeacherClassDetails() {
       {tab === 'finalize' && <FinalizeTab classId={data.class.id} onChange={refresh} />}
 
       {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in md:left-[var(--sidebar-w)]">
           <div className="card w-full max-w-md space-y-4">
             <h3 className="text-lg font-semibold text-red-600 dark:text-red-300">
               Delete this class?
@@ -976,7 +976,7 @@ function CommentsModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in md:left-[var(--sidebar-w)]">
       <div className="card w-full max-w-md space-y-4">
         <div>
           <h3 className="text-lg font-semibold">Comments</h3>
@@ -1159,7 +1159,7 @@ function RequestChangeModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in md:left-[var(--sidebar-w)]">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">Request grade change</h3>
         <div className="rounded-md bg-amber-500/10 px-3 py-2 text-xs text-amber-700 dark:text-amber-300 dark:text-amber-200">
@@ -1636,7 +1636,7 @@ function ResolveAppealModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in md:left-[var(--sidebar-w)]">
       <form className="card w-full max-w-md space-y-4" onSubmit={(e) => e.preventDefault()}>
         <h3 className="text-lg font-semibold">Review Appeal</h3>
         <div className="rounded-md bg-surface-2 px-3 py-2 text-sm">

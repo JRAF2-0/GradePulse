@@ -283,7 +283,7 @@ function ReviewModal({
   const subj = request.score?.grade_item?.category?.class?.subject;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in md:left-[var(--sidebar-w)]">
       <div className="card w-full max-w-lg space-y-4">
         <div>
           <h3 className="text-lg font-semibold">

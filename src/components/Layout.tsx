@@ -30,6 +30,7 @@ export function Layout() {
       />
 
       <div
+        style={{ '--sidebar-w': collapsed ? '76px' : '256px' } as React.CSSProperties}
         className={`flex min-h-screen flex-col transition-[padding] duration-300 ${
           collapsed ? 'md:pl-[76px]' : 'md:pl-64'
         }`}
@@ -39,9 +40,7 @@ export function Layout() {
           id="main-content"
           className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 md:px-8 md:py-8"
         >
-          <div className="animate-fade-in">
-            <Outlet />
-          </div>
+          <Outlet />
         </main>
       </div>
     </div>

@@ -100,7 +100,7 @@ export function StudentClasses() {
       )}
 
       {leaving && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in md:left-[var(--sidebar-w)]">
           <div className="card w-full max-w-md space-y-4">
             <h3 className="text-lg font-semibold">Leave class?</h3>
             <p className="text-sm text-content-muted">

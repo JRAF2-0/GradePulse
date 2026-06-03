@@ -267,7 +267,7 @@ function ChangeSummary({ log }: { log: AuditLogRow }) {
 
 function DiffModal({ log, onClose }: { log: AuditLogRow; onClose: () => void }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in md:left-[var(--sidebar-w)]">
       <div className="card w-full max-w-3xl space-y-4">
         <div className="flex items-start justify-between">
           <div>
