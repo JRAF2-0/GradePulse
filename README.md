@@ -72,6 +72,12 @@ _All shown in dark mode (default). Light mode toggle available in the topbar._
 
 ---
 
+## Documentation
+
+- [Roles & bias detection](./docs/ROLES.md) — what each role does and how the platform surfaces fairness signals.
+
+---
+
 ## Quick start
 
 ```bash
