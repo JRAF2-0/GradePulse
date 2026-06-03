@@ -116,7 +116,7 @@ function ModalShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 px-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in">
       <div className="card w-full max-w-md space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-content">{title}</h3>
