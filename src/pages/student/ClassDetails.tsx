@@ -412,7 +412,7 @@ function AppealModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 px-4 animate-fade-in">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">File an Appeal</h3>
         <div className="rounded-md bg-surface-2 px-3 py-2 text-sm">
