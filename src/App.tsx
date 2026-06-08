@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { RoleGuard } from '@/components/RoleGuard';
+import { PageSkeleton } from '@/components/Skeleton';
 
 // Auth + shared
 const Login = lazy(() => import('@/pages/auth/Login').then((m) => ({ default: m.Login })));
@@ -98,11 +99,7 @@ const BiasSignals = lazy(() =>
 );
 
 function RouteFallback() {
-  return (
-    <div className="flex min-h-screen items-center justify-center text-content-subtle">
-      Loading…
-    </div>
-  );
+  return <PageSkeleton />;
 }
 
 export default function App() {

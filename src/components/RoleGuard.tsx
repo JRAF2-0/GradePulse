@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { PageSkeleton } from './Skeleton';
 import type { UserRole } from '@/types/database';
 
 interface Props {
@@ -12,11 +13,7 @@ export function RoleGuard({ allow, children }: Props) {
   const { session, role, loading, profile } = useAuth();
 
   if (loading || (session && !profile)) {
-    return (
-      <div className="flex min-h-screen items-center justify-center text-content-subtle">
-        Loading…
-      </div>
-    );
+    return <PageSkeleton />;
   }
 
   if (!profile) {

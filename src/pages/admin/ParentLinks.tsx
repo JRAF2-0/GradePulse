@@ -1,6 +1,7 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { humanizeError } from '@/utils/errorMessage';
+import { SkeletonTableRows } from '@/components/Skeleton';
 
 interface UserRow {
   id: string;
@@ -126,11 +127,7 @@ export function AdminParentLinks() {
           </thead>
           <tbody className="divide-y divide-line">
             {loading ? (
-              <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-content-subtle">
-                  Loading…
-                </td>
-              </tr>
+              <SkeletonTableRows rows={4} cols={5} />
             ) : links.length === 0 ? (
               <tr>
                 <td colSpan={5} className="px-4 py-6 text-center text-content-subtle">

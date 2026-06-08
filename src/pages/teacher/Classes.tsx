@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTeacherClasses } from '@/hooks/useTeacherClasses';
+import { SkeletonCard } from '@/components/Skeleton';
 
 export function TeacherClasses() {
   const { classes, loading, error } = useTeacherClasses();
@@ -23,7 +24,11 @@ export function TeacherClasses() {
       )}
 
       {loading ? (
-        <div className="card text-center text-sm text-content-subtle">Loading…</div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
       ) : classes.length === 0 ? (
         <div className="card text-center text-sm text-content-subtle">
           No classes yet. Click <strong>Create Class</strong> to get started.

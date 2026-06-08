@@ -7,6 +7,7 @@ import { humanizeError } from '@/utils/errorMessage';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import { RiskBadge } from '@/components/RiskBadge';
+import { PageSkeleton, SkeletonCard, SkeletonTableRows } from '@/components/Skeleton';
 import type {
   AppealStatus,
   AttendanceStatus,
@@ -33,7 +34,7 @@ export function TeacherClassDetails() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  if (loading) return <div className="card text-sm text-content-subtle">Loading…</div>;
+  if (loading) return <PageSkeleton />;
   if (error || !data)
     return (
       <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 ring-1 ring-red-500/30 dark:text-red-300">
@@ -1434,11 +1435,7 @@ function AttendanceTab({
           </thead>
           <tbody className="divide-y divide-line">
             {loading ? (
-              <tr>
-                <td colSpan={3} className="px-4 py-6 text-center text-content-subtle">
-                  Loading…
-                </td>
-              </tr>
+              <SkeletonTableRows rows={4} cols={3} />
             ) : (
               roster.map((r) => {
                 const status = statusFor(r.student_id);
@@ -1596,7 +1593,10 @@ function AppealsTab({ classId }: { classId: string }) {
       )}
 
       {loading ? (
-        <div className="card text-sm text-content-subtle">Loading…</div>
+        <div className="space-y-3">
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
       ) : filtered.length === 0 ? (
         <div className="card text-sm text-content-subtle">
           No {filter === 'all' ? '' : filter} appeals.

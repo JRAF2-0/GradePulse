@@ -18,6 +18,7 @@ import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useStudentClasses } from '@/hooks/useStudentClasses';
+import { SkeletonCard } from '@/components/Skeleton';
 import type { DbGradeCategory, DbGradeItem, DbScore, Period } from '@/types/database';
 
 interface ClassOption {
@@ -234,7 +235,10 @@ export function StudentAnalytics() {
       </section>
 
       {loading ? (
-        <div className="card text-sm text-content-subtle">Loading…</div>
+        <div className="grid gap-4 lg:grid-cols-2">
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
       ) : !selectedClassId || items.length === 0 ? (
         <div className="card text-sm text-content-subtle">
           No published grades to chart yet for this {period}.

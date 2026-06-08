@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase';
 import { formatNumeric } from '@/utils/conversionTable';
 import { humanizeError } from '@/utils/errorMessage';
 import { RiskBadge } from '@/components/RiskBadge';
+import { PageSkeleton } from '@/components/Skeleton';
 import type { AttendanceSummary, RiskLevel } from '@/types/database';
 
 interface ChildInfo {
@@ -152,7 +153,7 @@ export function ParentStudentView() {
     };
   }, [studentId]);
 
-  if (loading) return <div className="card text-sm text-content-subtle">Loading…</div>;
+  if (loading) return <PageSkeleton />;
   if (error)
     return (
       <div className="space-y-3">

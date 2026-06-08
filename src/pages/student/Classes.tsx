@@ -4,6 +4,7 @@ import { useStudentClasses, type EnrolledClass } from '@/hooks/useStudentClasses
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { humanizeError } from '@/utils/errorMessage';
+import { SkeletonCard } from '@/components/Skeleton';
 
 export function StudentClasses() {
   const { classes, loading, error, refresh } = useStudentClasses();
@@ -60,7 +61,11 @@ export function StudentClasses() {
       )}
 
       {loading ? (
-        <div className="card text-center text-sm text-content-subtle">Loading…</div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
       ) : classes.length === 0 ? (
         <div className="card text-center text-sm text-content-subtle">
           You haven't joined any class yet.

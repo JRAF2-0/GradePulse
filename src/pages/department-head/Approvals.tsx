@@ -1,6 +1,7 @@
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { humanizeError } from '@/utils/errorMessage';
+import { SkeletonTableRows } from '@/components/Skeleton';
 
 interface PendingRequest {
   id: string;
@@ -125,11 +126,7 @@ export function DepartmentHeadApprovals() {
           </thead>
           <tbody className="divide-y divide-line">
             {loading ? (
-              <tr>
-                <td colSpan={8} className="px-4 py-6 text-center text-content-subtle">
-                  Loading…
-                </td>
-              </tr>
+              <SkeletonTableRows rows={4} cols={8} />
             ) : visible.length === 0 ? (
               <tr>
                 <td colSpan={8} className="px-4 py-6 text-center text-content-subtle">

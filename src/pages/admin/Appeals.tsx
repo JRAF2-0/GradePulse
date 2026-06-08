@@ -2,6 +2,7 @@ import { FormEvent, useMemo, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAllAppeals, type AdminAppealRow } from '@/hooks/useAppeals';
 import { humanizeError } from '@/utils/errorMessage';
+import { SkeletonCard } from '@/components/Skeleton';
 import type { AppealStatus } from '@/types/database';
 
 export function AdminAppeals() {
@@ -87,7 +88,10 @@ export function AdminAppeals() {
       )}
 
       {loading ? (
-        <div className="card text-sm text-content-subtle">Loading…</div>
+        <div className="space-y-3">
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
       ) : filtered.length === 0 ? (
         <div className="card text-sm text-content-subtle">
           No {statusFilter === 'all' ? '' : statusFilter} appeals

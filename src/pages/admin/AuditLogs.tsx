@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { humanizeError } from '@/utils/errorMessage';
+import { Skeleton, SkeletonTableRows } from '@/components/Skeleton';
 import type { AuditAction, Json } from '@/types/database';
 
 interface AuditLogRow {
@@ -114,7 +115,11 @@ export function AdminAuditLogs() {
           Reset
         </button>
         <div className="ml-auto text-sm text-content-subtle">
-          {loading ? 'Loading…' : `${total.toLocaleString()} total log${total === 1 ? '' : 's'}`}
+          {loading ? (
+            <Skeleton className="h-3 w-24" inline />
+          ) : (
+            `${total.toLocaleString()} total log${total === 1 ? '' : 's'}`
+          )}
         </div>
       </div>
 
@@ -139,11 +144,7 @@ export function AdminAuditLogs() {
           </thead>
           <tbody className="divide-y divide-line">
             {loading ? (
-              <tr>
-                <td colSpan={7} className="px-4 py-6 text-center text-content-subtle">
-                  Loading…
-                </td>
-              </tr>
+              <SkeletonTableRows rows={5} cols={7} />
             ) : logs.length === 0 ? (
               <tr>
                 <td colSpan={7} className="px-4 py-6 text-center text-content-subtle">

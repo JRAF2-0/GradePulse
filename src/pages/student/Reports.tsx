@@ -6,6 +6,7 @@ import { downloadCsv } from '@/utils/csvExport';
 import { downloadPdf } from '@/utils/pdfExport';
 import { formatNumeric } from '@/utils/conversionTable';
 import { humanizeError } from '@/utils/errorMessage';
+import { Skeleton } from '@/components/Skeleton';
 import type {
   DbFinalizedGrade,
   DbGradeCategory,
@@ -291,7 +292,7 @@ export function StudentReports() {
         <div>
           <label className="label">Pick a class</label>
           {loading ? (
-            <p className="text-sm text-content-subtle">Loading…</p>
+            <Skeleton className="h-9 w-full" />
           ) : classes.length === 0 ? (
             <p className="text-sm text-content-subtle">You're not enrolled in any class yet.</p>
           ) : (
@@ -564,7 +565,7 @@ function TranscriptSection() {
       <div>
         <label className="label">Term</label>
         {classesLoading ? (
-          <p className="text-sm text-content-subtle">Loading…</p>
+          <Skeleton className="h-9 w-full" />
         ) : termOptions.length === 0 ? (
           <p className="text-sm text-content-subtle">No classes joined yet.</p>
         ) : (
