@@ -5,6 +5,7 @@ import { useClassDetail, categoriesForPeriod, weightTotal } from '@/hooks/useCla
 import { useClassAppeals, type AppealRow } from '@/hooks/useAppeals';
 import { humanizeError } from '@/utils/errorMessage';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/context/ToastContext';
 import { RiskBadge } from '@/components/RiskBadge';
 import type {
   AppealStatus,
@@ -570,6 +571,7 @@ function GradesTab({
   comments: DbScoreComment[];
   onChange: () => void;
 }) {
+  const toast = useToast();
   const [commentModal, setCommentModal] = useState<{
     studentId: string;
     itemId: string;
@@ -655,7 +657,26 @@ function GradesTab({
   }
 
   const update = (key: string, patch: Partial<CellState>) => {
-    setCells((c) => ({ ...c, [key]: { ...c[key], ...patch, dirty: true } }));
+    setCells((c) => {
+      const prev = c[key];
+      const next: CellState = { ...prev, ...patch, dirty: true };
+      if (patch.score !== undefined) {
+        const itemId = key.split('|')[1];
+        const item = items.find((i) => i.id === itemId);
+        const max = Number(item?.max_score ?? 0);
+        const trimmed = String(patch.score).trim();
+        if (trimmed === '') {
+          next.error = undefined;
+        } else {
+          const num = Number(trimmed);
+          if (Number.isNaN(num)) next.error = 'Not a number';
+          else if (num < 0) next.error = 'Must be ≥ 0';
+          else if (num > max) next.error = `Max is ${max}`;
+          else next.error = undefined;
+        }
+      }
+      return { ...c, [key]: next };
+    });
   };
 
   const saveCell = async (studentId: string, itemId: string, cell: CellState, asDraft: boolean) => {
@@ -693,6 +714,19 @@ function GradesTab({
       setCells((c) => ({ ...c, [key]: { ...c[key], saving: false, dirty: false } }));
       return;
     }
+    const item = items.find((i) => i.id === itemId);
+    const maxScore = Number(item?.max_score ?? 0);
+    if (cell.status === 'graded' && String(cell.score).trim() !== '') {
+      const num = Number(cell.score);
+      if (Number.isNaN(num) || num < 0 || num > maxScore) {
+        setCells((c) => ({
+          ...c,
+          [key]: { ...c[key], saving: false, error: `Score must be between 0 and ${maxScore}` },
+        }));
+        toast.error(`Score must be between 0 and ${maxScore}.`, 'Invalid score');
+        return false;
+      }
+    }
     setCells((c) => ({ ...c, [key]: { ...c[key], saving: true, error: undefined } }));
     const scoreVal = cell.status === 'graded' ? Number(cell.score) || 0 : null;
     const { error: err } = await supabase.from('scores').upsert(
@@ -711,7 +745,7 @@ function GradesTab({
         ...c,
         [key]: { ...c[key], saving: false, error: humanizeError(err) },
       }));
-      return;
+      return false;
     }
     setCells((c) => ({
       ...c,
@@ -722,17 +756,55 @@ function GradesTab({
     setTimeout(() => {
       setCells((c) => (c[key] ? { ...c, [key]: { ...c[key], saved: false } } : c));
     }, 2500);
+    return true;
   };
 
   const saveAll = async (asDraft: boolean) => {
+    let saved = 0;
+    let invalid = 0;
+    let skipped = 0;
+    let failed = 0;
     for (const r of roster) {
       for (const i of items) {
         const key = `${r.student_id}|${i.id}`;
         const cell = cells[key];
-        if (cell?.dirty) {
-          await saveCell(r.student_id, i.id, cell, asDraft);
+        if (!cell?.dirty) continue;
+        if (isLocked(r.student_id, i.id)) {
+          skipped++;
+          continue;
         }
+        if (cell.status === 'graded' && String(cell.score).trim() !== '') {
+          const num = Number(cell.score);
+          const max = Number(i.max_score);
+          if (Number.isNaN(num) || num < 0 || num > max) {
+            invalid++;
+            setCells((c) => ({
+              ...c,
+              [key]: { ...c[key], error: `Score must be between 0 and ${max}` },
+            }));
+            continue;
+          }
+        }
+        const ok = await saveCell(r.student_id, i.id, cell, asDraft);
+        if (ok) saved++;
+        else failed++;
       }
+    }
+    if (saved + invalid + failed + skipped === 0) {
+      toast.info('No unsaved changes.');
+      return;
+    }
+    if (invalid > 0 || failed > 0) {
+      const parts: string[] = [];
+      if (saved > 0) parts.push(`${saved} ${asDraft ? 'saved as draft' : 'published'}`);
+      if (invalid > 0) parts.push(`${invalid} blocked (over max)`);
+      if (failed > 0) parts.push(`${failed} failed`);
+      if (skipped > 0) parts.push(`${skipped} locked`);
+      toast.error(parts.join(' · '), 'Some scores not saved');
+    } else {
+      const verb = asDraft ? 'saved as draft' : 'published';
+      const suffix = skipped > 0 ? ` (${skipped} locked, skipped)` : '';
+      toast.success(`${saved} score${saved === 1 ? '' : 's'} ${verb}${suffix}.`);
     }
   };
 
@@ -794,13 +866,27 @@ function GradesTab({
                           max={i.max_score}
                           step="0.5"
                           disabled={cell?.status !== 'graded'}
-                          className={`input h-8 text-center ${cell?.dirty ? 'ring-2 ring-amber-500/30' : ''} ${locked ? 'border-amber-300 bg-amber-500/10' : ''}`}
+                          className={`input h-8 text-center ${
+                            cell?.error
+                              ? 'ring-2 ring-red-500/60'
+                              : cell?.dirty
+                                ? 'ring-2 ring-amber-500/30'
+                                : ''
+                          } ${locked ? 'border-amber-300 bg-amber-500/10' : ''}`}
                           value={cell?.score ?? ''}
                           onChange={(e) => update(key, { score: e.target.value })}
                           onBlur={() =>
-                            cell?.dirty && void saveCell(r.student_id, i.id, cell, false)
+                            cell?.dirty && !cell?.error
+                              ? void saveCell(r.student_id, i.id, cell, false)
+                              : undefined
                           }
-                          title={locked ? 'Period finalized — changes require approval' : undefined}
+                          title={
+                            cell?.error
+                              ? cell.error
+                              : locked
+                                ? 'Period finalized — changes require approval'
+                                : undefined
+                          }
                         />
                         <select
                           className="input h-7 text-xs"

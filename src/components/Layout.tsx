@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
+import { ToastProvider } from '@/context/ToastContext';
 
 const COLLAPSE_KEY = 'gradepulse-sidebar-collapsed';
 
@@ -14,7 +15,8 @@ export function Layout() {
   }, [collapsed]);
 
   return (
-    <div className="min-h-screen bg-app">
+    <ToastProvider>
+      <div className="min-h-screen bg-app">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-xl focus:bg-brand-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg"
@@ -43,6 +45,7 @@ export function Layout() {
           <Outlet />
         </main>
       </div>
-    </div>
+      </div>
+    </ToastProvider>
   );
 }
