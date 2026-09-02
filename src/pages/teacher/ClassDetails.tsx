@@ -1748,10 +1748,32 @@ function ResolveAppealModal({
         .from('scores')
         .update({ score: parsedScore })
         .eq('id', appeal.score_id);
+
       if (scoreErr) {
-        setError(humanizeError(scoreErr));
-        setBusy(null);
-        return;
+        // If direct score update is blocked (e.g. period is finalized/locked),
+        // route the change through request_grade_change for Department Head review
+        const isLocked =
+          scoreErr.message?.toLowerCase().includes('finalize') ||
+          scoreErr.message?.toLowerCase().includes('lock') ||
+          scoreErr.code === 'P0001';
+
+        if (isLocked) {
+          const { error: reqErr } = await supabase.rpc('request_grade_change', {
+            p_score_id: appeal.score_id,
+            p_new_score: parsedScore,
+            p_reason: `Appeal approved: ${response.trim() || appeal.reason}`,
+          });
+
+          if (reqErr) {
+            setError(humanizeError(reqErr));
+            setBusy(null);
+            return;
+          }
+        } else {
+          setError(humanizeError(scoreErr));
+          setBusy(null);
+          return;
+        }
       }
     }
 
@@ -1772,7 +1794,7 @@ function ResolveAppealModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in md:left-[var(--sidebar-w)]">
-      <form className="card w-full max-w-md space-y-4" onSubmit={(e) => e.preventDefault()}>
+      <form className="card w-full max-w-md space-y-4" onSubmit={(e) => void resolve(e, 'approved')}>
         <h3 className="text-lg font-semibold">Review Appeal</h3>
         <div className="rounded-md bg-surface-2 px-3 py-2 text-sm">
           <div>
@@ -1794,7 +1816,7 @@ function ResolveAppealModal({
         )}
 
         <div className="rounded-md border border-amber-200 bg-amber-500/10 px-3 py-3">
-          <label className="flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-300 dark:text-amber-200">
+          <label className="flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-300">
             <input
               type="checkbox"
               checked={updateScore}
@@ -1818,7 +1840,7 @@ function ResolveAppealModal({
             </div>
           )}
           <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">
-            The audit log will record both the score change and the appeal resolution.
+            The audit log will record the resolution. If the period is finalized, a change request will automatically be sent to the Department Head for approval.
           </p>
         </div>
 

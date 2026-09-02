@@ -128,7 +128,7 @@ export function AdminAppeals() {
                   </p>
                   {a.teacher_response && (
                     <p className="mt-2 rounded-xl bg-brand-500/10 px-4 py-3 text-sm font-medium text-brand-700 ring-1 ring-brand-500/30 dark:text-brand-300">
-                      <strong>Resolver response:</strong> {a.teacher_response}
+                      <strong>Response:</strong> {a.teacher_response}
                     </p>
                   )}
                 </div>
@@ -177,7 +177,7 @@ function AdminResolveAppealModal({
 }) {
   const [decision, setDecision] = useState<'approved' | 'rejected'>('approved');
   const [response, setResponse] = useState('');
-  const [updateScore, setUpdateScore] = useState(false);
+  const [updateScore, setUpdateScore] = useState(true);
   const [newScore, setNewScore] = useState<string>(
     appeal.score_value != null ? String(appeal.score_value) : '',
   );
