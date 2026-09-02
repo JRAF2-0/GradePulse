@@ -24,9 +24,13 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
 
   return (
     <>
-      {/* Mobile click-outside-to-close (transparent) */}
+      {/* Mobile click-outside-to-close backdrop */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 md:hidden" onClick={onCloseMobile} aria-hidden />
+        <div
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm animate-fade-in md:hidden"
+          onClick={onCloseMobile}
+          aria-hidden="true"
+        />
       )}
 
       <aside
