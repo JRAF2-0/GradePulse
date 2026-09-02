@@ -38,7 +38,6 @@ export function Signup() {
     setBusy(true);
     try {
       await signUp(email, password, fullName);
-      navigate('/');
     } catch (err) {
       setError(humanizeError(err));
     } finally {

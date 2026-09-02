@@ -46,7 +46,6 @@ export function Login() {
     setBusy(true);
     try {
       await signIn(email, password);
-      navigate('/');
     } catch (err) {
       setError(humanizeError(err));
     } finally {
